@@ -1,3 +1,4 @@
+export { allocatePayouts, type CreatorPayout, type CreatorScore } from "./payouts.js";
 export {
   creatorScore,
   creatorThreshold,
