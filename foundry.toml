@@ -43,3 +43,8 @@ depth = 200
 
 [fmt]
 line_length = 100
+
+[lint]
+# Campaign deadlines are whole days (start, end, Day 5, Day 10). Validators can shift a block
+# timestamp by seconds, which is irrelevant at that scale, so this lint is disabled.
+exclude_lints = ["block-timestamp"]
