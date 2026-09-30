@@ -13,7 +13,8 @@ Early development. Not deployed. Not audited.
 | Escrow contract (`MORCastEscrow`) | Implemented; unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
 | Deployment scripts | Implemented; not yet deployed |
-| TypeScript SDK and result verifier | Planned |
+| TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
+| TypeScript SDK: result hashing, Merkle trees, verifier | Planned |
 
 ## Usage
 
@@ -55,8 +56,10 @@ The brand pays for 64% of the target, so 64,000 USDC is spent.
 ## Documentation
 
 - [Escrow contract](docs/escrow.md): roles, timeline, functions, payout leaves and security properties.
-- [Settlement arithmetic](docs/settlement.md): how the budget is split between fee, creator pool and refund.
+- [Settlement arithmetic](docs/settlement.md): creator scores, the budget split and creator payouts.
+- [Metrics](docs/metrics.md): exact decimals and the Integration retention metric.
 - [Deployment](docs/deployment.md): deploying to Base mainnet, other networks and a local Anvil node.
+- [TypeScript SDK](sdk/README.md): the protocol arithmetic for off-chain services and verifiers.
 
 ## Development
 
@@ -70,6 +73,8 @@ forge test
 ```
 
 Dependencies are Git submodules pinned in `foundry.lock`: forge-std v1.17.0 and OpenZeppelin Contracts v5.7.0.
+
+The TypeScript SDK lives in [`sdk/`](sdk) and has its own [instructions](sdk/README.md#development).
 
 ### Tests
 
