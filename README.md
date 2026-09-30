@@ -16,6 +16,7 @@ Feature-complete for protocol v1. Not deployed. Not audited.
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
 | TypeScript SDK: document hashing, payout Merkle trees | Implemented; trees verified against the contract |
 | TypeScript SDK: result dataset and verifier (`morcast-verify`) | Implemented; verified end to end on a local node |
+| Security | Internal review completed, no critical, high or medium findings; external audit pending |
 
 ## Usage
 
@@ -69,6 +70,7 @@ The brand pays for 64% of the target, so 64,000 USDC is spent.
 - [Metrics](docs/metrics.md): exact decimals and the Integration retention metric.
 - [Hashing and Merkle trees](docs/hashing.md): canonical JSON for `manifestHash` and `resultHash`, and payout tree construction.
 - [Result dataset](docs/dataset.md): the published result format, reason codes and what the verifier checks.
+- [Security](docs/security.md): trust model, internal review findings and verified properties.
 - [Deployment](docs/deployment.md): deploying to Base mainnet, other networks and a local Anvil node.
 - [TypeScript SDK](sdk/README.md): the protocol arithmetic for off-chain services and verifiers.
 

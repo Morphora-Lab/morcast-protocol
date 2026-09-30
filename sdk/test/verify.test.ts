@@ -9,6 +9,7 @@ import {
   verifyResultDataset,
 } from "../src/index.js";
 import { exampleDataset } from "./fixtures/example.js";
+import { Random } from "./helpers.js";
 
 const EXAMPLE_FILE = new URL("../../examples/result-dataset.json", import.meta.url);
 
@@ -287,6 +288,68 @@ describe("verifyResultDataset", () => {
     const report = verifyResultDataset(dataset);
     expect(report.valid).toBe(false);
     expect(report.errors.map((e) => e.path)).toContain(path);
+  });
+
+  it.each([
+    ["the zero address", "0x0000000000000000000000000000000000000000"],
+    ["the escrow contract", exampleDataset().escrow],
+  ])("reports a creator wallet that is %s", (_, address) => {
+    const d = structuredClone(exampleDataset());
+    // Rewrite every reference to the first creator's wallet.
+    const original = creatorAt(d, 0).wallet;
+    for (const item of d.items) if (item.wallet === original) item.wallet = address;
+    creatorAt(d, 0).wallet = address;
+    const leaf = d.merkle.leaves.find((l) => l.wallet === original);
+    if (leaf !== undefined) leaf.wallet = address;
+    expect(verifyResultDataset(d).errors.map((e) => e.path)).toContain("creators[0].wallet");
+  });
+
+  it("reports a creator listed twice instead of throwing", () => {
+    const d = structuredClone(exampleDataset());
+    d.creators.splice(1, 0, structuredClone(creatorAt(d, 0)));
+    const report = verifyResultDataset(d);
+    expect(report.valid).toBe(false);
+    expect(report.errors.map((e) => e.path)).toContain("creators");
+  });
+
+  it("never throws, whatever values a dataset contains", () => {
+    // Copy random string values of the example into random string fields, many times over.
+    const random = new Random(31n);
+    const example = exampleDataset();
+    const values: string[] = [];
+    const collect = (node: unknown): void => {
+      if (typeof node === "string") values.push(node);
+      else if (Array.isArray(node)) node.forEach(collect);
+      else if (node !== null && typeof node === "object") Object.values(node).forEach(collect);
+    };
+    collect(example);
+
+    for (let run = 0; run < 300; run++) {
+      const d = structuredClone(example) as unknown as Record<string, unknown>;
+      for (let edit = 0; edit < 3; edit++) {
+        const slots: [Record<string, unknown> | unknown[], string | number][] = [];
+        const find = (node: unknown): void => {
+          if (Array.isArray(node)) {
+            node.forEach((child, i) => {
+              if (typeof child === "string") slots.push([node, i]);
+              else find(child);
+            });
+          } else if (node !== null && typeof node === "object") {
+            for (const [key, child] of Object.entries(node)) {
+              if (typeof child === "string") slots.push([node as Record<string, unknown>, key]);
+              else find(child);
+            }
+          }
+        };
+        find(d);
+        const [container, key] = slots[Number(random.between(0n, BigInt(slots.length - 1)))] as [
+          Record<string | number, unknown>,
+          string | number,
+        ];
+        container[key] = values[Number(random.between(0n, BigInt(values.length - 1)))];
+      }
+      expect(() => verifyResultDataset(d)).not.toThrow();
+    }
   });
 
   it("reports schema violations with their paths", () => {
