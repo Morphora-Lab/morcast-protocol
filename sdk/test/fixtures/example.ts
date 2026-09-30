@@ -72,10 +72,10 @@ export function exampleDataset(): ResultDataset {
     item(1, "a", "Xk2mP4vL8qR", startAt + 48n * h, { metric: 300_000n }),
     item(2, "b", "Ld7Nq2wE5tY", startAt + 72n * h, { metric: 180_000n }),
     item(3, "c", "Pz9Rt3uI6oA", startAt + 96n * h, { metric: 120_000n }),
-    item(4, "a", "Xk2mP4vL8qR", startAt + 120n * h, {
-      reasons: ["DUPLICATE"],
-      primary: "DUPLICATE",
-      measured: false,
+    item(4, "a", "Hy5Tq8wZ3nB", startAt + 120n * h, {
+      reasons: ["EDITED"],
+      primary: "EDITED",
+      measured: true,
     }),
     item(5, "d", "Bn4Mv7cX1zS", startAt + 144n * h, { metric: 40_000n }),
     item(6, "e", "Qw8Er5tY2uI", startAt + 168n * h, { metric: 9_000n }),

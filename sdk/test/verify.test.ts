@@ -189,6 +189,7 @@ describe("verifyResultDataset", () => {
       "the same content counted twice",
       (d) => {
         Object.assign(itemAt(d, 3), {
+          contentId: itemAt(d, 0).contentId,
           status: "PASS",
           reasons: [],
           primaryReason: null,

@@ -68,16 +68,16 @@
       "submissionId": "sub-0004",
       "wallet": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
       "account": "UCa4Vq1kP8sZ2xN7mR3tY6wB",
-      "contentId": "Xk2mP4vL8qR",
-      "contentUrl": "https://www.youtube.com/watch?v=Xk2mP4vL8qR",
+      "contentId": "Hy5Tq8wZ3nB",
+      "contentUrl": "https://www.youtube.com/watch?v=Hy5Tq8wZ3nB",
       "receivedAt": "1791270000",
       "status": "FAIL",
       "reasons": [
-        "DUPLICATE"
+        "EDITED"
       ],
-      "primaryReason": "DUPLICATE",
+      "primaryReason": "EDITED",
       "metric": "0",
-      "retrievedAt": null,
+      "retrievedAt": "1792310400",
       "evidence": "https://evidence.morcast.example/campaigns/1/sub-0004",
       "integration": null
     },
