@@ -1,4 +1,11 @@
 export {
+  type CanonicalValue,
+  canonicalize,
+  decimalString,
+  hashCanonical,
+  parseDecimalString,
+} from "./canonical.js";
+export {
   integrationMetric,
   RETENTION_SCALE,
   type RetentionSample,

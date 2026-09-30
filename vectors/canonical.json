@@ -1,0 +1,83 @@
+{
+  "description": "Canonical JSON vectors: RFC 8785 serialization of number-free JSON (objects, arrays, strings, booleans, null), and hash = keccak256 of its UTF-8 bytes.",
+  "cases": [
+    {
+      "name": "empty-object",
+      "description": "The empty object.",
+      "value": {},
+      "canonical": "{}",
+      "hash": "0xb48d38f93eaa084033fc5970bf96e559c33c4cdc07d889ab00b4d63f9590739d"
+    },
+    {
+      "name": "key-order",
+      "description": "Members are sorted by key at every level.",
+      "value": {
+        "b": "2",
+        "a": "1",
+        "c": {
+          "z": true,
+          "y": null
+        }
+      },
+      "canonical": "{\"a\":\"1\",\"b\":\"2\",\"c\":{\"y\":null,\"z\":true}}",
+      "hash": "0xf057a9d135ad58a00f545daa0778a31e414eb9dfb30202bdd464774d9c34bf17"
+    },
+    {
+      "name": "utf16-key-order",
+      "description": "Keys compare as UTF-16 code units: U+1F600 (surrogates D83D DE00) sorts before U+FB01, although its code point is larger.",
+      "value": {
+        "ﬁ": "ligature",
+        "😀": "emoji",
+        "€": "euro",
+        "a": "ascii"
+      },
+      "canonical": "{\"a\":\"ascii\",\"€\":\"euro\",\"😀\":\"emoji\",\"ﬁ\":\"ligature\"}",
+      "hash": "0xaa01934d52b8599783824c46711be9dd8a64fea5b6aee7fc14817b7775c92334"
+    },
+    {
+      "name": "string-escapes",
+      "description": "Quote, backslash and control characters are escaped; U+007F is not.",
+      "value": {
+        "s": "quote\" backslash\\ newline\n tab\t control\u0001 delete"
+      },
+      "canonical": "{\"s\":\"quote\\\" backslash\\\\ newline\\n tab\\t control\\u0001 delete\"}",
+      "hash": "0x6793757e39052ec0b9079f95e54d5c4a236b875493c8b5845d9176e26177194e"
+    },
+    {
+      "name": "unicode-literal",
+      "description": "Non-ASCII characters are written literally as UTF-8.",
+      "value": {
+        "s": "café € 😀"
+      },
+      "canonical": "{\"s\":\"café € 😀\"}",
+      "hash": "0x453f4d986f32b91cc75150ee655e79ec755f8878f2847ee7ae283b07cec32ea1"
+    },
+    {
+      "name": "arrays-keep-order",
+      "description": "Array order is preserved; empty containers are kept.",
+      "value": {
+        "a": [
+          [
+            "2",
+            "1"
+          ],
+          [],
+          {}
+        ],
+        "b": []
+      },
+      "canonical": "{\"a\":[[\"2\",\"1\"],[],{}],\"b\":[]}",
+      "hash": "0xd8f7850a11e8ab95e27da614925e26e0221868c3c4f9ad764bbfe32da13cbd32"
+    },
+    {
+      "name": "integers-as-strings",
+      "description": "Integers are decimal strings, so no precision is lost.",
+      "value": {
+        "amount": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "zero": "0"
+      },
+      "canonical": "{\"amount\":\"115792089237316195423570985008687907853269984665640564039457584007913129639935\",\"zero\":\"0\"}",
+      "hash": "0xefb411bf11cace4eb8ababcf3f124ecbc88a325ea2143e083842d54e2ad6e189"
+    }
+  ]
+}
