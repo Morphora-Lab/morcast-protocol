@@ -4,7 +4,7 @@ TypeScript implementation of the MORCast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Settlement, payouts and metrics are implemented and tested against the shared vectors in [`../vectors`](../vectors). Result hashing, Merkle trees and the result verifier are planned. The package is not yet published to npm.
+Settlement, payouts, metrics, document hashing and payout Merkle trees are implemented and tested against the shared vectors in [`../vectors`](../vectors). The result verifier is planned. The package is not yet published to npm.
 
 ## Usage
 
@@ -37,6 +37,18 @@ const payouts = allocatePayouts(pool, scores);
 // payouts 24_000_000_000n, 14_400_000_000n, 0n
 ```
 
+Build the payout tree for `settle` and `claim`, and hash a document:
+
+```ts
+import { buildPayoutTree, hashCanonical } from "@morcast/protocol";
+
+const tree = buildPayoutTree(1n, payouts.map((p) => ({ wallet: p.wallet, amount: p.payout })));
+tree.root;               // merkleRoot for settle()
+tree.leaves[0].proof;    // proof for claim()
+
+hashCanonical({ campaignId: "1", status: "PASS" }); // keccak256 of the canonical JSON
+```
+
 ## API
 
 All values are `bigint`. Every function throws a `RangeError` on invalid input.
@@ -51,8 +63,13 @@ All values are `bigint`. Every function throws a `RangeError` on invalid input.
 | `trunc6(decimal)` | Decimal text truncated to millionths |
 | `retentionFactor(samples, startSec, endSec, durationSec)` | Integration retention `R_u` in millionths, or `null` when not measurable |
 | `integrationMetric(views, retention)` | `q = views × R_u div 1,000,000` |
+| `canonicalize(value)` | RFC 8785 canonical JSON of a number-free document |
+| `hashCanonical(value)` | keccak256 of the canonical JSON (`manifestHash`, `resultHash`) |
+| `buildPayoutTree(campaignId, payouts)` | `{ root, leaves }`, each leaf with its hash and proof. Zero payouts are left out. |
+| `payoutLeafHash(campaignId, wallet, amount)` | The leaf hash, identical to `MORCastEscrow.leafHash` |
+| `verifyPayoutProof(root, campaignId, wallet, amount, proof)` | Whether `claim` would accept the proof |
 
-The rules are specified in [`docs/settlement.md`](../docs/settlement.md) and [`docs/metrics.md`](../docs/metrics.md).
+The rules are specified in [`docs/settlement.md`](../docs/settlement.md), [`docs/metrics.md`](../docs/metrics.md) and [`docs/hashing.md`](../docs/hashing.md).
 
 ## Development
 

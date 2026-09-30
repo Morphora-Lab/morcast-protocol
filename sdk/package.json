@@ -1,7 +1,7 @@
 {
   "name": "@morcast/protocol",
   "version": "0.1.0",
-  "description": "Settlement arithmetic, creator payouts and campaign metrics of the MORCast Payment Protocol.",
+  "description": "Settlement arithmetic, creator payouts, campaign metrics, document hashing and payout Merkle trees of the MORCast Payment Protocol.",
   "license": "MIT",
   "private": true,
   "type": "module",
@@ -28,6 +28,7 @@
     "format": "biome format --write ."
   },
   "dependencies": {
+    "@openzeppelin/merkle-tree": "^1.0.8",
     "viem": "^2.57.1"
   },
   "devDependencies": {

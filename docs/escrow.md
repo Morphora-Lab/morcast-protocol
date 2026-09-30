@@ -49,7 +49,7 @@ Each creator payout is one Merkle leaf:
 leaf = keccak256(bytes.concat(keccak256(abi.encode(uint256 campaignId, address wallet, uint256 amount))))
 ```
 
-This is the OpenZeppelin `StandardMerkleTree` leaf format for the value types `(uint256, address, uint256)`. Inner nodes hash their two children in sorted order, which is what `MerkleProof` expects. Because the campaign ID is part of the leaf, a proof for one campaign can never pay out of another.
+This is the OpenZeppelin `StandardMerkleTree` leaf format for the value types `(uint256, address, uint256)`. Inner nodes hash their two children in sorted order, which is what `MerkleProof` expects. Because the campaign ID is part of the leaf, a proof for one campaign can never pay out of another. The full tree construction is specified in [Hashing and Merkle trees](hashing.md).
 
 ## Security Properties
 

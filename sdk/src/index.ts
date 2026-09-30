@@ -1,4 +1,22 @@
 export {
+  type CanonicalValue,
+  canonicalize,
+  decimalString,
+  hashCanonical,
+  parseDecimalString,
+} from "./canonical.js";
+export {
+  buildPayoutTree,
+  EMPTY_ROOT,
+  hashPair,
+  PAYOUT_LEAF_ENCODING,
+  type Payout,
+  type PayoutLeaf,
+  type PayoutTree,
+  payoutLeafHash,
+  verifyPayoutProof,
+} from "./merkle.js";
+export {
   integrationMetric,
   RETENTION_SCALE,
   type RetentionSample,

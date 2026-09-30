@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 
 import {
   allocatePayouts,
+  buildPayoutTree,
   creatorScore,
   creatorThreshold,
+  hashCanonical,
   recognizedTotal,
   split,
+  verifyPayoutProof,
 } from "../src/index.js";
 
 /** Keeps the usage example in README.md correct. */
@@ -34,5 +37,16 @@ describe("README example", () => {
 
     const payouts = allocatePayouts(pool, scores);
     expect(payouts.map((p) => p.payout)).toEqual([24_000_000_000n, 14_400_000_000n, 0n]);
+
+    // The zero payout is left out of the tree; both remaining leaves have valid proofs.
+    const tree = buildPayoutTree(
+      1n,
+      payouts.map((p) => ({ wallet: p.wallet, amount: p.payout })),
+    );
+    expect(tree.leaves).toHaveLength(2);
+    for (const leaf of tree.leaves) {
+      expect(verifyPayoutProof(tree.root, 1n, leaf.wallet, leaf.amount, leaf.proof)).toBe(true);
+    }
+    expect(hashCanonical({ campaignId: "1", status: "PASS" })).toMatch(/^0x[0-9a-f]{64}$/);
   });
 });
