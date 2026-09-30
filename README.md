@@ -10,9 +10,8 @@ Early development. Not deployed. Not audited.
 
 | Component | State |
 |---|---|
-| Escrow contract (`MORCastEscrow`) | Implemented, unit-tested |
+| Escrow contract (`MORCastEscrow`) | Implemented; unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
-| Invariant and Base fork tests | Planned |
 | Deployment scripts | Planned |
 | TypeScript SDK and result verifier | Planned |
 
@@ -70,6 +69,21 @@ forge test
 ```
 
 Dependencies are Git submodules pinned in `foundry.lock`: forge-std v1.17.0 and OpenZeppelin Contracts v5.7.0.
+
+### Tests
+
+| Suite | Location | Checks |
+|---|---|---|
+| Unit | `test/*.t.sol` | Every function, revert path and time boundary. |
+| Fuzz | `testFuzz_*` functions | Settlement and payout properties for random inputs. |
+| Invariant | `test/invariant/` | Across random multi-campaign sequences: escrow balances equal outstanding obligations, and settled campaigns follow the formula. |
+| Fork | `test/fork/` | Full lifecycle with the real USDC and MOR contracts on Base mainnet. Skipped unless `BASE_RPC_URL` is set. |
+| Vectors | `vectors/` | Numeric examples from the specification, shared with off-chain implementations. |
+
+```sh
+forge test                                              # unit, fuzz and invariant tests
+BASE_RPC_URL=https://mainnet.base.org forge test --match-path "test/fork/*"
+```
 
 ## License
 
