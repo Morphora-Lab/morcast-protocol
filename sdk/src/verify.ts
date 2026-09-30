@@ -10,6 +10,7 @@
 import type { Hex } from "viem";
 
 import { type CanonicalValue, hashCanonical, parseDecimalString } from "./canonical.js";
+import { MAX_CAMPAIGN_DURATION } from "./constants.js";
 import {
   type DatasetCreator,
   type DatasetItem,
@@ -101,7 +102,11 @@ function checkHeader(d: ResultDataset, fail: Fail): void {
   } else if (n(c.threshold) !== creatorThreshold(target)) {
     fail("campaign.threshold", `expected ceil(target / 100) = ${creatorThreshold(target)}`);
   }
-  if (n(c.startAt) >= n(c.endAt)) fail("campaign.endAt", "must be after startAt");
+  if (n(c.startAt) >= n(c.endAt)) {
+    fail("campaign.endAt", "must be after startAt");
+  } else if (n(c.endAt) - n(c.startAt) > MAX_CAMPAIGN_DURATION) {
+    fail("campaign.endAt", "the campaign must not last longer than 90 days");
+  }
   if (n(d.publishedAt) < n(c.endAt)) fail("publishedAt", "must not be before the campaign ends");
   if ((c.platform === "X") !== (c.format === null)) {
     fail("campaign.format", "must be null for X and DEDICATED or INTEGRATION for YOUTUBE");

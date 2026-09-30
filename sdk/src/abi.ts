@@ -31,6 +31,19 @@ export const morcastEscrowAbi = [
   },
   {
     "type": "function",
+    "name": "MAX_CAMPAIGN_DURATION",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "MOR",
     "inputs": [],
     "outputs": [

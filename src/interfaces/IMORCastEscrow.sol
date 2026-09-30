@@ -143,7 +143,8 @@ interface IMORCastEscrow {
     /// @notice The target is zero.
     error InvalidTarget();
 
-    /// @notice `startAt` is not before `endAt`.
+    /// @notice `startAt` is not before `endAt`, or the campaign lasts longer than
+    ///         `MAX_CAMPAIGN_DURATION`.
     error InvalidSchedule(uint64 startAt, uint64 endAt);
 
     /// @notice The action is only allowed before `startAt`, and `startAt` has been reached.
@@ -245,6 +246,9 @@ interface IMORCastEscrow {
 
     /// @notice Delay after `endAt` when settlement closes and the full refund opens (Day 10).
     function SETTLEMENT_CLOSES_AFTER() external view returns (uint256);
+
+    /// @notice Longest allowed campaign window, `endAt − startAt` (90 days).
+    function MAX_CAMPAIGN_DURATION() external view returns (uint256);
 
     /// @notice Number of campaigns created so far; also the ID of the latest campaign.
     function campaignCount() external view returns (uint256);

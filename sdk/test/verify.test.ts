@@ -86,6 +86,13 @@ describe("verifyResultDataset", () => {
       "campaign.endAt",
     ],
     [
+      "a campaign longer than 90 days",
+      (d) => {
+        d.campaign.endAt = (BigInt(d.campaign.startAt) + 90n * 86_400n + 1n).toString();
+      },
+      "campaign.endAt",
+    ],
+    [
       "a format on an X campaign",
       (d) => {
         d.campaign.platform = "X";

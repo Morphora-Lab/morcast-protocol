@@ -24,6 +24,7 @@ contract MORCastEscrowTest is EscrowFixture {
         assertEq(escrow.MOR(), address(mor));
         assertEq(escrow.SETTLEMENT_OPENS_AFTER(), 5 days);
         assertEq(escrow.SETTLEMENT_CLOSES_AFTER(), 10 days);
+        assertEq(escrow.MAX_CAMPAIGN_DURATION(), 90 days);
         assertEq(escrow.campaignCount(), 0);
     }
 
@@ -141,6 +142,34 @@ contract MORCastEscrowTest is EscrowFixture {
         );
         vm.prank(brand);
         escrow.createCampaign(address(usdc), BUDGET, TARGET, endAt, startAt, MANIFEST_HASH);
+    }
+
+    function test_createCampaign_acceptsMaximumDuration() public {
+        uint64 lastEnd = startAt + 90 days;
+        vm.prank(brand);
+        uint256 id =
+            escrow.createCampaign(address(usdc), BUDGET, TARGET, startAt, lastEnd, MANIFEST_HASH);
+        assertEq(escrow.getCampaign(id).endAt, lastEnd);
+    }
+
+    function test_createCampaign_revertsWhenLongerThanMaximumDuration() public {
+        uint64 tooLate = startAt + 90 days + 1;
+        vm.expectRevert(
+            abi.encodeWithSelector(IMORCastEscrow.InvalidSchedule.selector, startAt, tooLate)
+        );
+        vm.prank(brand);
+        escrow.createCampaign(address(usdc), BUDGET, TARGET, startAt, tooLate, MANIFEST_HASH);
+    }
+
+    /// @notice An `endAt` given in milliseconds instead of seconds would lock the budget for
+    ///         thousands of years after the start; the duration cap rejects it at creation.
+    function test_createCampaign_rejectsEndAtInMilliseconds() public {
+        uint64 endAtMillis = endAt * 1000;
+        vm.expectRevert(
+            abi.encodeWithSelector(IMORCastEscrow.InvalidSchedule.selector, startAt, endAtMillis)
+        );
+        vm.prank(brand);
+        escrow.createCampaign(address(usdc), BUDGET, TARGET, startAt, endAtMillis, MANIFEST_HASH);
     }
 
     function test_createCampaign_revertsAtStart() public {

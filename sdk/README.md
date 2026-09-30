@@ -93,6 +93,7 @@ All values are `bigint`. Every function throws a `RangeError` on invalid input.
 | `readCampaign(client, escrow, campaignId)` | The campaign as stored by the escrow |
 | `compareWithChain(dataset, campaign, resultHash)` | Mismatches between a dataset and the on-chain campaign |
 | `morcastEscrowAbi` | ABI of `MORCastEscrow`, generated from the compiled contract |
+| `SETTLEMENT_OPENS_AFTER`, `SETTLEMENT_CLOSES_AFTER`, `MAX_CAMPAIGN_DURATION` | The contract's timing constants in seconds: Day 5, Day 10 and 90 days |
 
 The rules are specified in [`docs/settlement.md`](../docs/settlement.md), [`docs/metrics.md`](../docs/metrics.md), [`docs/hashing.md`](../docs/hashing.md) and [`docs/dataset.md`](../docs/dataset.md).
 

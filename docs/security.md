@@ -4,7 +4,7 @@
 
 | Item | State |
 |---|---|
-| Internal review | Completed 2026-09-30 on commit `45a7bc4`. No critical, high or medium findings. |
+| Internal review | Completed 2026-09-30 on commit `45a7bc4`. No critical, high or medium findings. S-2 has since been fixed. |
 | External audit | Not yet performed. Required before mainnet deployment. |
 | Deployment | None |
 
@@ -41,7 +41,7 @@ Base's sequencer orders transactions and sets timestamps. Deadlines are whole da
 | ID | Severity | Finding | Status |
 |---|---|---|---|
 | S-1 | Centralization | The settler decides `S` and the payout tree | By design; mitigated operationally |
-| S-2 | Low | No upper bound on the campaign schedule | Open |
+| S-2 | Low | No upper bound on the campaign schedule | Fixed: 90-day maximum |
 | S-3 | Low | The USDC issuer can freeze transfers | Accepted |
 | S-4 | Informational | A wrong payout tree cannot be corrected | Mitigated off-chain |
 | S-5 | Informational | Tokens sent directly to the escrow are locked | Accepted |
@@ -62,7 +62,7 @@ Mitigations:
 
 `createCampaign` accepts any `startAt < endAt`. Once `startAt` has passed, the brand cannot cancel, and an unsettled budget returns only from `endAt + 10 days`. A mistaken `endAt`, for example milliseconds instead of seconds, would lock the budget for thousands of years.
 
-Recommendation: enforce a maximum campaign length on-chain. This changes the specification. Until then, the platform must validate every deposit request before the brand signs it.
+Fixed: `createCampaign` rejects campaigns longer than `MAX_CAMPAIGN_DURATION` (90 days), so a mistaken `endAt` fails at creation. A lead time before `startAt` needs no limit, because the brand can cancel at any time before the start.
 
 ### S-3: The USDC issuer can freeze transfers
 
@@ -112,4 +112,5 @@ Concurrent `createCampaign` transactions can change which ID a campaign receives
 | A brand's approval cannot be spent by anyone else | `test_brandApprovalCannotBeSpentByOthers` |
 | A token callback cannot re-enter the escrow, and a relayer can batch claims | Reentrancy test; `test_relayerCanBatchClaimsInOneTransaction` |
 | A deposit must deliver exactly the budget | Fee-on-transfer test |
+| No campaign can last longer than 90 days, so a mistaken `endAt` cannot lock a budget | `test_createCampaign_rejectsEndAtInMilliseconds` and the duration tests |
 | The real USDC and MOR contracts behave as expected | Base fork tests |

@@ -27,7 +27,7 @@ On Base mainnet the script always uses the canonical tokens. `USDC` and `MOR` ma
 After deployment, check:
 
 - `SETTLER()`, `TREASURY()`, `USDC()` and `MOR()` return the intended addresses.
-- `SETTLEMENT_OPENS_AFTER()` returns `432000` (5 days) and `SETTLEMENT_CLOSES_AFTER()` returns `864000` (10 days).
+- `SETTLEMENT_OPENS_AFTER()` returns `432000` (5 days), `SETTLEMENT_CLOSES_AFTER()` returns `864000` (10 days) and `MAX_CAMPAIGN_DURATION()` returns `7776000` (90 days).
 - The source is verified on Basescan.
 
 ## Other Networks
