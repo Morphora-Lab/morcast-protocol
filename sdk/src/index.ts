@@ -1,3 +1,4 @@
+export { morcastEscrowAbi } from "./abi.js";
 export {
   type CanonicalValue,
   canonicalize,
@@ -32,6 +33,13 @@ export {
   retentionFactor,
   trunc6,
 } from "./metrics.js";
+export {
+  CAMPAIGN_STATUSES,
+  type CampaignStatus,
+  compareWithChain,
+  type OnChainCampaign,
+  readCampaign,
+} from "./onchain.js";
 export { allocatePayouts, type CreatorPayout, type CreatorScore } from "./payouts.js";
 export {
   creatorScore,
