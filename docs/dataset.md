@@ -91,7 +91,7 @@ Codes for compliance checks (required elements, semantic and visual requirements
 `verifyResultDataset` in the SDK, and the `morcast-verify` command, check that:
 
 - the document matches the schema;
-- `threshold = ceil(target / 100)`, the budget is positive and a multiple of 5, `startAt < endAt`, and the dataset was published after `endAt`;
+- `threshold = ceil(target / 100)`, the budget is positive and a multiple of 5, `startAt < endAt` with at most 90 days between them, and the dataset was published after `endAt`;
 - revision `"0"` has no previous hash and no issues, and later revisions have a previous hash;
 - items are in order, submission IDs are unique, and every submission was received before `endAt`;
 - `PASS` items have no reasons; `FAIL` items have sorted reasons, a primary reason among them, and a metric of `0`;

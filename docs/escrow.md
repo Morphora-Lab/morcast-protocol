@@ -20,6 +20,7 @@ The contract has no owner, no pause and no upgrade path. Changing a deployment s
 | Action | Allowed when |
 |---|---|
 | `createCampaign`, `cancel` | `t < startAt` |
+| Campaign window | `startAt ≤ t < endAt`, at most 90 days long (`MAX_CAMPAIGN_DURATION`) |
 | `settle` | `Day 5 ≤ t < Day 10` |
 | `withdrawBrand` of an unsettled campaign | `t ≥ Day 10` |
 | `claim`, `withdrawFee`, `withdrawBrand` of a settled campaign | Any time after settlement. Entitlements never expire. |
@@ -34,7 +35,7 @@ createCampaign ─► Funded ─┬─ cancel (t < startAt) ──────�
 
 | Function | Caller | Conditions | Effect |
 |---|---|---|---|
-| `createCampaign(token, budget, target, startAt, endAt, manifestHash)` | brand | `token` is USDC or MOR. `budget > 0` and `budget mod 5 == 0`. `target > 0`. `startAt < endAt`. `t < startAt`. The escrow's balance rises by exactly `budget`. | Pulls `budget`. Status `Funded`. Returns the new campaign ID. |
+| `createCampaign(token, budget, target, startAt, endAt, manifestHash)` | brand | `token` is USDC or MOR. `budget > 0` and `budget mod 5 == 0`. `target > 0`. `startAt < endAt` and `endAt − startAt ≤ 90 days`. `t < startAt`. The escrow's balance rises by exactly `budget`. | Pulls `budget`. Status `Funded`. Returns the new campaign ID. |
 | `cancel(id)` | brand | `Funded` and `t < startAt` | Status `Cancelled`. The budget goes to the brand. |
 | `settle(id, recognized, merkleRoot, resultHash)` | settler | `Funded` and `Day 5 ≤ t < Day 10`. `merkleRoot ≠ 0` when the pool is not empty. `resultHash ≠ 0`. | Computes spent, fee, pool and refund with the [settlement formula](settlement.md). Status `Settled`. |
 | `claim(id, wallet, amount, proof)` | anyone | `Settled`. The leaf is proven against `merkleRoot` and not yet claimed. `amount ≤ pool − creatorClaimed`. | Marks the leaf claimed. `amount` goes to `wallet`. |
