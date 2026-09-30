@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
-    "viem": "^2.57.1"
+    "viem": "^2.57.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

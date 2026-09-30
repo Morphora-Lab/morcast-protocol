@@ -6,6 +6,15 @@ export {
   parseDecimalString,
 } from "./canonical.js";
 export {
+  type DatasetCampaign,
+  type DatasetCreator,
+  type DatasetIssue,
+  type DatasetItem,
+  RESULT_SCHEMA,
+  type ResultDataset,
+  resultDatasetSchema,
+} from "./dataset.js";
+export {
   buildPayoutTree,
   EMPTY_ROOT,
   hashPair,
