@@ -69,22 +69,9 @@ Issues are raised after the first publication, so revision `"0"` has none.
 
 ## Reason Codes
 
-Codes defined by the specification:
+A `FAIL` item lists why it failed as upper-case codes (digits and underscores allowed), for example `NOT_PUBLIC`, `EDITED`, `NOT_MEASURABLE`, `MEDIA_MISMATCH` or `FRAUD`. The codes and the checks behind them belong to the MORCast platform's verification rules. The dataset records their outcome, and the verifier takes them as published.
 
-| Code | Meaning |
-|---|---|
-| `NOT_OWNER` | The content's author account is not linked to the submitting wallet. |
-| `ACCOUNT_MISMATCH` | The wallet already uses another account in this campaign, or the account is used by another wallet. |
-| `OVER_LIMIT` | The wallet exceeded the campaign's submission limit. |
-| `DUPLICATE` | The same content or performance is already counted. |
-| `OUT_OF_WINDOW` | The content was not posted within `[startAt, endAt)`. |
-| `EDITED` | Campaign-relevant content changed after capture in a way the manifest does not allow. |
-| `NOT_PUBLIC` | The content was not public at the `endAt` or Day-3 check. |
-| `NOT_MEASURABLE` | The metric could not be retrieved or computed. |
-| `FRAUD` | Fraud under the manifest's standard. |
-| `WITHDRAWN` | The creator withdrew the submission. |
-
-Codes for compliance checks (required elements, semantic and visual requirements) are defined by the verifier version pinned in the manifest. Every code is upper case, with digits and underscores allowed.
+Only accepted submissions are items. A submission rejected at the moment it is submitted, for example content the wallet does not own or a video that was already submitted, never appears in a dataset.
 
 ## Verification
 
