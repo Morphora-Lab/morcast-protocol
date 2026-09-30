@@ -45,6 +45,12 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
     uint256 public constant SETTLEMENT_CLOSES_AFTER = 10 days;
 
     /// @inheritdoc IMORCastEscrow
+    /// @dev Once a campaign has started, its budget stays escrowed until settlement or the Day-10
+    ///      refund, so a wrong `endAt` (for example milliseconds instead of seconds) would lock
+    ///      the budget for a very long time. Capping the length rules that out.
+    uint256 public constant MAX_CAMPAIGN_DURATION = 90 days;
+
+    /// @inheritdoc IMORCastEscrow
     address public immutable SETTLER;
 
     /// @inheritdoc IMORCastEscrow
@@ -112,8 +118,11 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
         // The target is the divisor of the settlement formula, so it must be positive.
         if (target == 0) revert InvalidTarget();
 
-        // The campaign window [startAt, endAt) must not be empty.
-        if (startAt >= endAt) revert InvalidSchedule(startAt, endAt);
+        // The campaign window [startAt, endAt) must not be empty and must last at most 90 days.
+        // `endAt - startAt` cannot underflow: the first condition is checked first.
+        if (startAt >= endAt || endAt - startAt > MAX_CAMPAIGN_DURATION) {
+            revert InvalidSchedule(startAt, endAt);
+        }
 
         // The deposit must be made before the campaign starts.
         if (block.timestamp >= startAt) revert CampaignStarted(startAt);
