@@ -1,3 +1,10 @@
+export {
+  integrationMetric,
+  RETENTION_SCALE,
+  type RetentionSample,
+  retentionFactor,
+  trunc6,
+} from "./metrics.js";
 export { allocatePayouts, type CreatorPayout, type CreatorScore } from "./payouts.js";
 export {
   creatorScore,

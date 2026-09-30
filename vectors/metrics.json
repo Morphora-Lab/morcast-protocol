@@ -1,0 +1,2949 @@
+{
+  "description": "Metric vectors. trunc6 truncates an exact decimal to millionths. Retention R_u (millionths) is the minimum truncated audienceWatchRatio over the samples inside [segmentStartSec/durationSec, segmentEndSec/durationSec] plus the nearest sample strictly before and strictly after, capped at 1,000,000; null when no sample exists. Integration metric q = views x R_u div 1,000,000.",
+  "trunc6": [
+    {
+      "input": "0.4567891234",
+      "output": "456789"
+    },
+    {
+      "input": "1",
+      "output": "1000000"
+    },
+    {
+      "input": "1.0",
+      "output": "1000000"
+    },
+    {
+      "input": "1.2345678",
+      "output": "1234567"
+    },
+    {
+      "input": "0.0000009",
+      "output": "0"
+    },
+    {
+      "input": "0.000001",
+      "output": "1"
+    },
+    {
+      "input": "2.5E-1",
+      "output": "250000"
+    },
+    {
+      "input": "1e2",
+      "output": "100000000"
+    },
+    {
+      "input": "0.9999999999",
+      "output": "999999"
+    },
+    {
+      "input": "0",
+      "output": "0"
+    }
+  ],
+  "retention": [
+    {
+      "name": "segment-spans-samples",
+      "description": "Samples 0.25-0.35 lie inside [xs, xe] = [0.25, 0.35]; 0.24 and 0.36 are the nearest outside.",
+      "segmentStartSec": "50",
+      "segmentEndSec": "70",
+      "durationSec": "200",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "0.9831003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "0.9762006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "0.9693009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "0.9624012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "0.9555015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "0.9486018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "0.9417000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "0.9348003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "0.9279006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "0.9210009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "0.9141012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "0.9072015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "0.9003018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "0.8934000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "0.8865003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "0.8796006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "0.8727009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "0.8658012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "0.8589015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "0.8520018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "0.8451000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "0.8382003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "0.8313006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "0.8244009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "0.8175012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "0.8106015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "0.8037018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "0.7968000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "0.7899003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "0.7830006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "0.7761009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "0.7692012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "0.7623015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "0.7554018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "0.7485000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "0.7416003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "0.7347006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "0.7278009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "0.7209012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "0.7140015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "0.7071018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "0.7002000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "0.6933003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "0.6864006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "0.6795009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "0.6726012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "0.6657015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "0.6588018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "0.6519000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "0.6450003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "0.6381006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "0.6312009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "0.6243012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "0.6174015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "0.6105018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "0.6036000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "0.5967003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "0.5898006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "0.5829009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "0.5760012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "0.5691015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "0.5622018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "0.5553000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "0.5484003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "0.5415006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "0.5346009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "0.5277012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "0.5208015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "0.5139018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "0.5070000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "0.5001003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "0.4932006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "0.4863009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "0.4794012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "0.4725015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "0.4656018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "0.4587000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "0.4518003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "0.4449006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "0.4380009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "0.4311012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "0.4242015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "0.4173018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "0.4104000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "0.4035003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "0.3966006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "0.3897009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "0.3828012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "0.3759015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "0.3690018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "0.3621000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "0.3552003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "0.3483006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "0.3414009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "0.3345012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "0.3276015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "0.3207018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "0.3138000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "0.3069003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "0.3000006000"
+        }
+      ],
+      "retention": "741600"
+    },
+    {
+      "name": "segment-between-samples",
+      "description": "No sample lies inside [0.123, 0.124]; only the nearest samples 0.12 and 0.13 count.",
+      "segmentStartSec": "123",
+      "segmentEndSec": "124",
+      "durationSec": "1000",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "0.9831003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "0.9762006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "0.9693009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "0.9624012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "0.9555015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "0.9486018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "0.9417000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "0.9348003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "0.9279006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "0.9210009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "0.9141012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "0.9072015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "0.9003018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "0.8934000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "0.8865003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "0.8796006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "0.8727009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "0.8658012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "0.8589015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "0.8520018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "0.8451000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "0.8382003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "0.8313006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "0.8244009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "0.8175012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "0.8106015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "0.8037018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "0.7968000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "0.7899003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "0.7830006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "0.7761009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "0.7692012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "0.7623015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "0.7554018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "0.7485000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "0.7416003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "0.7347006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "0.7278009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "0.7209012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "0.7140015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "0.7071018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "0.7002000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "0.6933003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "0.6864006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "0.6795009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "0.6726012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "0.6657015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "0.6588018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "0.6519000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "0.6450003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "0.6381006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "0.6312009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "0.6243012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "0.6174015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "0.6105018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "0.6036000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "0.5967003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "0.5898006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "0.5829009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "0.5760012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "0.5691015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "0.5622018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "0.5553000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "0.5484003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "0.5415006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "0.5346009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "0.5277012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "0.5208015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "0.5139018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "0.5070000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "0.5001003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "0.4932006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "0.4863009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "0.4794012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "0.4725015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "0.4656018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "0.4587000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "0.4518003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "0.4449006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "0.4380009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "0.4311012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "0.4242015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "0.4173018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "0.4104000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "0.4035003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "0.3966006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "0.3897009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "0.3828012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "0.3759015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "0.3690018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "0.3621000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "0.3552003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "0.3483006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "0.3414009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "0.3345012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "0.3276015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "0.3207018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "0.3138000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "0.3069003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "0.3000006000"
+        }
+      ],
+      "retention": "900301"
+    },
+    {
+      "name": "segment-at-start",
+      "description": "No sample lies before xs = 0; J is 0.01-0.10 plus the next sample 0.11.",
+      "segmentStartSec": "0",
+      "segmentEndSec": "10",
+      "durationSec": "100",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "0.9831003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "0.9762006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "0.9693009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "0.9624012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "0.9555015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "0.9486018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "0.9417000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "0.9348003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "0.9279006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "0.9210009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "0.9141012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "0.9072015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "0.9003018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "0.8934000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "0.8865003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "0.8796006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "0.8727009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "0.8658012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "0.8589015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "0.8520018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "0.8451000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "0.8382003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "0.8313006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "0.8244009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "0.8175012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "0.8106015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "0.8037018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "0.7968000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "0.7899003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "0.7830006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "0.7761009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "0.7692012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "0.7623015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "0.7554018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "0.7485000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "0.7416003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "0.7347006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "0.7278009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "0.7209012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "0.7140015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "0.7071018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "0.7002000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "0.6933003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "0.6864006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "0.6795009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "0.6726012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "0.6657015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "0.6588018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "0.6519000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "0.6450003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "0.6381006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "0.6312009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "0.6243012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "0.6174015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "0.6105018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "0.6036000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "0.5967003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "0.5898006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "0.5829009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "0.5760012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "0.5691015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "0.5622018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "0.5553000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "0.5484003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "0.5415006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "0.5346009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "0.5277012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "0.5208015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "0.5139018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "0.5070000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "0.5001003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "0.4932006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "0.4863009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "0.4794012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "0.4725015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "0.4656018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "0.4587000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "0.4518003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "0.4449006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "0.4380009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "0.4311012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "0.4242015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "0.4173018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "0.4104000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "0.4035003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "0.3966006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "0.3897009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "0.3828012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "0.3759015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "0.3690018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "0.3621000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "0.3552003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "0.3483006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "0.3414009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "0.3345012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "0.3276015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "0.3207018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "0.3138000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "0.3069003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "0.3000006000"
+        }
+      ],
+      "retention": "914101"
+    },
+    {
+      "name": "segment-at-end",
+      "description": "No sample lies after xe = 1; J is 0.90-1.00 plus the previous sample 0.89.",
+      "segmentStartSec": "90",
+      "segmentEndSec": "100",
+      "durationSec": "100",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "0.9831003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "0.9762006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "0.9693009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "0.9624012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "0.9555015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "0.9486018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "0.9417000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "0.9348003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "0.9279006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "0.9210009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "0.9141012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "0.9072015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "0.9003018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "0.8934000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "0.8865003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "0.8796006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "0.8727009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "0.8658012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "0.8589015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "0.8520018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "0.8451000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "0.8382003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "0.8313006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "0.8244009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "0.8175012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "0.8106015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "0.8037018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "0.7968000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "0.7899003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "0.7830006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "0.7761009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "0.7692012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "0.7623015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "0.7554018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "0.7485000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "0.7416003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "0.7347006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "0.7278009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "0.7209012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "0.7140015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "0.7071018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "0.7002000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "0.6933003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "0.6864006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "0.6795009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "0.6726012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "0.6657015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "0.6588018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "0.6519000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "0.6450003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "0.6381006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "0.6312009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "0.6243012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "0.6174015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "0.6105018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "0.6036000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "0.5967003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "0.5898006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "0.5829009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "0.5760012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "0.5691015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "0.5622018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "0.5553000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "0.5484003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "0.5415006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "0.5346009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "0.5277012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "0.5208015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "0.5139018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "0.5070000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "0.5001003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "0.4932006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "0.4863009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "0.4794012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "0.4725015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "0.4656018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "0.4587000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "0.4518003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "0.4449006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "0.4380009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "0.4311012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "0.4242015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "0.4173018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "0.4104000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "0.4035003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "0.3966006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "0.3897009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "0.3828012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "0.3759015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "0.3690018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "0.3621000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "0.3552003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "0.3483006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "0.3414009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "0.3345012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "0.3276015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "0.3207018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "0.3138000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "0.3069003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "0.3000006000"
+        }
+      ],
+      "retention": "300000"
+    },
+    {
+      "name": "bounds-are-inclusive",
+      "description": "xs = 0.33 and xe = 0.50 are samples themselves, so they are inside; 0.32 and 0.51 are the nearest outside.",
+      "segmentStartSec": "33",
+      "segmentEndSec": "50",
+      "durationSec": "100",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "0.9831003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "0.9762006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "0.9693009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "0.9624012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "0.9555015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "0.9486018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "0.9417000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "0.9348003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "0.9279006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "0.9210009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "0.9141012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "0.9072015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "0.9003018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "0.8934000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "0.8865003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "0.8796006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "0.8727009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "0.8658012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "0.8589015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "0.8520018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "0.8451000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "0.8382003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "0.8313006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "0.8244009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "0.8175012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "0.8106015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "0.8037018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "0.7968000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "0.7899003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "0.7830006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "0.7761009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "0.7692012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "0.7623015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "0.7554018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "0.7485000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "0.7416003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "0.7347006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "0.7278009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "0.7209012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "0.7140015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "0.7071018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "0.7002000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "0.6933003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "0.6864006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "0.6795009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "0.6726012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "0.6657015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "0.6588018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "0.6519000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "0.6450003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "0.6381006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "0.6312009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "0.6243012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "0.6174015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "0.6105018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "0.6036000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "0.5967003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "0.5898006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "0.5829009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "0.5760012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "0.5691015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "0.5622018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "0.5553000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "0.5484003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "0.5415006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "0.5346009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "0.5277012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "0.5208015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "0.5139018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "0.5070000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "0.5001003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "0.4932006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "0.4863009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "0.4794012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "0.4725015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "0.4656018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "0.4587000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "0.4518003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "0.4449006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "0.4380009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "0.4311012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "0.4242015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "0.4173018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "0.4104000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "0.4035003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "0.3966006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "0.3897009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "0.3828012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "0.3759015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "0.3690018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "0.3621000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "0.3552003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "0.3483006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "0.3414009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "0.3345012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "0.3276015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "0.3207018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "0.3138000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "0.3069003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "0.3000006000"
+        }
+      ],
+      "retention": "638100"
+    },
+    {
+      "name": "exact-rational-bounds",
+      "description": "xs = 1/3 exactly, so 0.33 is the nearest sample before and 0.32 (the curve minimum) is excluded. Rounding xs to 0.33 would wrongly include 0.32.",
+      "segmentStartSec": "1",
+      "segmentEndSec": "3",
+      "durationSec": "3",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "0.5581003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "0.5530006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "0.5479009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "0.5428012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "0.5377015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "0.5326018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "0.5275000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "0.5224003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "0.5173006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "0.5122009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "0.5071012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "0.5020015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "0.4969018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "0.4918000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "0.4867003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "0.4816006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "0.4765009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "0.4714012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "0.4663015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "0.4612018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "0.4561000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "0.4510003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "0.4459006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "0.4408009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "0.4357012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "0.4306015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "0.4255018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "0.4204000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "0.4153003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "0.4102006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "0.4051009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "0.4000012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "0.4051015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "0.4102018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "0.4153000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "0.4204003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "0.4255006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "0.4306009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "0.4357012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "0.4408015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "0.4459018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "0.4510000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "0.4561003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "0.4612006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "0.4663009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "0.4714012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "0.4765015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "0.4816018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "0.4867000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "0.4918003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "0.4969006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "0.5020009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "0.5071012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "0.5122015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "0.5173018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "0.5224000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "0.5275003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "0.5326006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "0.5377009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "0.5428012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "0.5479015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "0.5530018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "0.5581000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "0.5632003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "0.5683006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "0.5734009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "0.5785012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "0.5836015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "0.5887018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "0.5938000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "0.5989003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "0.6040006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "0.6091009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "0.6142012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "0.6193015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "0.6244018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "0.6295000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "0.6346003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "0.6397006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "0.6448009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "0.6499012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "0.6550015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "0.6601018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "0.6652000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "0.6703003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "0.6754006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "0.6805009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "0.6856012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "0.6907015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "0.6958018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "0.7009000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "0.7060003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "0.7111006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "0.7162009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "0.7213012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "0.7264015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "0.7315018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "0.7366000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "0.7417003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "0.7468006000"
+        }
+      ],
+      "retention": "405101"
+    },
+    {
+      "name": "ratio-above-one-is-capped",
+      "description": "Every ratio in J is above 1, so R_u is capped at 1,000,000.",
+      "segmentStartSec": "10",
+      "segmentEndSec": "20",
+      "durationSec": "100",
+      "samples": [
+        {
+          "position": "0.01",
+          "ratio": "1.8931003000"
+        },
+        {
+          "position": "0.02",
+          "ratio": "1.8862006000"
+        },
+        {
+          "position": "0.03",
+          "ratio": "1.8793009000"
+        },
+        {
+          "position": "0.04",
+          "ratio": "1.8724012000"
+        },
+        {
+          "position": "0.05",
+          "ratio": "1.8655015000"
+        },
+        {
+          "position": "0.06",
+          "ratio": "1.8586018000"
+        },
+        {
+          "position": "0.07",
+          "ratio": "1.8517000000"
+        },
+        {
+          "position": "0.08",
+          "ratio": "1.8448003000"
+        },
+        {
+          "position": "0.09",
+          "ratio": "1.8379006000"
+        },
+        {
+          "position": "0.10",
+          "ratio": "1.8310009000"
+        },
+        {
+          "position": "0.11",
+          "ratio": "1.8241012000"
+        },
+        {
+          "position": "0.12",
+          "ratio": "1.8172015000"
+        },
+        {
+          "position": "0.13",
+          "ratio": "1.8103018000"
+        },
+        {
+          "position": "0.14",
+          "ratio": "1.8034000000"
+        },
+        {
+          "position": "0.15",
+          "ratio": "1.7965003000"
+        },
+        {
+          "position": "0.16",
+          "ratio": "1.7896006000"
+        },
+        {
+          "position": "0.17",
+          "ratio": "1.7827009000"
+        },
+        {
+          "position": "0.18",
+          "ratio": "1.7758012000"
+        },
+        {
+          "position": "0.19",
+          "ratio": "1.7689015000"
+        },
+        {
+          "position": "0.20",
+          "ratio": "1.7620018000"
+        },
+        {
+          "position": "0.21",
+          "ratio": "1.7551000000"
+        },
+        {
+          "position": "0.22",
+          "ratio": "1.7482003000"
+        },
+        {
+          "position": "0.23",
+          "ratio": "1.7413006000"
+        },
+        {
+          "position": "0.24",
+          "ratio": "1.7344009000"
+        },
+        {
+          "position": "0.25",
+          "ratio": "1.7275012000"
+        },
+        {
+          "position": "0.26",
+          "ratio": "1.7206015000"
+        },
+        {
+          "position": "0.27",
+          "ratio": "1.7137018000"
+        },
+        {
+          "position": "0.28",
+          "ratio": "1.7068000000"
+        },
+        {
+          "position": "0.29",
+          "ratio": "1.6999003000"
+        },
+        {
+          "position": "0.30",
+          "ratio": "1.6930006000"
+        },
+        {
+          "position": "0.31",
+          "ratio": "1.6861009000"
+        },
+        {
+          "position": "0.32",
+          "ratio": "1.6792012000"
+        },
+        {
+          "position": "0.33",
+          "ratio": "1.6723015000"
+        },
+        {
+          "position": "0.34",
+          "ratio": "1.6654018000"
+        },
+        {
+          "position": "0.35",
+          "ratio": "1.6585000000"
+        },
+        {
+          "position": "0.36",
+          "ratio": "1.6516003000"
+        },
+        {
+          "position": "0.37",
+          "ratio": "1.6447006000"
+        },
+        {
+          "position": "0.38",
+          "ratio": "1.6378009000"
+        },
+        {
+          "position": "0.39",
+          "ratio": "1.6309012000"
+        },
+        {
+          "position": "0.40",
+          "ratio": "1.6240015000"
+        },
+        {
+          "position": "0.41",
+          "ratio": "1.6171018000"
+        },
+        {
+          "position": "0.42",
+          "ratio": "1.6102000000"
+        },
+        {
+          "position": "0.43",
+          "ratio": "1.6033003000"
+        },
+        {
+          "position": "0.44",
+          "ratio": "1.5964006000"
+        },
+        {
+          "position": "0.45",
+          "ratio": "1.5895009000"
+        },
+        {
+          "position": "0.46",
+          "ratio": "1.5826012000"
+        },
+        {
+          "position": "0.47",
+          "ratio": "1.5757015000"
+        },
+        {
+          "position": "0.48",
+          "ratio": "1.5688018000"
+        },
+        {
+          "position": "0.49",
+          "ratio": "1.5619000000"
+        },
+        {
+          "position": "0.50",
+          "ratio": "1.5550003000"
+        },
+        {
+          "position": "0.51",
+          "ratio": "1.5481006000"
+        },
+        {
+          "position": "0.52",
+          "ratio": "1.5412009000"
+        },
+        {
+          "position": "0.53",
+          "ratio": "1.5343012000"
+        },
+        {
+          "position": "0.54",
+          "ratio": "1.5274015000"
+        },
+        {
+          "position": "0.55",
+          "ratio": "1.5205018000"
+        },
+        {
+          "position": "0.56",
+          "ratio": "1.5136000000"
+        },
+        {
+          "position": "0.57",
+          "ratio": "1.5067003000"
+        },
+        {
+          "position": "0.58",
+          "ratio": "1.4998006000"
+        },
+        {
+          "position": "0.59",
+          "ratio": "1.4929009000"
+        },
+        {
+          "position": "0.60",
+          "ratio": "1.4860012000"
+        },
+        {
+          "position": "0.61",
+          "ratio": "1.4791015000"
+        },
+        {
+          "position": "0.62",
+          "ratio": "1.4722018000"
+        },
+        {
+          "position": "0.63",
+          "ratio": "1.4653000000"
+        },
+        {
+          "position": "0.64",
+          "ratio": "1.4584003000"
+        },
+        {
+          "position": "0.65",
+          "ratio": "1.4515006000"
+        },
+        {
+          "position": "0.66",
+          "ratio": "1.4446009000"
+        },
+        {
+          "position": "0.67",
+          "ratio": "1.4377012000"
+        },
+        {
+          "position": "0.68",
+          "ratio": "1.4308015000"
+        },
+        {
+          "position": "0.69",
+          "ratio": "1.4239018000"
+        },
+        {
+          "position": "0.70",
+          "ratio": "1.4170000000"
+        },
+        {
+          "position": "0.71",
+          "ratio": "1.4101003000"
+        },
+        {
+          "position": "0.72",
+          "ratio": "1.4032006000"
+        },
+        {
+          "position": "0.73",
+          "ratio": "1.3963009000"
+        },
+        {
+          "position": "0.74",
+          "ratio": "1.3894012000"
+        },
+        {
+          "position": "0.75",
+          "ratio": "1.3825015000"
+        },
+        {
+          "position": "0.76",
+          "ratio": "1.3756018000"
+        },
+        {
+          "position": "0.77",
+          "ratio": "1.3687000000"
+        },
+        {
+          "position": "0.78",
+          "ratio": "1.3618003000"
+        },
+        {
+          "position": "0.79",
+          "ratio": "1.3549006000"
+        },
+        {
+          "position": "0.80",
+          "ratio": "1.3480009000"
+        },
+        {
+          "position": "0.81",
+          "ratio": "1.3411012000"
+        },
+        {
+          "position": "0.82",
+          "ratio": "1.3342015000"
+        },
+        {
+          "position": "0.83",
+          "ratio": "1.3273018000"
+        },
+        {
+          "position": "0.84",
+          "ratio": "1.3204000000"
+        },
+        {
+          "position": "0.85",
+          "ratio": "1.3135003000"
+        },
+        {
+          "position": "0.86",
+          "ratio": "1.3066006000"
+        },
+        {
+          "position": "0.87",
+          "ratio": "1.2997009000"
+        },
+        {
+          "position": "0.88",
+          "ratio": "1.2928012000"
+        },
+        {
+          "position": "0.89",
+          "ratio": "1.2859015000"
+        },
+        {
+          "position": "0.90",
+          "ratio": "1.2790018000"
+        },
+        {
+          "position": "0.91",
+          "ratio": "1.2721000000"
+        },
+        {
+          "position": "0.92",
+          "ratio": "1.2652003000"
+        },
+        {
+          "position": "0.93",
+          "ratio": "1.2583006000"
+        },
+        {
+          "position": "0.94",
+          "ratio": "1.2514009000"
+        },
+        {
+          "position": "0.95",
+          "ratio": "1.2445012000"
+        },
+        {
+          "position": "0.96",
+          "ratio": "1.2376015000"
+        },
+        {
+          "position": "0.97",
+          "ratio": "1.2307018000"
+        },
+        {
+          "position": "0.98",
+          "ratio": "1.2238000000"
+        },
+        {
+          "position": "0.99",
+          "ratio": "1.2169003000"
+        },
+        {
+          "position": "1.00",
+          "ratio": "1.2100006000"
+        }
+      ],
+      "retention": "1000000"
+    },
+    {
+      "name": "no-samples",
+      "description": "Without samples J cannot be formed, so the item is not measurable.",
+      "segmentStartSec": "10",
+      "segmentEndSec": "20",
+      "durationSec": "100",
+      "samples": [],
+      "retention": null
+    }
+  ],
+  "integration": [
+    {
+      "name": "spec-13-retention",
+      "description": "Section 13 example: V = 123,457 and minimum ratio 0.4567891234.",
+      "views": "123457",
+      "retention": "456789",
+      "metric": "56393"
+    },
+    {
+      "name": "full-retention",
+      "description": "R_u = 1,000,000 keeps every view.",
+      "views": "98765",
+      "retention": "1000000",
+      "metric": "98765"
+    },
+    {
+      "name": "zero-retention",
+      "description": "R_u = 0 counts no views.",
+      "views": "98765",
+      "retention": "0",
+      "metric": "0"
+    }
+  ]
+}
