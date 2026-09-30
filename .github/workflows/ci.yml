@@ -17,6 +17,9 @@ jobs:
     env:
       # The "ci" profile in foundry.toml runs more fuzz and invariant iterations.
       FOUNDRY_PROFILE: ci
+      # Fork tests run against Base mainnet. A private endpoint can be provided as the
+      # BASE_RPC_URL secret; otherwise the public endpoint is used.
+      BASE_RPC_URL: ${{ secrets.BASE_RPC_URL || 'https://mainnet.base.org' }}
     steps:
       - uses: actions/checkout@v7
         with:
