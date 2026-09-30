@@ -4,7 +4,7 @@ TypeScript implementation of the MORCast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Settlement, payouts, metrics, document hashing and payout Merkle trees are implemented and tested against the shared vectors in [`../vectors`](../vectors). The result verifier is planned. The package is not yet published to npm.
+Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). The package is not yet published to npm.
 
 ## Usage
 
@@ -49,6 +49,26 @@ tree.leaves[0].proof;    // proof for claim()
 hashCanonical({ campaignId: "1", status: "PASS" }); // keccak256 of the canonical JSON
 ```
 
+Verify a published result dataset, on its own or against the escrow:
+
+```ts
+import { compareWithChain, readCampaign, verifyResultDataset } from "@morcast/protocol";
+
+const report = verifyResultDataset(JSON.parse(readFileSync("result.json", "utf8")));
+report.valid;       // every check passed
+report.errors;      // [{ path: "totals.fee", message: "expected 12800000000" }, ...]
+report.resultHash;  // the hash that settle() must use
+
+const onChain = await readCampaign(publicClient, escrowAddress, 1n);
+compareWithChain(report.dataset, onChain, report.resultHash); // [] when everything matches
+```
+
+The same checks are available as a command:
+
+```sh
+morcast-verify result.json [--rpc-url <url>] [--json]
+```
+
 ## API
 
 All values are `bigint`. Every function throws a `RangeError` on invalid input.
@@ -68,8 +88,13 @@ All values are `bigint`. Every function throws a `RangeError` on invalid input.
 | `buildPayoutTree(campaignId, payouts)` | `{ root, leaves }`, each leaf with its hash and proof. Zero payouts are left out. |
 | `payoutLeafHash(campaignId, wallet, amount)` | The leaf hash, identical to `MORCastEscrow.leafHash` |
 | `verifyPayoutProof(root, campaignId, wallet, amount, proof)` | Whether `claim` would accept the proof |
+| `verifyResultDataset(input)` | `{ valid, errors, resultHash, dataset }` for a published result dataset |
+| `resultDatasetSchema` | The dataset schema (zod), `morcast.result.v1` |
+| `readCampaign(client, escrow, campaignId)` | The campaign as stored by the escrow |
+| `compareWithChain(dataset, campaign, resultHash)` | Mismatches between a dataset and the on-chain campaign |
+| `morcastEscrowAbi` | ABI of `MORCastEscrow`, generated from the compiled contract |
 
-The rules are specified in [`docs/settlement.md`](../docs/settlement.md), [`docs/metrics.md`](../docs/metrics.md) and [`docs/hashing.md`](../docs/hashing.md).
+The rules are specified in [`docs/settlement.md`](../docs/settlement.md), [`docs/metrics.md`](../docs/metrics.md), [`docs/hashing.md`](../docs/hashing.md) and [`docs/dataset.md`](../docs/dataset.md).
 
 ## Development
 
@@ -80,5 +105,9 @@ pnpm install
 pnpm test        # every case in ../vectors plus property tests
 pnpm lint        # Biome
 pnpm typecheck
-pnpm build       # emits dist/
+pnpm build       # emits dist/, including the morcast-verify command (dist/bin.js)
 ```
+
+`src/abi.ts` is generated from the compiled contract: `forge build && node sdk/scripts/generate-abi.mjs` from the repository root. CI fails if it is out of date.
+
+`test/fixtures/example.ts` builds [`examples/result-dataset.json`](../examples/result-dataset.json); a test fails if they differ. After changing the fixture, run `UPDATE_EXAMPLES=1 pnpm test` to rewrite the file.

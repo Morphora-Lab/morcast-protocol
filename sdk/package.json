@@ -1,7 +1,7 @@
 {
   "name": "@morcast/protocol",
   "version": "0.1.0",
-  "description": "Settlement arithmetic, creator payouts, campaign metrics, document hashing and payout Merkle trees of the MORCast Payment Protocol.",
+  "description": "Settlement arithmetic, creator payouts, campaign metrics, document hashing, payout Merkle trees and result dataset verification for the MORCast Payment Protocol.",
   "license": "MIT",
   "private": true,
   "type": "module",
@@ -12,6 +12,9 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
+  },
+  "bin": {
+    "morcast-verify": "./dist/bin.js"
   },
   "files": [
     "dist"
@@ -29,7 +32,8 @@
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
-    "viem": "^2.57.1"
+    "viem": "^2.57.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

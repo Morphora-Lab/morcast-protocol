@@ -1,3 +1,4 @@
+export { morcastEscrowAbi } from "./abi.js";
 export {
   type CanonicalValue,
   canonicalize,
@@ -5,6 +6,15 @@ export {
   hashCanonical,
   parseDecimalString,
 } from "./canonical.js";
+export {
+  type DatasetCampaign,
+  type DatasetCreator,
+  type DatasetIssue,
+  type DatasetItem,
+  RESULT_SCHEMA,
+  type ResultDataset,
+  resultDatasetSchema,
+} from "./dataset.js";
 export {
   buildPayoutTree,
   EMPTY_ROOT,
@@ -23,6 +33,13 @@ export {
   retentionFactor,
   trunc6,
 } from "./metrics.js";
+export {
+  CAMPAIGN_STATUSES,
+  type CampaignStatus,
+  compareWithChain,
+  type OnChainCampaign,
+  readCampaign,
+} from "./onchain.js";
 export { allocatePayouts, type CreatorPayout, type CreatorScore } from "./payouts.js";
 export {
   creatorScore,
@@ -33,3 +50,8 @@ export {
   split,
 } from "./settlement.js";
 export { assertUint256, MAX_UINT256 } from "./uint.js";
+export {
+  type VerificationError,
+  type VerificationReport,
+  verifyResultDataset,
+} from "./verify.js";
