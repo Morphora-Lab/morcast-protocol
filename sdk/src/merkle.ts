@@ -68,7 +68,7 @@ export function payoutLeafHash(campaignId: bigint, wallet: Address, amount: bigi
  * {@link EMPTY_ROOT}; the escrow accepts a zero root only when the creator pool is empty.
  *
  * @throws RangeError if the campaign ID or an amount is not a uint256, the campaign ID is zero,
- *         or a wallet is invalid or repeated.
+ *         or a wallet is invalid, repeated or the zero address.
  */
 export function buildPayoutTree(campaignId: bigint, payouts: readonly Payout[]): PayoutTree {
   assertUint256(campaignId, "campaignId");
@@ -127,6 +127,8 @@ function validatePayouts(payouts: readonly Payout[]): void {
   const seen = new Set<string>();
   for (const { wallet, amount } of payouts) {
     if (!isAddress(wallet, { strict: false })) throw new RangeError(`invalid wallet ${wallet}`);
+    // Tokens refuse transfers to the zero address, so such a payout could never be claimed.
+    if (BigInt(wallet) === 0n) throw new RangeError("a payout cannot go to the zero address");
     const key = wallet.toLowerCase();
     if (seen.has(key)) throw new RangeError(`duplicate wallet ${wallet}`);
     seen.add(key);

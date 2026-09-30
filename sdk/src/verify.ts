@@ -67,8 +67,8 @@ export function verifyResultDataset(input: unknown): VerificationReport {
 
   checkHeader(dataset, fail);
   checkItems(dataset, fail);
-  checkCreators(dataset, fail);
-  checkTotalsAndMerkle(dataset, fail);
+  const creatorsValid = checkCreators(dataset, fail);
+  checkTotalsAndMerkle(dataset, creatorsValid, fail);
   checkIssues(dataset, fail);
 
   return { valid: errors.length === 0, resultHash, errors, dataset };
@@ -200,13 +200,27 @@ function checkIntegration(item: DatasetItem, path: string, fail: Fail): void {
 // Creators
 // ---------------------------------------------------------------------------------------------
 
-function checkCreators(d: ResultDataset, fail: Fail): void {
+/**
+ * Checks the creator list. Returns false when the list itself is unusable (wrong wallets, order or
+ * duplicates, or a wallet that can never be paid), in which case payouts are not recomputed.
+ */
+function checkCreators(d: ResultDataset, fail: Fail): boolean {
+  let valid = true;
+
+  // A payout to the zero address or to the escrow itself could never leave the escrow.
+  d.creators.forEach((creator, i) => {
+    if (BigInt(creator.wallet) === 0n || creator.wallet === d.escrow) {
+      fail(`creators[${i}].wallet`, "must not be the zero address or the escrow contract");
+      valid = false;
+    }
+  });
+
   // Expected: one creator per wallet with an item, ordered by wallet address.
   const wallets = [...new Set(d.items.map((item) => item.wallet))].sort();
   const listed = d.creators.map((creator) => creator.wallet);
   if (wallets.join() !== listed.join()) {
     fail("creators", "must list each wallet with an item exactly once, ordered by address");
-    return;
+    return false;
   }
 
   const threshold = n(d.campaign.threshold);
@@ -225,13 +239,14 @@ function checkCreators(d: ResultDataset, fail: Fail): void {
       fail(`${path}.account`, `expected ${account}, the account of its PASS items`);
     }
   });
+  return valid;
 }
 
 // ---------------------------------------------------------------------------------------------
 // Totals, payouts and Merkle tree
 // ---------------------------------------------------------------------------------------------
 
-function checkTotalsAndMerkle(d: ResultDataset, fail: Fail): void {
+function checkTotalsAndMerkle(d: ResultDataset, creatorsValid: boolean, fail: Fail): void {
   const recognized = d.creators.reduce((sum, creator) => sum + n(creator.score), 0n);
   if (n(d.totals.recognized) !== recognized) {
     fail("totals.recognized", `expected the sum of scores, ${recognized}`);
@@ -245,6 +260,9 @@ function checkTotalsAndMerkle(d: ResultDataset, fail: Fail): void {
   for (const key of ["spent", "fee", "pool", "refund"] as const) {
     if (n(d.totals[key]) !== expected[key]) fail(`totals.${key}`, `expected ${expected[key]}`);
   }
+
+  // Payouts and leaves are only recomputed over a valid creator list (errors already reported).
+  if (!creatorsValid) return;
 
   // Payouts follow the allocation rule over the creators' scores.
   const payouts = allocatePayouts(

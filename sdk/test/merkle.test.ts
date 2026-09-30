@@ -131,5 +131,6 @@ describe("buildPayoutTree", () => {
       ]),
     ).toThrow(/duplicate/);
     expect(() => buildPayoutTree(1n, [{ wallet: wallet(1n), amount: -1n }])).toThrow(RangeError);
+    expect(() => buildPayoutTree(1n, [{ wallet: wallet(0n), amount: 1n }])).toThrow(/zero address/);
   });
 });
