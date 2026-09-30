@@ -1,0 +1,144 @@
+{
+  "description": "Creator payout vectors: base = pool x score div S; leftover = pool - sum(base) is handed out one unit each by remainder descending, then wallet address ascending. Integers are decimal strings; wallets are lowercase hex.",
+  "cases": [
+    {
+      "name": "spec-13-partial-delivery",
+      "description": "Section 13 partial delivery: pool 51,200 USDC; the creator below M has score 0 and is not listed.",
+      "pool": "51200000000",
+      "creators": [
+        {
+          "wallet": "0x00000000000000000000000000000000000000c1",
+          "score": "300000",
+          "payout": "24000000000"
+        },
+        {
+          "wallet": "0x00000000000000000000000000000000000000c2",
+          "score": "180000",
+          "payout": "14400000000"
+        },
+        {
+          "wallet": "0x00000000000000000000000000000000000000c3",
+          "score": "120000",
+          "payout": "9600000000"
+        },
+        {
+          "wallet": "0x00000000000000000000000000000000000000c4",
+          "score": "40000",
+          "payout": "3200000000"
+        }
+      ]
+    },
+    {
+      "name": "spec-13-over-delivery",
+      "description": "Section 13 over-delivery: pool 80,000 USDC, S = 1,500,000; the creator with 300,000 receives 16,000 USDC.",
+      "pool": "80000000000",
+      "creators": [
+        {
+          "wallet": "0x00000000000000000000000000000000000000d1",
+          "score": "300000",
+          "payout": "16000000000"
+        },
+        {
+          "wallet": "0x00000000000000000000000000000000000000d2",
+          "score": "700000",
+          "payout": "37333333333"
+        },
+        {
+          "wallet": "0x00000000000000000000000000000000000000d3",
+          "score": "500000",
+          "payout": "26666666667"
+        }
+      ]
+    },
+    {
+      "name": "spec-13-integer-vector",
+      "description": "Section 13 integer vector: one leftover unit goes to the largest remainder (0x0a).",
+      "pool": "266933332",
+      "creators": [
+        {
+          "wallet": "0x000000000000000000000000000000000000000a",
+          "score": "500",
+          "payout": "133333333"
+        },
+        {
+          "wallet": "0x000000000000000000000000000000000000000b",
+          "score": "400",
+          "payout": "106666666"
+        },
+        {
+          "wallet": "0x000000000000000000000000000000000000000c",
+          "score": "101",
+          "payout": "26933333"
+        }
+      ]
+    },
+    {
+      "name": "spec-13-tie",
+      "description": "Section 13 tie vector: equal remainders, so the two leftover units go to the lowest wallet addresses.",
+      "pool": "800000000",
+      "creators": [
+        {
+          "wallet": "0x0000000000000000000000000000000000000003",
+          "score": "1000",
+          "payout": "266666666"
+        },
+        {
+          "wallet": "0x0000000000000000000000000000000000000001",
+          "score": "1000",
+          "payout": "266666667"
+        },
+        {
+          "wallet": "0x0000000000000000000000000000000000000002",
+          "score": "1000",
+          "payout": "266666667"
+        }
+      ]
+    },
+    {
+      "name": "single-creator",
+      "description": "A single creator receives the whole pool.",
+      "pool": "5",
+      "creators": [
+        {
+          "wallet": "0x00000000000000000000000000000000000000e1",
+          "score": "7",
+          "payout": "5"
+        }
+      ]
+    },
+    {
+      "name": "remainder-beats-address",
+      "description": "A larger remainder wins the leftover unit over a lower address.",
+      "pool": "10",
+      "creators": [
+        {
+          "wallet": "0x0000000000000000000000000000000000000001",
+          "score": "1",
+          "payout": "3"
+        },
+        {
+          "wallet": "0x0000000000000000000000000000000000000002",
+          "score": "2",
+          "payout": "7"
+        }
+      ]
+    },
+    {
+      "name": "zero-pool",
+      "description": "An empty pool pays nothing.",
+      "pool": "0",
+      "creators": [
+        {
+          "wallet": "0x00000000000000000000000000000000000000f1",
+          "score": "5",
+          "payout": "0"
+        },
+        {
+          "wallet": "0x00000000000000000000000000000000000000f2",
+          "score": "9",
+          "payout": "0"
+        }
+      ]
+    }
+  ]
+}
