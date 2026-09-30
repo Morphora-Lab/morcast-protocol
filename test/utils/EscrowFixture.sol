@@ -30,6 +30,7 @@ abstract contract EscrowFixture is Test {
     MockERC20 internal mor;
     MORCastEscrow internal escrow;
 
+    address internal owner = makeAddr("owner");
     address internal settler = makeAddr("settler");
     address internal treasury = makeAddr("treasury");
     address internal brand = makeAddr("brand");
@@ -44,7 +45,7 @@ abstract contract EscrowFixture is Test {
 
         usdc = new MockERC20("USD Coin", "USDC", 6);
         mor = new MockERC20("MorpheusAI", "MOR", 18);
-        escrow = new MORCastEscrow(settler, treasury, address(usdc), address(mor));
+        escrow = new MORCastEscrow(owner, settler, treasury, _tokens(address(usdc), address(mor)));
 
         _fund(brand, usdc, 10 * BUDGET);
         _fund(brand, mor, 1_000_000e18);
@@ -53,6 +54,18 @@ abstract contract EscrowFixture is Test {
     // -------------------------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------------------------
+
+    /// @dev A token list for the escrow constructor.
+    function _tokens(address a) internal pure returns (address[] memory tokens) {
+        tokens = new address[](1);
+        tokens[0] = a;
+    }
+
+    function _tokens(address a, address b) internal pure returns (address[] memory tokens) {
+        tokens = new address[](2);
+        tokens[0] = a;
+        tokens[1] = b;
+    }
 
     /// @dev Mints `amount` to `account` and approves the escrow to pull it.
     function _fund(address account, MockERC20 token, uint256 amount) internal {

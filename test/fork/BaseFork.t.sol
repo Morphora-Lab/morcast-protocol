@@ -35,7 +35,10 @@ contract BaseForkTest is Test {
         }
         vm.createSelectFork(rpc);
 
-        escrow = new MORCastEscrow(settler, treasury, USDC, MOR);
+        address[] memory tokens = new address[](2);
+        tokens[0] = USDC;
+        tokens[1] = MOR;
+        escrow = new MORCastEscrow(makeAddr("owner"), settler, treasury, tokens);
         startAt = uint64(block.timestamp + 1 days);
         endAt = uint64(block.timestamp + 15 days);
     }

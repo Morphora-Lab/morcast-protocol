@@ -12,8 +12,8 @@ import {EscrowHandler} from "./EscrowHandler.sol";
 
 /// @notice Global properties that must hold after every sequence of escrow actions.
 /// @dev The fuzzer calls random handler actions (create, cancel, warp, settle, claim,
-///      withdrawFee, withdrawBrand) across many campaigns in both tokens, and checks every
-///      invariant below after each call.
+///      withdrawFee, withdrawBrand, and the owner actions) across many campaigns in both tokens,
+///      and checks every invariant below after each call.
 contract EscrowInvariantsTest is StdInvariant, Test {
     MockERC20 internal usdc;
     MockERC20 internal mor;
@@ -25,13 +25,15 @@ contract EscrowInvariantsTest is StdInvariant, Test {
 
         usdc = new MockERC20("USD Coin", "USDC", 6);
         mor = new MockERC20("MorpheusAI", "MOR", 18);
-        escrow = new MORCastEscrow(
-            makeAddr("settler"), makeAddr("treasury"), address(usdc), address(mor)
-        );
-        handler = new EscrowHandler(escrow, usdc, mor, makeAddr("settler"));
+        address[] memory tokens = new address[](2);
+        tokens[0] = address(usdc);
+        tokens[1] = address(mor);
+        escrow =
+            new MORCastEscrow(makeAddr("owner"), makeAddr("settler"), makeAddr("treasury"), tokens);
+        handler = new EscrowHandler(escrow, usdc, mor);
 
         // Only the handler's actions are called; views and helpers are excluded.
-        bytes4[] memory selectors = new bytes4[](7);
+        bytes4[] memory selectors = new bytes4[](14);
         selectors[0] = EscrowHandler.createCampaign.selector;
         selectors[1] = EscrowHandler.cancel.selector;
         selectors[2] = EscrowHandler.warp.selector;
@@ -39,6 +41,13 @@ contract EscrowInvariantsTest is StdInvariant, Test {
         selectors[4] = EscrowHandler.claim.selector;
         selectors[5] = EscrowHandler.withdrawFee.selector;
         selectors[6] = EscrowHandler.withdrawBrand.selector;
+        selectors[7] = EscrowHandler.rotateSettler.selector;
+        selectors[8] = EscrowHandler.rotateTreasury.selector;
+        selectors[9] = EscrowHandler.toggleCreationPaused.selector;
+        selectors[10] = EscrowHandler.toggleCampaignToken.selector;
+        selectors[11] = EscrowHandler.voidCampaign.selector;
+        selectors[12] = EscrowHandler.sendStrayTokens.selector;
+        selectors[13] = EscrowHandler.recoverTokens.selector;
         targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
         targetContract(address(handler));
     }
@@ -50,8 +59,9 @@ contract EscrowInvariantsTest is StdInvariant, Test {
         assertEq(mor.balanceOf(address(escrow)), handler.ghostBalance(address(mor)), "MOR");
     }
 
-    /// @notice The escrow holds exactly what it still owes according to its own records:
-    ///         funded budgets, unpaid fees, unpaid refunds and unclaimed creator pools.
+    /// @notice The escrow holds exactly what it still owes according to its own records
+    ///         (funded budgets, unpaid fees, unpaid refunds and unclaimed creator pools), plus
+    ///         stray tokens; `totalOwed` always equals what it owes.
     function invariant_balancesMatchOutstandingObligations() public view {
         uint256 owedUsdc;
         uint256 owedMor;
@@ -63,8 +73,15 @@ contract EscrowInvariantsTest is StdInvariant, Test {
             else owedMor += owed;
         }
 
-        assertEq(usdc.balanceOf(address(escrow)), owedUsdc, "USDC");
-        assertEq(mor.balanceOf(address(escrow)), owedMor, "MOR");
+        // The escrow's own ledger agrees with its campaign records...
+        assertEq(escrow.totalOwed(address(usdc)), owedUsdc, "USDC ledger");
+        assertEq(escrow.totalOwed(address(mor)), owedMor, "MOR ledger");
+
+        // ...and its balance is exactly what it owes plus stray tokens not yet recovered.
+        assertEq(
+            usdc.balanceOf(address(escrow)), owedUsdc + handler.ghostStray(address(usdc)), "USDC"
+        );
+        assertEq(mor.balanceOf(address(escrow)), owedMor + handler.ghostStray(address(mor)), "MOR");
     }
 
     /// @notice Every settled campaign follows the settlement formula exactly, never pays out

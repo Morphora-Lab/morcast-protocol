@@ -14,21 +14,27 @@ import {MockERC20} from "../utils/Tokens.sol";
 /// @dev The fuzzer calls these functions with random arguments. Each function turns the random
 ///      input into a valid action (or does nothing if no valid action exists) and records what
 ///      the escrow should hold afterwards in `ghostBalance`, independently of the escrow's own
-///      bookkeeping.
+///      bookkeeping. Owner actions (settler and treasury rotation, pausing, token allowlist,
+///      voiding, recovering stray tokens) are exercised too.
 contract EscrowHandler is Test {
     MORCastEscrow public immutable escrow;
     MockERC20 public immutable usdc;
     MockERC20 public immutable mor;
-    address public immutable settler;
+    address public immutable owner;
 
     /// @notice Tokens the escrow should hold, per token, according to this handler.
     mapping(address token => uint256) public ghostBalance;
+
+    /// @notice Tokens sent to the escrow outside any campaign and not yet recovered.
+    mapping(address token => uint256) public ghostStray;
 
     /// @notice Number of successful calls per action, useful when debugging a failing run.
     mapping(string action => uint256) public calls;
 
     address[] internal _brands;
     address[] internal _creators;
+    address[] internal _settlers;
+    address[] internal _treasuries;
     uint256[] internal _ids;
 
     /// @dev Payouts fixed at settlement: wallets, amounts, Merkle leaves and claim status.
@@ -37,11 +43,18 @@ contract EscrowHandler is Test {
     mapping(uint256 id => bytes32[]) internal _payoutLeaves;
     mapping(uint256 id => mapping(uint256 index => bool)) internal _payoutClaimed;
 
-    constructor(MORCastEscrow escrow_, MockERC20 usdc_, MockERC20 mor_, address settler_) {
+    constructor(MORCastEscrow escrow_, MockERC20 usdc_, MockERC20 mor_) {
         escrow = escrow_;
         usdc = usdc_;
         mor = mor_;
-        settler = settler_;
+        owner = escrow_.owner();
+
+        // Candidate settlers include the zero address, which disables settlement.
+        _settlers.push(escrow_.settler());
+        _settlers.push(makeAddr("settler B"));
+        _settlers.push(address(0));
+        _treasuries.push(escrow_.treasury());
+        _treasuries.push(makeAddr("treasury B"));
 
         for (uint256 i; i < 3; i++) {
             _brands.push(makeAddr(string.concat("brand ", vm.toString(i))));
@@ -70,6 +83,7 @@ contract EscrowHandler is Test {
     ) external {
         address brand = _brands[brandSeed % _brands.length];
         MockERC20 token = useMor ? mor : usdc;
+        if (escrow.creationPaused() || !escrow.isCampaignToken(address(token))) return;
 
         budget = bound(budget, 1, 1e30) * 5; // always a multiple of 5
         target = bound(target, 1, 1e18);
@@ -113,6 +127,8 @@ contract EscrowHandler is Test {
     function settle(uint256 idSeed, uint256 creatorCount, uint256 scoreSeed, uint256 offsetSeed)
         external
     {
+        address settler = escrow.settler();
+        if (settler == address(0)) return; // settlement disabled by the owner
         (bool found, uint256 id) = _find(idSeed, _isSettleable);
         if (!found) return;
         IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
@@ -201,6 +217,84 @@ contract EscrowHandler is Test {
     }
 
     // -------------------------------------------------------------------------------------------
+    // Owner actions
+    // -------------------------------------------------------------------------------------------
+
+    /// @notice The owner replaces the settler, possibly disabling settlement.
+    function rotateSettler(uint256 seed) external {
+        vm.prank(owner);
+        escrow.setSettler(_settlers[seed % _settlers.length]);
+        calls["rotateSettler"]++;
+    }
+
+    /// @notice The owner replaces the treasury.
+    function rotateTreasury(uint256 seed) external {
+        vm.prank(owner);
+        escrow.setTreasury(_treasuries[seed % _treasuries.length]);
+        calls["rotateTreasury"]++;
+    }
+
+    /// @notice The owner pauses or resumes campaign creation.
+    function toggleCreationPaused() external {
+        // Read first: vm.prank applies to the very next call, including view calls.
+        bool paused = !escrow.creationPaused();
+        vm.prank(owner);
+        escrow.setCreationPaused(paused);
+        calls["toggleCreationPaused"]++;
+    }
+
+    /// @notice The owner allows or disallows a token for new campaigns.
+    function toggleCampaignToken(bool useMor) external {
+        address token = useMor ? address(mor) : address(usdc);
+        bool allowed = !escrow.isCampaignToken(token);
+        vm.prank(owner);
+        escrow.setCampaignToken(token, allowed);
+        calls["toggleCampaignToken"]++;
+    }
+
+    /// @notice The owner voids a funded campaign; its budget goes back to the brand.
+    function voidCampaign(uint256 idSeed) external {
+        (bool found, uint256 id) = _find(idSeed, _isFunded);
+        if (!found) return;
+        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+
+        vm.prank(owner);
+        escrow.voidCampaign(id);
+
+        ghostBalance[c.token] -= c.budget;
+        calls["voidCampaign"]++;
+    }
+
+    /// @notice Someone transfers tokens straight to the escrow, outside any campaign.
+    function sendStrayTokens(bool useMor, uint256 amount) external {
+        MockERC20 token = useMor ? mor : usdc;
+        amount = bound(amount, 1, 1e30);
+        token.mint(address(this), amount);
+        token.transfer(address(escrow), amount);
+
+        ghostBalance[address(token)] += amount;
+        ghostStray[address(token)] += amount;
+        calls["sendStrayTokens"]++;
+    }
+
+    /// @notice The owner recovers the stray tokens, and nothing more.
+    function recoverTokens(bool useMor) external {
+        address token = useMor ? address(mor) : address(usdc);
+        uint256 stray = ghostStray[token];
+        if (stray == 0) return;
+
+        address recipient = makeAddr("recovery recipient");
+        uint256 before = MockERC20(token).balanceOf(recipient);
+        vm.prank(owner);
+        escrow.recoverTokens(token, recipient);
+        assertEq(MockERC20(token).balanceOf(recipient) - before, stray, "recovered != stray");
+
+        ghostBalance[token] -= stray;
+        ghostStray[token] = 0;
+        calls["recoverTokens"]++;
+    }
+
+    // -------------------------------------------------------------------------------------------
     // Campaign selection
     // -------------------------------------------------------------------------------------------
 
@@ -224,6 +318,10 @@ contract EscrowHandler is Test {
     function _isCancellable(uint256 id) internal view returns (bool) {
         IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
         return c.status == IMORCastEscrow.Status.Funded && block.timestamp < c.startAt;
+    }
+
+    function _isFunded(uint256 id) internal view returns (bool) {
+        return escrow.getCampaign(id).status == IMORCastEscrow.Status.Funded;
     }
 
     function _isSettleable(uint256 id) internal view returns (bool) {

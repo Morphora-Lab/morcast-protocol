@@ -43,6 +43,8 @@ escrow.withdrawBrand(id);                // unspent budget back to the brand
 
 If the campaign is not settled before Day 10, the brand calls `withdrawBrand(id)` from Day 10 to recover the whole budget.
 
+The owner, a MORCast multisig, operates the escrow. It can replace the settler and the treasury, choose tokens and pause creation for new campaigns, void a funded campaign (the budget goes back to its brand) and recover tokens sent to the escrow by mistake. It can never move a campaign's funds anywhere else.
+
 Anyone can check a published result dataset, and compare it with the escrow:
 
 ```sh

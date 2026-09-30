@@ -8,7 +8,8 @@ import {MORCastEscrow} from "../src/MORCastEscrow.sol";
 /// @notice Deploys MORCastEscrow.
 /// @dev Environment variables:
 ///
-///        SETTLER   the only address allowed to settle campaigns       (required)
+///        OWNER     owner of the escrow; should be a multisig          (required)
+///        SETTLER   the address allowed to settle campaigns            (required)
 ///        TREASURY  the address that receives protocol fees            (required)
 ///        USDC      USDC token address        (required, except on Base mainnet)
 ///        MOR       MOR token address         (required, except on Base mainnet)
@@ -29,17 +30,23 @@ contract Deploy is Script {
     address public constant BASE_MOR = 0x7431aDa8a591C955a994a21710752EF9b882b8e3;
 
     function run() external returns (MORCastEscrow escrow) {
+        address owner = vm.envAddress("OWNER");
         address settler = vm.envAddress("SETTLER");
         address treasury = vm.envAddress("TREASURY");
         (address usdc, address mor) =
             resolveTokens(block.chainid, vm.envOr("USDC", address(0)), vm.envOr("MOR", address(0)));
 
+        address[] memory tokens = new address[](2);
+        tokens[0] = usdc;
+        tokens[1] = mor;
+
         vm.startBroadcast();
-        escrow = new MORCastEscrow(settler, treasury, usdc, mor);
+        escrow = new MORCastEscrow(owner, settler, treasury, tokens);
         vm.stopBroadcast();
 
         console.log("Chain ID     ", block.chainid);
         console.log("MORCastEscrow", address(escrow));
+        console.log("OWNER        ", owner);
         console.log("SETTLER      ", settler);
         console.log("TREASURY     ", treasury);
         console.log("USDC         ", usdc);

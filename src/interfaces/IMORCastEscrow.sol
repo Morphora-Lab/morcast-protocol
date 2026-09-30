@@ -7,7 +7,8 @@ pragma solidity ^0.8.24;
 ///
 ///        createCampaign ─► Funded ─┬─ cancel (t < startAt) ──────────► Cancelled
 ///                                  ├─ settle (Day 5 <= t < Day 10) ─► Settled
-///                                  └─ withdrawBrand (t >= Day 10) ──► Refunded
+///                                  ├─ withdrawBrand (t >= Day 10) ──► Refunded
+///                                  └─ voidCampaign (owner) ─────────► Refunded
 ///
 ///      A settled campaign pays out through claim (creators), withdrawFee (treasury) and
 ///      withdrawBrand (refund of the unspent budget).
@@ -16,9 +17,12 @@ pragma solidity ^0.8.24;
 ///        - Brand:    the address that created the campaign. It can cancel before the start,
 ///                    withdraw the refund after settlement, and withdraw the whole budget if
 ///                    the campaign was never settled.
-///        - Settler:  one fixed MORCast address. Its only power is to settle each campaign once,
-///                    inside the settlement window.
-///        - Treasury: the fixed MORCast address that receives protocol fees.
+///        - Settler:  the MORCast address allowed to settle each campaign once, inside the
+///                    settlement window. It has no other power.
+///        - Treasury: the MORCast address that receives protocol fees.
+///        - Owner:    operates the escrow (see the owner actions below). It can never move a
+///                    campaign's money anywhere except back to the brand that deposited it.
+///                    Ownership is transferred in two steps (OpenZeppelin Ownable2Step).
 ///        - Anyone:   may submit a creator claim (funds always go to the wallet in the Merkle
 ///                    leaf) or trigger the fee transfer to the treasury.
 interface IMORCastEscrow {
@@ -36,7 +40,8 @@ interface IMORCastEscrow {
         Cancelled,
         /// MORCast settled the campaign. Fee, creator claims and refund are payable.
         Settled,
-        /// The campaign was not settled before Day 10 and the brand withdrew the whole budget.
+        /// The whole budget went back to the brand without settlement: the brand withdrew it from
+        /// Day 10, or the owner voided the campaign.
         Refunded
     }
 
@@ -53,7 +58,7 @@ interface IMORCastEscrow {
         bool feePaid;
         /// True once the post-settlement refund has been transferred to the brand.
         bool refundPaid;
-        /// Campaign token: USDC or MOR.
+        /// Campaign token, for example USDC or MOR.
         address token;
         /// Performance cutoff (unix seconds). All settlement deadlines are measured from it.
         uint64 endAt;
@@ -124,18 +129,36 @@ interface IMORCastEscrow {
     /// @notice The campaign was not settled in time and the whole budget went back to the brand.
     event CampaignRefunded(uint256 indexed id, address indexed brand, uint256 amount);
 
+    /// @notice The owner voided a funded campaign and the whole budget went back to the brand.
+    event CampaignVoided(uint256 indexed id, address indexed brand, uint256 amount);
+
+    /// @notice The settler changed. A zero `newSettler` means that settlement is disabled.
+    event SettlerUpdated(address indexed previousSettler, address indexed newSettler);
+
+    /// @notice The treasury changed.
+    event TreasuryUpdated(address indexed previousTreasury, address indexed newTreasury);
+
+    /// @notice A token was allowed or disallowed for new campaigns.
+    event CampaignTokenUpdated(address indexed token, bool allowed);
+
+    /// @notice Campaign creation was paused or resumed.
+    event CreationPausedUpdated(bool paused);
+
+    /// @notice Tokens that no campaign is owed were sent to `to`.
+    event TokensRecovered(address indexed token, address indexed to, uint256 amount);
+
     // -------------------------------------------------------------------------------------------
     // Errors
     // -------------------------------------------------------------------------------------------
 
-    /// @notice A constructor address is the zero address.
+    /// @notice An address that must be set is the zero address.
     error ZeroAddress();
 
-    /// @notice USDC and MOR were configured with the same address.
-    error IdenticalTokens();
-
-    /// @notice The token is neither USDC nor MOR.
+    /// @notice The token is not allowed for new campaigns.
     error UnsupportedToken(address token);
+
+    /// @notice Campaign creation is paused.
+    error CreationPaused();
 
     /// @notice The budget is zero or not a multiple of 5.
     error InvalidBudget(uint256 budget);
@@ -189,6 +212,9 @@ interface IMORCastEscrow {
     /// @notice The unsettled campaign cannot be refunded before `availableAt` (Day 10).
     error RefundNotAvailable(uint256 availableAt);
 
+    /// @notice The escrow holds no tokens beyond what campaigns are owed.
+    error NothingToRecover();
+
     // -------------------------------------------------------------------------------------------
     // Actions
     // -------------------------------------------------------------------------------------------
@@ -226,20 +252,52 @@ interface IMORCastEscrow {
     function withdrawBrand(uint256 id) external;
 
     // -------------------------------------------------------------------------------------------
+    // Owner actions
+    // -------------------------------------------------------------------------------------------
+
+    /// @notice Replaces the settler, for example after its key was lost or exposed. The zero
+    ///         address disables settlement; unsettled campaigns then fall back to the Day-10
+    ///         refund.
+    function setSettler(address newSettler) external;
+
+    /// @notice Replaces the treasury. Fees withdrawn from then on go to the new treasury.
+    function setTreasury(address newTreasury) external;
+
+    /// @notice Allows or disallows a token for new campaigns. Existing campaigns are unaffected.
+    /// @dev Only standard ERC-20 tokens without transfer fees, rebasing or transfer hooks may be
+    ///      allowed.
+    function setCampaignToken(address token, bool allowed) external;
+
+    /// @notice Pauses or resumes campaign creation. Every other action keeps working while
+    ///         paused, so no campaign's funds are ever locked by a pause.
+    function setCreationPaused(bool paused) external;
+
+    /// @notice Voids a funded campaign and returns its whole budget to its brand.
+    function voidCampaign(uint256 id) external;
+
+    /// @notice Sends `to` the tokens the escrow holds beyond what campaigns are owed, such as
+    ///         tokens transferred to the escrow by mistake. Campaign funds cannot be recovered.
+    function recoverTokens(address token, address to) external;
+
+    // -------------------------------------------------------------------------------------------
     // Views
     // -------------------------------------------------------------------------------------------
 
-    /// @notice The only address allowed to settle campaigns.
-    function SETTLER() external view returns (address);
+    /// @notice The only address allowed to settle campaigns; zero when settlement is disabled.
+    function settler() external view returns (address);
 
     /// @notice The address that receives protocol fees.
-    function TREASURY() external view returns (address);
+    function treasury() external view returns (address);
 
-    /// @notice The USDC token accepted as campaign token.
-    function USDC() external view returns (address);
+    /// @notice Whether new campaigns may use `token`.
+    function isCampaignToken(address token) external view returns (bool);
 
-    /// @notice The MOR token accepted as campaign token.
-    function MOR() external view returns (address);
+    /// @notice Whether campaign creation is paused.
+    function creationPaused() external view returns (bool);
+
+    /// @notice Total amount of `token` the escrow owes to campaigns: funded budgets, unclaimed
+    ///         creator pools, and unpaid fees and refunds.
+    function totalOwed(address token) external view returns (uint256);
 
     /// @notice Delay after `endAt` when settlement opens (Day 5).
     function SETTLEMENT_OPENS_AFTER() external view returns (uint256);

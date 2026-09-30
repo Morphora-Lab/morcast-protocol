@@ -10,6 +10,7 @@ import {MockERC20} from "../test/utils/Tokens.sol";
 ///         development against Anvil. Never use it on a public network.
 /// @dev Environment variables (all optional):
 ///
+///        OWNER     escrow owner         (default: Anvil account 0, the deployer)
 ///        SETTLER   settlement address   (default: Anvil account 1)
 ///        TREASURY  fee recipient        (default: Anvil account 2)
 ///        BRAND     account that receives 1,000,000 mock USDC and MOR (default: Anvil account 3)
@@ -20,6 +21,7 @@ import {MockERC20} from "../test/utils/Tokens.sol";
 ///          --private-key <anvil account 0 key> --broadcast
 contract DeployLocal is Script {
     /// @dev Default Anvil accounts derived from the "test test ... junk" mnemonic.
+    address internal constant ANVIL_ACCOUNT_0 = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address internal constant ANVIL_ACCOUNT_1 = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
     address internal constant ANVIL_ACCOUNT_2 = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC;
     address internal constant ANVIL_ACCOUNT_3 = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
@@ -27,6 +29,7 @@ contract DeployLocal is Script {
     function run() external returns (MORCastEscrow escrow, MockERC20 usdc, MockERC20 mor) {
         require(block.chainid == 31_337, "DeployLocal: Anvil only");
 
+        address owner = vm.envOr("OWNER", ANVIL_ACCOUNT_0);
         address settler = vm.envOr("SETTLER", ANVIL_ACCOUNT_1);
         address treasury = vm.envOr("TREASURY", ANVIL_ACCOUNT_2);
         address brand = vm.envOr("BRAND", ANVIL_ACCOUNT_3);
@@ -34,7 +37,10 @@ contract DeployLocal is Script {
         vm.startBroadcast();
         usdc = new MockERC20("USD Coin", "USDC", 6);
         mor = new MockERC20("MorpheusAI", "MOR", 18);
-        escrow = new MORCastEscrow(settler, treasury, address(usdc), address(mor));
+        address[] memory tokens = new address[](2);
+        tokens[0] = address(usdc);
+        tokens[1] = address(mor);
+        escrow = new MORCastEscrow(owner, settler, treasury, tokens);
         usdc.mint(brand, 1_000_000e6);
         mor.mint(brand, 1_000_000e18);
         vm.stopBroadcast();
@@ -42,6 +48,7 @@ contract DeployLocal is Script {
         console.log("MORCastEscrow", address(escrow));
         console.log("USDC (mock)  ", address(usdc));
         console.log("MOR (mock)   ", address(mor));
+        console.log("OWNER        ", owner);
         console.log("SETTLER      ", settler);
         console.log("TREASURY     ", treasury);
         console.log("BRAND        ", brand);
