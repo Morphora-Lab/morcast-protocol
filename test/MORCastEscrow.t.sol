@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.37;
 
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
 
@@ -18,36 +19,42 @@ contract MORCastEscrowTest is EscrowFixture {
     // ===========================================================================================
 
     function test_constructor_setsConfiguration() public view {
-        assertEq(escrow.SETTLER(), settler);
-        assertEq(escrow.TREASURY(), treasury);
-        assertEq(escrow.USDC(), address(usdc));
-        assertEq(escrow.MOR(), address(mor));
+        assertEq(escrow.owner(), owner);
+        assertEq(escrow.settler(), settler);
+        assertEq(escrow.treasury(), treasury);
+        assertTrue(escrow.isCampaignToken(address(usdc)));
+        assertTrue(escrow.isCampaignToken(address(mor)));
+        assertFalse(escrow.creationPaused());
         assertEq(escrow.SETTLEMENT_OPENS_AFTER(), 5 days);
         assertEq(escrow.SETTLEMENT_CLOSES_AFTER(), 10 days);
         assertEq(escrow.MAX_CAMPAIGN_DURATION(), 90 days);
         assertEq(escrow.campaignCount(), 0);
     }
 
-    function test_constructor_revertsOnZeroAddress() public {
-        address u = address(usdc);
-        address m = address(mor);
-
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
-        new MORCastEscrow(address(0), treasury, u, m);
-
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
-        new MORCastEscrow(settler, address(0), u, m);
-
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
-        new MORCastEscrow(settler, treasury, address(0), m);
-
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
-        new MORCastEscrow(settler, treasury, u, address(0));
+    function test_constructor_emitsConfiguration() public {
+        vm.expectEmit();
+        emit IMORCastEscrow.SettlerUpdated(address(0), settler);
+        vm.expectEmit();
+        emit IMORCastEscrow.TreasuryUpdated(address(0), treasury);
+        vm.expectEmit();
+        emit IMORCastEscrow.CampaignTokenUpdated(address(usdc), true);
+        new MORCastEscrow(owner, settler, treasury, _tokens(address(usdc)));
     }
 
-    function test_constructor_revertsOnIdenticalTokens() public {
-        vm.expectRevert(IMORCastEscrow.IdenticalTokens.selector);
-        new MORCastEscrow(settler, treasury, address(usdc), address(usdc));
+    function test_constructor_revertsOnZeroAddress() public {
+        address[] memory tokens = _tokens(address(usdc), address(mor));
+
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableInvalidOwner.selector, address(0)));
+        new MORCastEscrow(address(0), settler, treasury, tokens);
+
+        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
+        new MORCastEscrow(owner, address(0), treasury, tokens);
+
+        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
+        new MORCastEscrow(owner, settler, address(0), tokens);
+
+        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
+        new MORCastEscrow(owner, settler, treasury, _tokens(address(usdc), address(0)));
     }
 
     // ===========================================================================================
@@ -203,7 +210,7 @@ contract MORCastEscrowTest is EscrowFixture {
         // An escrow whose "USDC" charges 1% per transfer: the deposit check must reject it.
         FeeOnTransferToken feeToken = new FeeOnTransferToken();
         MORCastEscrow feeEscrow =
-            new MORCastEscrow(settler, treasury, address(feeToken), address(mor));
+            new MORCastEscrow(owner, settler, treasury, _tokens(address(feeToken)));
         feeToken.mint(brand, BUDGET);
         vm.startPrank(brand);
         feeToken.approve(address(feeEscrow), BUDGET);
@@ -757,7 +764,7 @@ contract MORCastEscrowTest is EscrowFixture {
     ///         reentrancy guard, and the whole claim reverts.
     function test_reentrancyGuard_blocksCallbackFromToken() public {
         ReentrantToken token = new ReentrantToken();
-        MORCastEscrow guarded = new MORCastEscrow(settler, treasury, address(token), address(mor));
+        MORCastEscrow guarded = new MORCastEscrow(owner, settler, treasury, _tokens(address(token)));
         token.mint(brand, BUDGET);
         vm.startPrank(brand);
         token.approve(address(guarded), BUDGET);

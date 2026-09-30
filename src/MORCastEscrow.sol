@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.37;
 
+import {Ownable, Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
@@ -12,28 +13,35 @@ import {SettlementMath} from "./libraries/SettlementMath.sol";
 /// @title MORCastEscrow
 /// @notice Escrow for MORCast creator campaigns.
 ///
-///         A brand escrows a budget in USDC or MOR. After the campaign, MORCast measures and
-///         verifies performance off-chain, publishes the result dataset and settles the campaign
-///         once with the recognized total S. The contract derives the fee, the creator pool and
-///         the brand refund from S with a fixed formula, pays creators against a Merkle root,
-///         and returns the whole budget to the brand if MORCast does not settle in time.
+///         A brand escrows a budget in an allowed token (USDC or MOR). After the campaign,
+///         MORCast measures and verifies performance off-chain, publishes the result dataset and
+///         settles the campaign once with the recognized total S. The contract derives the fee,
+///         the creator pool and the brand refund from S with a fixed formula, pays creators
+///         against a Merkle root, and returns the whole budget to the brand if MORCast does not
+///         settle in time.
 ///
 /// @dev Design rules:
 ///        - The contract holds money, pays it out once according to the fixed formula, and
 ///          refunds the brand if the campaign is not settled. Everything else happens off-chain.
-///        - Nothing can be changed after deployment: no owner, no pause, no upgrade. The settler's
-///          only power is `settle`, once per campaign, inside the settlement window.
+///        - The code cannot be upgraded. The economic rules (the formula, the fee, Day 5, Day 10
+///          and the 90-day maximum) are constants. A new version is a new deployment.
+///        - The settler's only power is `settle`, once per campaign, inside the settlement window.
+///        - The owner operates the escrow: it can replace the settler and the treasury, allow
+///          tokens and pause creation for new campaigns, void a funded campaign (the budget goes
+///          back to its brand) and recover tokens that no campaign is owed. It can never move a
+///          campaign's money anywhere else.
 ///        - Every campaign has its own accounting. A campaign never pays out more than its own
-///          budget, whatever happens to other campaigns.
+///          budget, whatever happens to other campaigns. `totalOwed` tracks, per token, exactly
+///          what all campaigns are still owed.
 ///        - State is updated and events are emitted before every token transfer, transfers use
 ///          SafeERC20, and every function that moves tokens is also protected by a reentrancy
 ///          guard.
 ///        - Settlement is final and entitlements never expire.
-contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
+contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient {
     using SafeERC20 for IERC20;
 
     // -------------------------------------------------------------------------------------------
-    // Constants and immutables
+    // Constants
     // -------------------------------------------------------------------------------------------
 
     /// @inheritdoc IMORCastEscrow
@@ -50,21 +58,27 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
     ///      the budget for a very long time. Capping the length rules that out.
     uint256 public constant MAX_CAMPAIGN_DURATION = 90 days;
 
-    /// @inheritdoc IMORCastEscrow
-    address public immutable SETTLER;
-
-    /// @inheritdoc IMORCastEscrow
-    address public immutable TREASURY;
-
-    /// @inheritdoc IMORCastEscrow
-    address public immutable USDC;
-
-    /// @inheritdoc IMORCastEscrow
-    address public immutable MOR;
-
     // -------------------------------------------------------------------------------------------
     // Storage
     // -------------------------------------------------------------------------------------------
+
+    /// @inheritdoc IMORCastEscrow
+    address public settler;
+
+    /// @inheritdoc IMORCastEscrow
+    address public treasury;
+
+    /// @inheritdoc IMORCastEscrow
+    bool public creationPaused;
+
+    /// @inheritdoc IMORCastEscrow
+    mapping(address token => bool) public isCampaignToken;
+
+    /// @inheritdoc IMORCastEscrow
+    /// @dev Increased by every deposit and decreased by every payout, so for each token it always
+    ///      equals the sum of what the campaigns in that token are still owed. The escrow's
+    ///      balance above this amount belongs to no campaign and is what `recoverTokens` returns.
+    mapping(address token => uint256) public totalOwed;
 
     /// @inheritdoc IMORCastEscrow
     uint256 public campaignCount;
@@ -81,19 +95,23 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
     // Constructor
     // -------------------------------------------------------------------------------------------
 
-    /// @param settler  The only address allowed to settle campaigns.
-    /// @param treasury The address that receives protocol fees.
-    /// @param usdc     The USDC token (on Base: Circle-issued USDC, 6 decimals).
-    /// @param mor      The MOR token (on Base: Morpheus MOR, 18 decimals).
-    constructor(address settler, address treasury, address usdc, address mor) {
-        if (settler == address(0) || treasury == address(0)) revert ZeroAddress();
-        if (usdc == address(0) || mor == address(0)) revert ZeroAddress();
-        if (usdc == mor) revert IdenticalTokens();
-
-        SETTLER = settler;
-        TREASURY = treasury;
-        USDC = usdc;
-        MOR = mor;
+    /// @param initialOwner    Owner of the escrow; should be a multisig.
+    /// @param initialSettler  The only address allowed to settle campaigns.
+    /// @param initialTreasury The address that receives protocol fees.
+    /// @param initialTokens   Tokens allowed for campaigns (on Base: USDC and MOR).
+    constructor(
+        address initialOwner,
+        address initialSettler,
+        address initialTreasury,
+        address[] memory initialTokens
+    ) Ownable(initialOwner) {
+        // A settler is required at deployment; the owner can disable it later if needed.
+        if (initialSettler == address(0)) revert ZeroAddress();
+        _setSettler(initialSettler);
+        _setTreasury(initialTreasury);
+        for (uint256 i; i < initialTokens.length; i++) {
+            _setCampaignToken(initialTokens[i], true);
+        }
     }
 
     // -------------------------------------------------------------------------------------------
@@ -109,8 +127,11 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
         uint64 endAt,
         bytes32 manifestHash
     ) external nonReentrant returns (uint256 id) {
-        // Only the two campaign tokens are accepted.
-        if (token != USDC && token != MOR) revert UnsupportedToken(token);
+        // The owner can pause campaign creation, for example while a problem is investigated.
+        if (creationPaused) revert CreationPaused();
+
+        // Only tokens allowed by the owner can be used for new campaigns.
+        if (!isCampaignToken[token]) revert UnsupportedToken(token);
 
         // A multiple of 5 guarantees that a fully spent budget splits exactly into 20% / 80%.
         if (budget == 0 || budget % SettlementMath.FEE_DIVISOR != 0) revert InvalidBudget(budget);
@@ -138,6 +159,7 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
         campaign.endAt = endAt;
         campaign.manifestHash = manifestHash;
         campaign.status = Status.Funded;
+        totalOwed[token] += budget;
 
         emit CampaignCreated(id, msg.sender, token, budget, target, startAt, endAt, manifestHash);
 
@@ -165,6 +187,7 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
         // Update state and emit the event first, then transfer.
         campaign.status = Status.Cancelled;
         uint256 amount = campaign.budget;
+        totalOwed[campaign.token] -= amount;
         emit CampaignCancelled(id, msg.sender, amount);
 
         IERC20(campaign.token).safeTransfer(msg.sender, amount);
@@ -178,7 +201,8 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
     function settle(uint256 id, uint256 recognized, bytes32 merkleRoot, bytes32 resultHash)
         external
     {
-        if (msg.sender != SETTLER) revert NotSettler();
+        // When the owner has disabled settlement, `settler` is zero and nobody passes this check.
+        if (msg.sender != settler) revert NotSettler();
 
         Campaign storage campaign = _load(id);
 
@@ -201,6 +225,8 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
         // Every settlement refers to a published result dataset, even when nothing is paid.
         if (resultHash == bytes32(0)) revert MissingResultHash();
 
+        // The campaign is still owed its whole budget: fee + pool + refund == budget, so
+        // `totalOwed` does not change here.
         campaign.status = Status.Settled;
         campaign.recognized = recognized;
         campaign.spent = spent;
@@ -244,6 +270,7 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
         // submit the claim.
         claimed[leaf] = true;
         campaign.creatorClaimed += amount;
+        totalOwed[campaign.token] -= amount;
         // MerkleProof is an internal library call (a jump, not an external call), so no external
         // code runs before this event.
         // forge-lint: disable-next-line(reentrancy-events)
@@ -260,10 +287,13 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
 
         campaign.feePaid = true;
         uint256 fee = campaign.fee;
-        emit FeeWithdrawn(id, TREASURY, fee);
+        totalOwed[campaign.token] -= fee;
+        // The fee goes to the treasury in place now, which the owner may have replaced.
+        address recipient = treasury;
+        emit FeeWithdrawn(id, recipient, fee);
 
         // A zero fee (nothing recognized) is marked as paid without a transfer.
-        if (fee != 0) IERC20(campaign.token).safeTransfer(TREASURY, fee);
+        if (fee != 0) IERC20(campaign.token).safeTransfer(recipient, fee);
     }
 
     /// @inheritdoc IMORCastEscrow
@@ -279,6 +309,7 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
 
             campaign.refundPaid = true;
             uint256 refund = campaign.refund;
+            totalOwed[campaign.token] -= refund;
             emit RefundWithdrawn(id, msg.sender, refund);
 
             // A zero refund (target reached) is marked as paid without a transfer.
@@ -291,6 +322,7 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
 
             campaign.status = Status.Refunded;
             uint256 budget = campaign.budget;
+            totalOwed[campaign.token] -= budget;
             emit CampaignRefunded(id, msg.sender, budget);
 
             IERC20(campaign.token).safeTransfer(msg.sender, budget);
@@ -298,6 +330,63 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
             // Cancelled and Refunded campaigns have nothing left to withdraw.
             revert InvalidStatus(status);
         }
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // Owner actions
+    // -------------------------------------------------------------------------------------------
+
+    /// @inheritdoc IMORCastEscrow
+    /// @dev The zero address is allowed: it disables settlement, which only ever leads to the
+    ///      brands' full refunds from Day 10.
+    function setSettler(address newSettler) external onlyOwner {
+        _setSettler(newSettler);
+    }
+
+    /// @inheritdoc IMORCastEscrow
+    function setTreasury(address newTreasury) external onlyOwner {
+        _setTreasury(newTreasury);
+    }
+
+    /// @inheritdoc IMORCastEscrow
+    function setCampaignToken(address token, bool allowed) external onlyOwner {
+        _setCampaignToken(token, allowed);
+    }
+
+    /// @inheritdoc IMORCastEscrow
+    function setCreationPaused(bool paused) external onlyOwner {
+        creationPaused = paused;
+        emit CreationPausedUpdated(paused);
+    }
+
+    /// @inheritdoc IMORCastEscrow
+    /// @dev Only a funded campaign can be voided, and its budget can only go to its brand. Used
+    ///      to release a budget deposited by mistake without waiting for the settlement window,
+    ///      or to return every budget to its brand in an emergency.
+    function voidCampaign(uint256 id) external nonReentrant onlyOwner {
+        Campaign storage campaign = _load(id);
+        if (campaign.status != Status.Funded) revert InvalidStatus(campaign.status);
+
+        campaign.status = Status.Refunded;
+        address brand = campaign.brand;
+        uint256 budget = campaign.budget;
+        totalOwed[campaign.token] -= budget;
+        emit CampaignVoided(id, brand, budget);
+
+        IERC20(campaign.token).safeTransfer(brand, budget);
+    }
+
+    /// @inheritdoc IMORCastEscrow
+    /// @dev The amount is the balance above `totalOwed[token]`, so campaign funds are never
+    ///      touched. For a token no campaign uses, that is the whole balance.
+    function recoverTokens(address token, address to) external nonReentrant onlyOwner {
+        if (to == address(0)) revert ZeroAddress();
+
+        uint256 excess = IERC20(token).balanceOf(address(this)) - totalOwed[token];
+        if (excess == 0) revert NothingToRecover();
+        emit TokensRecovered(token, to, excess);
+
+        IERC20(token).safeTransfer(to, excess);
     }
 
     // -------------------------------------------------------------------------------------------
@@ -340,6 +429,28 @@ contract MORCastEscrow is IMORCastEscrow, ReentrancyGuardTransient {
     // -------------------------------------------------------------------------------------------
     // Internal helpers
     // -------------------------------------------------------------------------------------------
+
+    function _setSettler(address newSettler) private {
+        address previous = settler;
+        settler = newSettler;
+        emit SettlerUpdated(previous, newSettler);
+    }
+
+    function _setTreasury(address newTreasury) private {
+        // Fees sent to the zero address would fail, so a treasury is always required.
+        if (newTreasury == address(0)) revert ZeroAddress();
+        address previous = treasury;
+        treasury = newTreasury;
+        emit TreasuryUpdated(previous, newTreasury);
+    }
+
+    function _setCampaignToken(address token, bool allowed) private {
+        // Also called in the constructor's loop, where a zero token must abort the deployment.
+        // forge-lint: disable-next-line(require-revert-in-loop)
+        if (token == address(0)) revert ZeroAddress();
+        isCampaignToken[token] = allowed;
+        emit CampaignTokenUpdated(token, allowed);
+    }
 
     /// @dev Returns the stored campaign, or reverts if it does not exist.
     function _load(uint256 id) private view returns (Campaign storage campaign) {

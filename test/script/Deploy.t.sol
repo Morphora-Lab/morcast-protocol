@@ -58,6 +58,7 @@ contract DeployTest is Test {
     function test_run_deploysEscrowFromEnvironment() public {
         MockERC20 usdc = new MockERC20("USD Coin", "USDC", 6);
         MockERC20 mor = new MockERC20("MorpheusAI", "MOR", 18);
+        vm.setEnv("OWNER", vm.toString(address(0x0A11)));
         vm.setEnv("SETTLER", vm.toString(address(0x5E77)));
         vm.setEnv("TREASURY", vm.toString(address(0x7EA5)));
         vm.setEnv("USDC", vm.toString(address(usdc)));
@@ -65,10 +66,11 @@ contract DeployTest is Test {
 
         MORCastEscrow escrow = deployer.run();
 
-        assertEq(escrow.SETTLER(), address(0x5E77));
-        assertEq(escrow.TREASURY(), address(0x7EA5));
-        assertEq(escrow.USDC(), address(usdc));
-        assertEq(escrow.MOR(), address(mor));
+        assertEq(escrow.owner(), address(0x0A11));
+        assertEq(escrow.settler(), address(0x5E77));
+        assertEq(escrow.treasury(), address(0x7EA5));
+        assertTrue(escrow.isCampaignToken(address(usdc)));
+        assertTrue(escrow.isCampaignToken(address(mor)));
     }
 
     // -------------------------------------------------------------------------------------------
@@ -78,8 +80,8 @@ contract DeployTest is Test {
     function test_deployLocal_deploysMocksAndFundsBrand() public {
         (MORCastEscrow escrow, MockERC20 usdc, MockERC20 mor) = new DeployLocal().run();
 
-        assertEq(escrow.USDC(), address(usdc));
-        assertEq(escrow.MOR(), address(mor));
+        assertTrue(escrow.isCampaignToken(address(usdc)));
+        assertTrue(escrow.isCampaignToken(address(mor)));
         assertEq(usdc.decimals(), 6);
         assertEq(mor.decimals(), 18);
         assertEq(usdc.totalSupply(), 1_000_000e6);
