@@ -6,7 +6,7 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, MORCa
 
 ## Status
 
-Early development. Not deployed. Not audited.
+Feature-complete for protocol v1. Not deployed. Not audited.
 
 | Component | State |
 |---|---|
@@ -15,7 +15,7 @@ Early development. Not deployed. Not audited.
 | Deployment scripts | Implemented; not yet deployed |
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
 | TypeScript SDK: document hashing, payout Merkle trees | Implemented; trees verified against the contract |
-| TypeScript SDK: result dataset and verifier | Planned |
+| TypeScript SDK: result dataset and verifier (`morcast-verify`) | Implemented; verified end to end on a local node |
 
 ## Usage
 
@@ -42,6 +42,14 @@ escrow.withdrawBrand(id);                // unspent budget back to the brand
 
 If the campaign is not settled before Day 10, the brand calls `withdrawBrand(id)` from Day 10 to recover the whole budget.
 
+Anyone can check a published result dataset, and compare it with the escrow:
+
+```sh
+cd sdk && pnpm install && pnpm build
+node dist/bin.js ../examples/result-dataset.json
+node dist/bin.js result.json --rpc-url https://mainnet.base.org
+```
+
 ## Example
 
 A brand escrows 100,000 USDC for a target of 1,000,000 qualified views, and MORCast recognizes 640,000:
@@ -60,6 +68,7 @@ The brand pays for 64% of the target, so 64,000 USDC is spent.
 - [Settlement arithmetic](docs/settlement.md): creator scores, the budget split and creator payouts.
 - [Metrics](docs/metrics.md): exact decimals and the Integration retention metric.
 - [Hashing and Merkle trees](docs/hashing.md): canonical JSON for `manifestHash` and `resultHash`, and payout tree construction.
+- [Result dataset](docs/dataset.md): the published result format, reason codes and what the verifier checks.
 - [Deployment](docs/deployment.md): deploying to Base mainnet, other networks and a local Anvil node.
 - [TypeScript SDK](sdk/README.md): the protocol arithmetic for off-chain services and verifiers.
 
@@ -87,10 +96,12 @@ The TypeScript SDK lives in [`sdk/`](sdk) and has its own [instructions](sdk/REA
 | Invariant | `test/invariant/` | Across random multi-campaign sequences: escrow balances equal outstanding obligations, and settled campaigns follow the formula. |
 | Fork | `test/fork/` | Full lifecycle with the real USDC and MOR contracts on Base mainnet. Skipped unless `BASE_RPC_URL` is set. |
 | Vectors | `vectors/` | Numeric examples from the specification, shared with off-chain implementations. |
+| End-to-end | `scripts/e2e-local.sh` | On a local Anvil node: deploy, create the example campaign, settle it from `examples/result-dataset.json`, verify it on-chain and claim every payout with SDK proofs. |
 
 ```sh
 forge test                                              # unit, fuzz and invariant tests
 BASE_RPC_URL=https://mainnet.base.org forge test --match-path "test/fork/*"
+(cd sdk && pnpm install && pnpm build) && scripts/e2e-local.sh
 ```
 
 ## License
