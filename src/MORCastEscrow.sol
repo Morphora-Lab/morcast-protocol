@@ -45,6 +45,11 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // -------------------------------------------------------------------------------------------
 
     /// @inheritdoc IMORCastEscrow
+    /// @dev The code cannot be upgraded, so every new version is a new deployment with its own
+    ///      address. Off-chain systems use this value to tell deployments apart.
+    string public constant VERSION = "1.0.0";
+
+    /// @inheritdoc IMORCastEscrow
     /// @dev Day 5: results are published by Day 4 and reviewed until at least Day 5.
     uint256 public constant SETTLEMENT_OPENS_AFTER = 5 days;
 

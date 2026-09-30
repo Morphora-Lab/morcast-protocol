@@ -3,9 +3,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   compareWithChain,
+  ESCROW_VERSION,
   hashCanonical,
+  isSupportedEscrowVersion,
   type OnChainCampaign,
   readCampaign,
+  readEscrowVersion,
 } from "../src/index.js";
 import { exampleDataset } from "./fixtures/example.js";
 
@@ -84,5 +87,24 @@ describe("readCampaign", () => {
     expect(campaign.status).toBe("Settled");
     expect(campaign.budget).toBe(onChain.budget);
     expect(campaign.merkleRoot).toBe(onChain.merkleRoot);
+  });
+});
+
+describe("escrow versions", () => {
+  it("accepts versions with the same major version only", () => {
+    expect(ESCROW_VERSION).toBe("1.0.0");
+    expect(isSupportedEscrowVersion("1.0.0")).toBe(true);
+    expect(isSupportedEscrowVersion("1.4.2")).toBe(true);
+    expect(isSupportedEscrowVersion("2.0.0")).toBe(false);
+    expect(isSupportedEscrowVersion("0.9.0")).toBe(false);
+  });
+
+  it("reads VERSION from the escrow", async () => {
+    const client = { readContract: async () => "1.0.0" };
+    const version = await readEscrowVersion(
+      client as unknown as Parameters<typeof readEscrowVersion>[0],
+      dataset.escrow as Hex,
+    );
+    expect(version).toBe("1.0.0");
   });
 });

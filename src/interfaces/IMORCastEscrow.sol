@@ -299,6 +299,9 @@ interface IMORCastEscrow {
     ///         creator pools, and unpaid fees and refunds.
     function totalOwed(address token) external view returns (uint256);
 
+    /// @notice Version of this deployment's code, following semantic versioning.
+    function VERSION() external view returns (string memory);
+
     /// @notice Delay after `endAt` when settlement opens (Day 5).
     function SETTLEMENT_OPENS_AFTER() external view returns (uint256);
 

@@ -12,7 +12,7 @@
 | Owner | Set at deployment; transferred in two steps | Operate the escrow (see [Owner Actions](#owner-actions)). The owner can never move a campaign's money anywhere except back to the brand that deposited it. |
 | Anyone | Any address | Submit a creator claim (funds always go to the leaf's wallet). Trigger the fee transfer to the treasury. |
 
-The code cannot be upgraded, and the economic rules (the formula, the 20% fee, Day 5, Day 10 and the 90-day maximum) are constants. A new version is a new deployment.
+The code cannot be upgraded, and the economic rules (the formula, the 20% fee, Day 5, Day 10 and the 90-day maximum) are constants. A new version is a new deployment; see [Versions and Upgrades](upgrades.md).
 
 ## Timeline
 

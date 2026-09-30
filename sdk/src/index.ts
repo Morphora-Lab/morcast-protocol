@@ -7,6 +7,7 @@ export {
   parseDecimalString,
 } from "./canonical.js";
 export {
+  ESCROW_VERSION,
   MAX_CAMPAIGN_DURATION,
   SETTLEMENT_CLOSES_AFTER,
   SETTLEMENT_OPENS_AFTER,
@@ -42,8 +43,10 @@ export {
   CAMPAIGN_STATUSES,
   type CampaignStatus,
   compareWithChain,
+  isSupportedEscrowVersion,
   type OnChainCampaign,
   readCampaign,
+  readEscrowVersion,
 } from "./onchain.js";
 export { allocatePayouts, type CreatorPayout, type CreatorScore } from "./payouts.js";
 export {

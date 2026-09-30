@@ -5,6 +5,7 @@
 import type { Address, Hex, PublicClient } from "viem";
 
 import { morcastEscrowAbi } from "./abi.js";
+import { ESCROW_VERSION } from "./constants.js";
 import type { ResultDataset } from "./dataset.js";
 import type { VerificationError } from "./verify.js";
 
@@ -67,6 +68,22 @@ export async function readCampaign(
     merkleRoot: c.merkleRoot,
     resultHash: c.resultHash,
   };
+}
+
+/** Reads the code version of an escrow deployment, for example "1.0.0". */
+export async function readEscrowVersion(
+  client: Pick<PublicClient, "readContract">,
+  escrow: Address,
+): Promise<string> {
+  return client.readContract({ address: escrow, abi: morcastEscrowAbi, functionName: "VERSION" });
+}
+
+/**
+ * Whether this SDK can read a deployment of `version`: the major versions must match, because a
+ * new major version may change the ABI or the rules.
+ */
+export function isSupportedEscrowVersion(version: string): boolean {
+  return version.split(".")[0] === ESCROW_VERSION.split(".")[0];
 }
 
 /**

@@ -1,6 +1,12 @@
 /**
- * Timing constants of the escrow contract, in seconds. `Day N` means `endAt + N days`.
+ * Constants of the escrow contract. Times are in seconds; `Day N` means `endAt + N days`.
  */
+
+/**
+ * Escrow version whose ABI and rules this SDK implements. Deployments with the same major
+ * version are compatible.
+ */
+export const ESCROW_VERSION = "1.0.0";
 
 /** Settlement opens on Day 5 (`MORCastEscrow.SETTLEMENT_OPENS_AFTER`). */
 export const SETTLEMENT_OPENS_AFTER = 5n * 86_400n;

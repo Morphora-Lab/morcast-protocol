@@ -19,6 +19,7 @@ contract MORCastEscrowTest is EscrowFixture {
     // ===========================================================================================
 
     function test_constructor_setsConfiguration() public view {
+        assertEq(escrow.VERSION(), "1.0.0");
         assertEq(escrow.owner(), owner);
         assertEq(escrow.settler(), settler);
         assertEq(escrow.treasury(), treasury);

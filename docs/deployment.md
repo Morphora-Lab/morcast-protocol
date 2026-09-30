@@ -28,7 +28,7 @@ On Base mainnet the script always uses the canonical tokens. `USDC` and `MOR` ma
 After deployment, check:
 
 - `owner()`, `settler()` and `treasury()` return the intended addresses, and `pendingOwner()` returns the zero address.
-- `isCampaignToken(USDC)` and `isCampaignToken(MOR)` return `true`, and `creationPaused()` returns `false`.
+- `isCampaignToken(USDC)` and `isCampaignToken(MOR)` return `true`, `creationPaused()` returns `false`, and `VERSION()` returns the released version.
 - `SETTLEMENT_OPENS_AFTER()` returns `432000` (5 days), `SETTLEMENT_CLOSES_AFTER()` returns `864000` (10 days) and `MAX_CAMPAIGN_DURATION()` returns `7776000` (90 days).
 - The source is verified on Basescan.
 
