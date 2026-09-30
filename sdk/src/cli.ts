@@ -12,7 +12,14 @@ import { readFileSync } from "node:fs";
 
 import { createPublicClient, type Hex, http } from "viem";
 
-import { compareWithChain, type OnChainCampaign, readCampaign } from "./onchain.js";
+import { ESCROW_VERSION } from "./constants.js";
+import {
+  compareWithChain,
+  isSupportedEscrowVersion,
+  type OnChainCampaign,
+  readCampaign,
+  readEscrowVersion,
+} from "./onchain.js";
 import { type VerificationError, type VerificationReport, verifyResultDataset } from "./verify.js";
 
 const USAGE = "usage: morcast-verify <dataset.json> [--rpc-url <url>] [--json]";
@@ -22,9 +29,10 @@ export interface CliEnvironment {
   out: (line: string) => void;
   err: (line: string) => void;
   readFile: (path: string) => string;
-  /** Returns the chain ID and a reader for campaigns on the chain at `rpcUrl`. */
+  /** Returns readers for the chain ID, escrow versions and campaigns at `rpcUrl`. */
   connect: (rpcUrl: string) => {
     chainId: () => Promise<number>;
+    escrowVersion: (escrow: Hex) => Promise<string>;
     readCampaign: (escrow: Hex, campaignId: bigint) => Promise<OnChainCampaign>;
   };
 }
@@ -37,6 +45,7 @@ const defaultEnvironment: CliEnvironment = {
     const client = createPublicClient({ transport: http(rpcUrl) });
     return {
       chainId: () => client.getChainId(),
+      escrowVersion: (escrow) => readEscrowVersion(client, escrow),
       readCampaign: (escrow, campaignId) => readCampaign(client, escrow, campaignId),
     };
   },
@@ -73,14 +82,24 @@ export async function main(
   if (options.rpcUrl !== null && report.dataset !== null && report.resultHash !== null) {
     try {
       const chain = env.connect(options.rpcUrl);
+      const escrow = report.dataset.escrow as Hex;
       const chainId = await chain.chainId();
-      if (BigInt(chainId) !== BigInt(report.dataset.chainId)) {
+      const version =
+        BigInt(chainId) === BigInt(report.dataset.chainId)
+          ? await chain.escrowVersion(escrow)
+          : null;
+      if (version === null) {
         chainErrors = [{ path: "chainId", message: `the RPC endpoint serves chain ${chainId}` }];
+      } else if (!isSupportedEscrowVersion(version)) {
+        // A new major version may change the ABI or the rules, so it cannot be read reliably.
+        chainErrors = [
+          {
+            path: "escrow",
+            message: `escrow version ${version} is not supported by this verifier (${ESCROW_VERSION})`,
+          },
+        ];
       } else {
-        const campaign = await chain.readCampaign(
-          report.dataset.escrow as Hex,
-          BigInt(report.dataset.campaignId),
-        );
+        const campaign = await chain.readCampaign(escrow, BigInt(report.dataset.campaignId));
         chainStatus = campaign.status;
         chainErrors = compareWithChain(report.dataset, campaign, report.resultHash);
       }

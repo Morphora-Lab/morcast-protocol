@@ -9,7 +9,7 @@ import { exampleDataset } from "./fixtures/example.js";
 async function run(
   args: string[],
   files: Record<string, string>,
-  chain?: { chainId: number; campaign: OnChainCampaign },
+  chain?: { chainId: number; campaign: OnChainCampaign; version?: string },
 ) {
   const out: string[] = [];
   const err: string[] = [];
@@ -23,6 +23,7 @@ async function run(
     },
     connect: () => ({
       chainId: async () => chain?.chainId ?? 0,
+      escrowVersion: async () => chain?.version ?? "1.0.0",
       readCampaign: async () => {
         if (chain === undefined) throw new Error("no chain");
         return chain.campaign;
@@ -91,6 +92,13 @@ describe("morcast-verify", () => {
     const result = await run(["result.json", "--rpc-url", "http://rpc"], files, chain);
     expect(result.code).toBe(1);
     expect(result.out).toContain("chainId: the RPC endpoint serves chain 8453");
+  });
+
+  it("refuses an escrow with an unsupported major version", async () => {
+    const chain = { chainId: 31_337, campaign: settledCampaign(), version: "2.0.0" };
+    const result = await run(["result.json", "--rpc-url", "http://rpc"], files, chain);
+    expect(result.code).toBe(1);
+    expect(result.out).toContain("escrow version 2.0.0 is not supported");
   });
 
   it.each([
