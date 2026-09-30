@@ -42,3 +42,8 @@ export {
   split,
 } from "./settlement.js";
 export { assertUint256, MAX_UINT256 } from "./uint.js";
+export {
+  type VerificationError,
+  type VerificationReport,
+  verifyResultDataset,
+} from "./verify.js";
