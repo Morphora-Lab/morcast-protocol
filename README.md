@@ -10,11 +10,52 @@ Early development. Not deployed. Not audited.
 
 | Component | State |
 |---|---|
-| Settlement arithmetic (`SettlementMath`) | Implemented and tested |
-| Escrow contract | In progress |
+| Escrow contract (`MORCastEscrow`) | Implemented, unit-tested |
+| Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
+| Invariant and Base fork tests | Planned |
+| Deployment scripts | Planned |
+| TypeScript SDK and result verifier | Planned |
+
+## Usage
+
+A brand approves the escrow for the budget and creates the campaign:
+
+```solidity
+IERC20(usdc).approve(address(escrow), budget);
+uint256 id = escrow.createCampaign(usdc, budget, target, startAt, endAt, manifestHash);
+```
+
+Between Day 5 and Day 10 after `endAt`, the settler settles the campaign with the recognized total from the published result dataset:
+
+```solidity
+escrow.settle(id, recognized, merkleRoot, resultHash);
+```
+
+Then each party collects its share:
+
+```solidity
+escrow.claim(id, wallet, amount, proof); // creator payout; anyone may submit it
+escrow.withdrawFee(id);                  // protocol fee to the treasury; anyone may call it
+escrow.withdrawBrand(id);                // unspent budget back to the brand
+```
+
+If the campaign is not settled before Day 10, the brand calls `withdrawBrand(id)` from Day 10 to recover the whole budget.
+
+## Example
+
+A brand escrows 100,000 USDC for a target of 1,000,000 qualified views, and MORCast recognizes 640,000:
+
+| Party | Receives |
+|---|---|
+| MORCast treasury (fee, 20% of spent) | 12,800 USDC |
+| Creators (pool, 80% of spent) | 51,200 USDC |
+| Brand (refund) | 36,000 USDC |
+
+The brand pays for 64% of the target, so 64,000 USDC is spent.
 
 ## Documentation
 
+- [Escrow contract](docs/escrow.md): roles, timeline, functions, payout leaves and security properties.
 - [Settlement arithmetic](docs/settlement.md): how the budget is split between fee, creator pool and refund.
 
 ## Development
