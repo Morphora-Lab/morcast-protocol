@@ -1,0 +1,126 @@
+{
+  "description": "Settlement split vectors: spent = floor(budget x min(recognized, target) / target) rounded down to a multiple of 5; fee = spent / 5; pool = spent - fee; refund = budget - spent. All integers are decimal strings in token base units.",
+  "cases": [
+    {
+      "name": "spec-13-partial-delivery",
+      "description": "Section 13 partial delivery: 100,000 USDC, 64% of target recognized.",
+      "budget": "100000000000",
+      "target": "1000000",
+      "recognized": "640000",
+      "spent": "64000000000",
+      "fee": "12800000000",
+      "pool": "51200000000",
+      "refund": "36000000000"
+    },
+    {
+      "name": "spec-13-threshold",
+      "description": "Section 13 threshold: no creator reaches M, so S = 0 and the brand is fully refunded.",
+      "budget": "100000000000",
+      "target": "1000000",
+      "recognized": "0",
+      "spent": "0",
+      "fee": "0",
+      "pool": "0",
+      "refund": "100000000000"
+    },
+    {
+      "name": "spec-13-over-delivery",
+      "description": "Section 13 over-delivery: S > T spends exactly the whole budget.",
+      "budget": "100000000000",
+      "target": "1000000",
+      "recognized": "1500000",
+      "spent": "100000000000",
+      "fee": "20000000000",
+      "pool": "80000000000",
+      "refund": "0"
+    },
+    {
+      "name": "spec-13-integer-vector",
+      "description": "Section 13 integer test vector.",
+      "budget": "1000000000",
+      "target": "3000",
+      "recognized": "1001",
+      "spent": "333666665",
+      "fee": "66733333",
+      "pool": "266933332",
+      "refund": "666333335"
+    },
+    {
+      "name": "spec-13-tie",
+      "description": "Section 13 tie vector: S = T spends exactly the whole budget.",
+      "budget": "1000000000",
+      "target": "3000",
+      "recognized": "3000",
+      "spent": "1000000000",
+      "fee": "200000000",
+      "pool": "800000000",
+      "refund": "0"
+    },
+    {
+      "name": "mor-18-decimals",
+      "description": "MOR budget with 18 decimals and a non-terminating ratio.",
+      "budget": "12345000000000000000000",
+      "target": "7",
+      "recognized": "3",
+      "spent": "5290714285714285714285",
+      "fee": "1058142857142857142857",
+      "pool": "4232571428571428571428",
+      "refund": "7054285714285714285715"
+    },
+    {
+      "name": "round-down-to-multiple-of-5",
+      "description": "floor(B x S / T) = 42 is rounded down to 40.",
+      "budget": "100",
+      "target": "7",
+      "recognized": "3",
+      "spent": "40",
+      "fee": "8",
+      "pool": "32",
+      "refund": "60"
+    },
+    {
+      "name": "dust-below-5",
+      "description": "floor(B x S / T) = 3 rounds down to 0; the brand keeps the dust.",
+      "budget": "10",
+      "target": "3",
+      "recognized": "1",
+      "spent": "0",
+      "fee": "0",
+      "pool": "0",
+      "refund": "10"
+    },
+    {
+      "name": "tiny-budget",
+      "description": "A tiny budget with a large target spends nothing.",
+      "budget": "5",
+      "target": "1000000",
+      "recognized": "1",
+      "spent": "0",
+      "fee": "0",
+      "pool": "0",
+      "refund": "5"
+    },
+    {
+      "name": "recognized-max-uint",
+      "description": "S at the uint256 maximum is capped at T.",
+      "budget": "1000000000",
+      "target": "3000",
+      "recognized": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+      "spent": "1000000000",
+      "fee": "200000000",
+      "pool": "800000000",
+      "refund": "0"
+    },
+    {
+      "name": "product-overflows-256-bits",
+      "description": "B x min(S, T) exceeds 256 bits; the result is still exact.",
+      "budget": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+      "target": "57896044618658097711785492504343953926634992332820282019728792003956564819968",
+      "recognized": "28948022309329048855892746252171976963317496166410141009864396001978282409984",
+      "spent": "57896044618658097711785492504343953926634992332820282019728792003956564819965",
+      "fee": "11579208923731619542357098500868790785326998466564056403945758400791312963993",
+      "pool": "46316835694926478169428394003475163141307993866256225615783033603165251855972",
+      "refund": "57896044618658097711785492504343953926634992332820282019728792003956564819970"
+    }
+  ]
+}
