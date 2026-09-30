@@ -74,6 +74,7 @@ The brand pays for 64% of the target, so 64,000 USDC is spent.
 - [Result dataset](docs/dataset.md): the published result format, reason codes and what the verifier checks.
 - [Security](docs/security.md): trust model, internal review findings and verified properties.
 - [Deployment](docs/deployment.md): deploying to Base mainnet, other networks and a local Anvil node.
+- [Versions and upgrades](docs/upgrades.md): how a new version is released and what off-chain systems must support.
 - [TypeScript SDK](sdk/README.md): the protocol arithmetic for off-chain services and verifiers.
 
 ## Development
