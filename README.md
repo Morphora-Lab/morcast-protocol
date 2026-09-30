@@ -12,7 +12,7 @@ Early development. Not deployed. Not audited.
 |---|---|
 | Escrow contract (`MORCastEscrow`) | Implemented; unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
-| Deployment scripts | Planned |
+| Deployment scripts | Implemented; not yet deployed |
 | TypeScript SDK and result verifier | Planned |
 
 ## Usage
@@ -56,6 +56,7 @@ The brand pays for 64% of the target, so 64,000 USDC is spent.
 
 - [Escrow contract](docs/escrow.md): roles, timeline, functions, payout leaves and security properties.
 - [Settlement arithmetic](docs/settlement.md): how the budget is split between fee, creator pool and refund.
+- [Deployment](docs/deployment.md): deploying to Base mainnet, other networks and a local Anvil node.
 
 ## Development
 
