@@ -1,0 +1,42 @@
+# Foundry configuration for the MORCast Payment Protocol.
+# Reference: https://getfoundry.sh/config/reference/overview
+
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib"]
+
+# The compiler version is pinned so that local builds, CI and deployments all
+# produce identical bytecode.
+solc_version = "0.8.37"
+
+# Base supports the Cancun instruction set. Cancun provides transient storage
+# (EIP-1153), which the reentrancy guard uses.
+evm_version = "cancun"
+
+optimizer = true
+optimizer_runs = 10_000
+
+# Fuzz tests generate random inputs for every test function that takes arguments.
+[fuzz]
+runs = 1_000
+
+# Invariant tests call random sequences of handler functions and check that
+# global properties hold after every call.
+[invariant]
+runs = 256
+depth = 100
+fail_on_revert = false
+
+# CI runs the same suites with more iterations.
+[profile.ci.fuzz]
+runs = 10_000
+
+[profile.ci.invariant]
+runs = 512
+depth = 200
+
+[fmt]
+line_length = 100
