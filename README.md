@@ -8,6 +8,15 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, MORCa
 
 Early development. Not deployed. Not audited.
 
+| Component | State |
+|---|---|
+| Settlement arithmetic (`SettlementMath`) | Implemented and tested |
+| Escrow contract | In progress |
+
+## Documentation
+
+- [Settlement arithmetic](docs/settlement.md): how the budget is split between fee, creator pool and refund.
+
 ## Development
 
 Requirements: [Foundry](https://getfoundry.sh) 1.8 or later.
