@@ -8,6 +8,19 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, MORCa
 
 Early development. Not deployed. Not audited.
 
+## Development
+
+Requirements: [Foundry](https://getfoundry.sh) 1.8 or later.
+
+```sh
+git clone --recurse-submodules https://github.com/Morphora-Lab/morcast-protocol.git
+cd morcast-protocol
+forge build
+forge test
+```
+
+Dependencies are Git submodules pinned in `foundry.lock`: forge-std v1.17.0 and OpenZeppelin Contracts v5.7.0.
+
 ## License
 
 [MIT](LICENSE)
