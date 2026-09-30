@@ -7,6 +7,11 @@ export {
   parseDecimalString,
 } from "./canonical.js";
 export {
+  MAX_CAMPAIGN_DURATION,
+  SETTLEMENT_CLOSES_AFTER,
+  SETTLEMENT_OPENS_AFTER,
+} from "./constants.js";
+export {
   type DatasetCampaign,
   type DatasetCreator,
   type DatasetIssue,
