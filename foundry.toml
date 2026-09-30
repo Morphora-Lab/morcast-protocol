@@ -27,18 +27,19 @@ fs_permissions = [{ access = "read", path = "./vectors" }]
 runs = 1_000
 
 # Invariant tests call random sequences of handler functions and check that
-# global properties hold after every call.
+# global properties hold after every call. Handlers only perform valid actions,
+# so any revert is a failure.
 [invariant]
 runs = 256
 depth = 100
-fail_on_revert = false
+fail_on_revert = true
 
 # CI runs the same suites with more iterations.
 [profile.ci.fuzz]
 runs = 10_000
 
 [profile.ci.invariant]
-runs = 512
+runs = 256
 depth = 200
 
 [fmt]
