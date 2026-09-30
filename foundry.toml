@@ -19,6 +19,9 @@ evm_version = "cancun"
 optimizer = true
 optimizer_runs = 10_000
 
+# Tests read the shared JSON test vectors in ./vectors.
+fs_permissions = [{ access = "read", path = "./vectors" }]
+
 # Fuzz tests generate random inputs for every test function that takes arguments.
 [fuzz]
 runs = 1_000
