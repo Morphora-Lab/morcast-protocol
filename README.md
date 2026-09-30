@@ -14,7 +14,8 @@ Early development. Not deployed. Not audited.
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
 | Deployment scripts | Implemented; not yet deployed |
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
-| TypeScript SDK: result hashing, Merkle trees, verifier | Planned |
+| TypeScript SDK: document hashing, payout Merkle trees | Implemented; trees verified against the contract |
+| TypeScript SDK: result dataset and verifier | Planned |
 
 ## Usage
 
@@ -58,6 +59,7 @@ The brand pays for 64% of the target, so 64,000 USDC is spent.
 - [Escrow contract](docs/escrow.md): roles, timeline, functions, payout leaves and security properties.
 - [Settlement arithmetic](docs/settlement.md): creator scores, the budget split and creator payouts.
 - [Metrics](docs/metrics.md): exact decimals and the Integration retention metric.
+- [Hashing and Merkle trees](docs/hashing.md): canonical JSON for `manifestHash` and `resultHash`, and payout tree construction.
 - [Deployment](docs/deployment.md): deploying to Base mainnet, other networks and a local Anvil node.
 - [TypeScript SDK](sdk/README.md): the protocol arithmetic for off-chain services and verifiers.
 
