@@ -1,4 +1,4 @@
-export { morcastEscrowAbi } from "./abi.js";
+export { ESCROW_CODE_HASH, morcastEscrowAbi } from "./abi.js";
 export {
   type CanonicalValue,
   canonicalize,
@@ -43,6 +43,7 @@ export {
   CAMPAIGN_STATUSES,
   type CampaignStatus,
   compareWithChain,
+  isGenuineEscrow,
   isSupportedEscrowVersion,
   type OnChainCampaign,
   readCampaign,
