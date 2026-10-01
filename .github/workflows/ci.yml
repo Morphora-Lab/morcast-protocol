@@ -35,7 +35,7 @@ jobs:
       - name: Build
         run: forge build --sizes
 
-      - name: Check that the SDK ABI matches the contract
+      - name: Check that the SDK ABI and code hash match the contract
         run: node sdk/scripts/generate-abi.mjs --check
 
       - name: Test

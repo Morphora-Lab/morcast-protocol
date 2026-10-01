@@ -2,9 +2,9 @@
  * Comparing a result dataset with the campaign recorded by the escrow contract.
  */
 
-import type { Address, Hex, PublicClient } from "viem";
+import { type Address, type Hex, keccak256, type PublicClient } from "viem";
 
-import { morcastEscrowAbi } from "./abi.js";
+import { ESCROW_CODE_HASH, morcastEscrowAbi } from "./abi.js";
 import { ESCROW_VERSION } from "./constants.js";
 import type { ResultDataset } from "./dataset.js";
 import type { VerificationError } from "./verify.js";
@@ -84,6 +84,23 @@ export async function readEscrowVersion(
  */
 export function isSupportedEscrowVersion(version: string): boolean {
   return version.split(".")[0] === ESCROW_VERSION.split(".")[0];
+}
+
+/**
+ * Whether the contract at `escrow` runs this version's MORCastEscrow code: its runtime code hash
+ * equals `ESCROW_CODE_HASH`. Every genuine deployment of the version has exactly this code, so a
+ * different hash means a different contract, whatever its functions answer. Use it before
+ * trusting an address with funds, for example before sending a brand a deposit request.
+ *
+ * @example
+ * if (!(await isGenuineEscrow(client, escrowAddress))) throw new Error("not a MORCast escrow");
+ */
+export async function isGenuineEscrow(
+  client: Pick<PublicClient, "getCode">,
+  escrow: Address,
+): Promise<boolean> {
+  const code = await client.getCode({ address: escrow });
+  return code !== undefined && code !== "0x" && keccak256(code) === ESCROW_CODE_HASH;
 }
 
 /**

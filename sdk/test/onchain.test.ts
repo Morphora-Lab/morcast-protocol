@@ -3,8 +3,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   compareWithChain,
+  ESCROW_CODE_HASH,
   ESCROW_VERSION,
   hashCanonical,
+  isGenuineEscrow,
   isSupportedEscrowVersion,
   type OnChainCampaign,
   readCampaign,
@@ -107,4 +109,38 @@ describe("escrow versions", () => {
     );
     expect(version).toBe("1.0.0");
   });
+});
+
+describe("isGenuineEscrow", () => {
+  /** A client whose getCode answers `code`, recording the address it was asked for. */
+  function clientWithCode(code: Hex | undefined) {
+    const asked: string[] = [];
+    const client = {
+      getCode: async ({ address }: { address: string }) => {
+        asked.push(address);
+        return code;
+      },
+    };
+    return { client: client as unknown as Parameters<typeof isGenuineEscrow>[0], asked };
+  }
+
+  it("publishes the code hash as 32 bytes of hex", () => {
+    expect(ESCROW_CODE_HASH).toMatch(/^0x[0-9a-f]{64}$/);
+  });
+
+  it("rejects a contract with other code", async () => {
+    const { client, asked } = clientWithCode("0x6080604052");
+    expect(await isGenuineEscrow(client, dataset.escrow as Hex)).toBe(false);
+    expect(asked).toEqual([dataset.escrow]);
+  });
+
+  it("rejects an address without code", async () => {
+    expect(await isGenuineEscrow(clientWithCode(undefined).client, dataset.escrow as Hex)).toBe(
+      false,
+    );
+    expect(await isGenuineEscrow(clientWithCode("0x").client, dataset.escrow as Hex)).toBe(false);
+  });
+
+  // A deployed escrow is accepted in the end-to-end check (scripts/e2e-local.sh), which compares
+  // a real deployment's code with this hash.
 });

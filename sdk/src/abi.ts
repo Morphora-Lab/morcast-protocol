@@ -1324,3 +1324,9 @@ export const morcastEscrowAbi = [
     "inputs": []
   }
 ] as const;
+
+/**
+ * keccak256 of MORCastEscrow's runtime code: what `extcodehash` returns for every deployment of
+ * this version. The contract has no immutable variables, so all its deployments share this code.
+ */
+export const ESCROW_CODE_HASH = "0x4194ddac80057e49838b235f3a6275a6dddbe55c12344065b687c8049e69da30";

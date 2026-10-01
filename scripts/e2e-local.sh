@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # End-to-end check on a local Anvil node, using the example result dataset:
 #
-#   1. deploy mock tokens and the escrow (script/DeployLocal.s.sol);
+#   1. deploy mock tokens and the escrow (script/DeployLocal.s.sol) and check that the escrow's
+#      code hash is the SDK's ESCROW_CODE_HASH;
 #   2. create the example campaign as the brand;
 #   3. verify the dataset against the funded campaign;
 #   4. move to Day 5 and settle with the dataset's S, Merkle root and resultHash;
@@ -41,6 +42,17 @@ step() { printf '\n==> %s\n' "$1"; }
 
 step "Deploy"
 forge script script/DeployLocal.s.sol --rpc-url "$RPC" --private-key "$DEPLOYER_KEY" --broadcast >/dev/null
+
+step "Check that the deployment runs the released code"
+# Runs in sdk/, where the SDK's dependencies (viem) resolve.
+(cd sdk && node --input-type=module -e "
+  import { createPublicClient, http } from 'viem';
+  import { isGenuineEscrow } from './dist/index.js';
+  const client = createPublicClient({ transport: http('$RPC') });
+  if (!(await isGenuineEscrow(client, '$ESCROW'))) throw new Error('escrow code differs from ESCROW_CODE_HASH');
+  if (await isGenuineEscrow(client, '$USDC')) throw new Error('a token passed as the escrow');
+  console.log('escrow code hash matches ESCROW_CODE_HASH');
+")
 
 step "Create the example campaign"
 budget=$(jq -r .campaign.budget "$DATASET")

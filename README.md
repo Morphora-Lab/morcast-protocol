@@ -48,7 +48,7 @@ The owner, a MORCast multisig, operates the escrow. It can replace the settler a
 Anyone can check a published result dataset, and compare it with the escrow, with the SDK package from a [release](#releases):
 
 ```sh
-npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.1/morcast-protocol-1.0.0-rc.1.tgz \
+npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.2/morcast-protocol-1.0.0-rc.2.tgz \
   morcast-verify result.json --rpc-url https://mainnet.base.org
 ```
 
@@ -115,6 +115,7 @@ Versions follow semantic versioning; a tag such as `v1.0.0-rc.1` marks a pre-rel
 | Release | State |
 |---|---|
 | `v1.0.0-rc.1` | Release candidate of protocol v1: feature-complete, internally reviewed; external audit pending, not deployed |
+| `v1.0.0-rc.2` | Adds the escrow's code hash to the SDK (`ESCROW_CODE_HASH`, `isGenuineEscrow`) |
 
 The escrow's `VERSION()` names the contract version a deployment runs; see [Versions and upgrades](docs/upgrades.md).
 
