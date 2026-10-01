@@ -1,5 +1,8 @@
 name: CI
 
+# Actions are pinned to full commit hashes, which cannot be moved, with their release in a
+# comment. Dependabot proposes updates (.github/dependabot.yml).
+
 on:
   push:
     branches: [main]
@@ -21,11 +24,11 @@ jobs:
       # BASE_RPC_URL secret; otherwise the public endpoint is used.
       BASE_RPC_URL: ${{ secrets.BASE_RPC_URL || 'https://mainnet.base.org' }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
 
-      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: foundry-rs/foundry-toolchain@908c540300062bd5a7e473851cdb4282204cee09 # v1.9.1
         with:
           version: v1.8.3
 
@@ -48,15 +51,15 @@ jobs:
       run:
         working-directory: sdk
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
           package_json_file: sdk/package.json
           cache: true
           cache_dependency_path: sdk/pnpm-lock.yaml
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
 
@@ -79,21 +82,21 @@ jobs:
     name: End-to-end
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
 
-      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: foundry-rs/foundry-toolchain@908c540300062bd5a7e473851cdb4282204cee09 # v1.9.1
         with:
           version: v1.8.3
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
           package_json_file: sdk/package.json
           cache: true
           cache_dependency_path: sdk/pnpm-lock.yaml
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
 
