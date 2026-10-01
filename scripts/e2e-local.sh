@@ -28,7 +28,11 @@ BRAND_KEY=0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
 USDC=0x5FbDB2315678afecb367f032d93F642f64180aa3
 ESCROW=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 
-anvil --port "$PORT" --silent &
+# The example campaign has fixed times, and a campaign can only be created before it starts. The
+# node therefore starts one day before the campaign instead of at the current time, so the check
+# gives the same result on any date.
+genesis=$(( $(jq -r .campaign.startAt "$DATASET") - 86400 ))
+anvil --port "$PORT" --silent --timestamp "$genesis" &
 ANVIL_PID=$!
 trap 'kill "$ANVIL_PID" 2>/dev/null || true' EXIT
 for _ in $(seq 1 50); do cast chain-id --rpc-url "$RPC" >/dev/null 2>&1 && break; sleep 0.2; done
