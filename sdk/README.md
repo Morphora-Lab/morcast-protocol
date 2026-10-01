@@ -4,20 +4,20 @@ TypeScript implementation of the MORCast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.1`, released with protocol release candidate `v1.0.0-rc.1`. The package is attached to each GitHub release; it is not on npm.
+Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.2`, released with protocol release candidate `v1.0.0-rc.2`. The package is attached to each GitHub release; it is not on npm.
 
 ## Install
 
 Each [release](https://github.com/Morphora-Lab/morcast-protocol/releases) carries the package. Install it from there:
 
 ```sh
-pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.1/morcast-protocol-1.0.0-rc.1.tgz
+pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.2/morcast-protocol-1.0.0-rc.2.tgz
 ```
 
 The lockfile records the package's hash, so every later install gets exactly the same files. To confirm that the release workflow built a downloaded package from this repository:
 
 ```sh
-gh attestation verify morcast-protocol-1.0.0-rc.1.tgz --repo Morphora-Lab/morcast-protocol
+gh attestation verify morcast-protocol-1.0.0-rc.2.tgz --repo Morphora-Lab/morcast-protocol
 ```
 
 The package is ESM only and needs Node.js 20 or later.
@@ -109,6 +109,7 @@ All values are `bigint`. Every function throws a `RangeError` on invalid input.
 | `readCampaign(client, escrow, campaignId)` | The campaign as stored by the escrow |
 | `compareWithChain(dataset, campaign, resultHash)` | Mismatches between a dataset and the on-chain campaign |
 | `morcastEscrowAbi` | ABI of `MORCastEscrow`, generated from the compiled contract |
+| `ESCROW_CODE_HASH`, `isGenuineEscrow(client, escrow)` | keccak256 of the escrow's runtime code, identical for every deployment of this version, and whether a deployment runs that code |
 | `SETTLEMENT_OPENS_AFTER`, `SETTLEMENT_CLOSES_AFTER`, `MAX_CAMPAIGN_DURATION` | The contract's timing constants in seconds: Day 5, Day 10 and 90 days |
 | `ESCROW_VERSION`, `readEscrowVersion(client, escrow)`, `isSupportedEscrowVersion(version)` | The escrow version this SDK implements, a deployment's version, and whether the SDK can read it (same major version) |
 
@@ -126,6 +127,6 @@ pnpm typecheck
 pnpm build       # emits dist/, including the morcast-verify command (dist/bin.js)
 ```
 
-`src/abi.ts` is generated from the compiled contract: `forge build && node sdk/scripts/generate-abi.mjs` from the repository root. CI fails if it is out of date.
+`src/abi.ts` (ABI and code hash) is generated from the compiled contract: `forge build && node sdk/scripts/generate-abi.mjs` from the repository root. CI fails if it is out of date.
 
 `test/fixtures/example.ts` builds [`examples/result-dataset.json`](../examples/result-dataset.json); a test fails if they differ. After changing the fixture, run `UPDATE_EXAMPLES=1 pnpm test` to rewrite the file.
