@@ -4,7 +4,23 @@ TypeScript implementation of the MORCast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). The package is not yet published to npm.
+Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.1`, released with protocol release candidate `v1.0.0-rc.1`. The package is attached to each GitHub release; it is not on npm.
+
+## Install
+
+Each [release](https://github.com/Morphora-Lab/morcast-protocol/releases) carries the package. Install it from there:
+
+```sh
+pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.1/morcast-protocol-1.0.0-rc.1.tgz
+```
+
+The lockfile records the package's hash, so every later install gets exactly the same files. To confirm that the release workflow built a downloaded package from this repository:
+
+```sh
+gh attestation verify morcast-protocol-1.0.0-rc.1.tgz --repo Morphora-Lab/morcast-protocol
+```
+
+The package is ESM only and needs Node.js 20 or later.
 
 ## Usage
 

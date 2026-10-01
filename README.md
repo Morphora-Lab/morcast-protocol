@@ -45,12 +45,11 @@ If the campaign is not settled before Day 10, the brand calls `withdrawBrand(id)
 
 The owner, a MORCast multisig, operates the escrow. It can replace the settler and the treasury, choose tokens and pause creation for new campaigns, void a funded campaign (the budget goes back to its brand) and recover tokens sent to the escrow by mistake. It can never move a campaign's funds anywhere else.
 
-Anyone can check a published result dataset, and compare it with the escrow:
+Anyone can check a published result dataset, and compare it with the escrow, with the SDK package from a [release](#releases):
 
 ```sh
-cd sdk && pnpm install && pnpm build
-node dist/bin.js ../examples/result-dataset.json
-node dist/bin.js result.json --rpc-url https://mainnet.base.org
+npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.1/morcast-protocol-1.0.0-rc.1.tgz \
+  morcast-verify result.json --rpc-url https://mainnet.base.org
 ```
 
 ## Example
@@ -108,6 +107,16 @@ forge test                                              # unit, fuzz and invaria
 BASE_RPC_URL=https://mainnet.base.org forge test --match-path "test/fork/*"
 (cd sdk && pnpm install && pnpm build) && scripts/e2e-local.sh
 ```
+
+## Releases
+
+Versions follow semantic versioning; a tag such as `v1.0.0-rc.1` marks a pre-release. Pushing a version tag on `main` runs the [release workflow](.github/workflows/release.yml): it tests and packs the SDK, attests the package's build provenance and publishes a GitHub release with the package attached.
+
+| Release | State |
+|---|---|
+| `v1.0.0-rc.1` | Release candidate of protocol v1: feature-complete, internally reviewed; external audit pending, not deployed |
+
+The escrow's `VERSION()` names the contract version a deployment runs; see [Versions and upgrades](docs/upgrades.md).
 
 ## License
 
