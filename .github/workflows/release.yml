@@ -1,5 +1,8 @@
 name: Release
 
+# Actions are pinned to full commit hashes, which cannot be moved, with their release in a
+# comment. Dependabot proposes updates (.github/dependabot.yml).
+
 # Pushing a version tag on main (v1.2.3, or v1.2.3-rc.1 for a pre-release) publishes a GitHub
 # release with the SDK package attached. Version tags can be created but never moved or deleted.
 on:
@@ -16,7 +19,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Full history, to check that the tagged commit is on main.
           fetch-depth: 0
@@ -34,13 +37,13 @@ jobs:
             exit 1
           fi
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
           package_json_file: sdk/package.json
           cache: true
           cache_dependency_path: sdk/pnpm-lock.yaml
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
 
@@ -57,7 +60,7 @@ jobs:
 
       # A signed statement that this workflow built the package from the tagged commit. Anyone can
       # check it: gh attestation verify <file> --repo Morphora-Lab/morcast-protocol
-      - uses: actions/attest-build-provenance@v4
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: morcast-protocol-*.tgz
 

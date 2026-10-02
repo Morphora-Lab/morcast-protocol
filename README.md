@@ -110,7 +110,7 @@ BASE_RPC_URL=https://mainnet.base.org forge test --match-path "test/fork/*"
 
 ## Releases
 
-Versions follow semantic versioning; a tag such as `v1.0.0-rc.1` marks a pre-release. Pushing a version tag on `main` runs the [release workflow](.github/workflows/release.yml): it tests and packs the SDK, attests the package's build provenance and publishes a GitHub release with the package attached.
+Versions follow semantic versioning; a tag such as `v1.0.0-rc.1` marks a pre-release. Pushing a version tag on `main` runs the [release workflow](.github/workflows/release.yml): it tests and packs the SDK, attests the package's build provenance and publishes a GitHub release with the package attached. The workflows pin every action to a commit hash, and Dependabot proposes updates to them and to the SDK's packages weekly.
 
 | Release | State |
 |---|---|

@@ -1,0 +1,31 @@
+# Weekly update pull requests (https://docs.github.com/code-security/dependabot).
+#
+# - GitHub Actions, which the workflows pin to commit hashes: all updates in one pull request.
+# - The SDK's npm packages: minor and patch updates grouped, each major update on its own, since
+#   majors can need code changes.
+#
+# The contract libraries (forge-std, OpenZeppelin Contracts) are Git submodules pinned in
+# foundry.lock. They are updated by hand, after reviewing their changes, because they are part of
+# the audited contract.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /sdk
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
