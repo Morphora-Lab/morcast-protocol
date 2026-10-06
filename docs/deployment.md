@@ -70,4 +70,12 @@ On a fresh Anvil node, the addresses are always:
 
 ## Deployments
 
-None yet.
+No production deployment yet. Staging (Base Sepolia, chain 84532) runs version `1.0.0`, deployed from `v1.0.0-rc.3` and verified on [Sourcify](https://sourcify.dev); its transactions are recorded in [`broadcast/Deploy.s.sol/84532`](../broadcast/Deploy.s.sol/84532):
+
+| Contract | Address |
+|---|---|
+| MORCastEscrow | [`0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7`](https://sepolia.basescan.org/address/0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7), created in block 47781042 |
+| USDC | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` (Circle's test USDC) |
+| MOR (test) | `0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`: [`MockERC20`](../test/utils/Tokens.sol) "MorpheusAI (test)", 18 decimals; anyone can mint it |
+
+Its owner, settler and treasury are one staging operator account, `0xB0742AC9890BEf1894747724077254F9553Cd946`, which holds no real funds. Production uses separate multisigs, as above.
