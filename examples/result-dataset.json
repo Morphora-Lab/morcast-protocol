@@ -67,7 +67,7 @@
     {
       "submissionId": "sub-0004",
       "wallet": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
-      "account": "UCa4Vq1kP8sZ2xN7mR3tY6wB",
+      "account": "UCa7Ws3eD6rF9gT2hY5uJ8iK",
       "contentId": "Hy5Tq8wZ3nB",
       "contentUrl": "https://www.youtube.com/watch?v=Hy5Tq8wZ3nB",
       "receivedAt": "1791270000",
@@ -150,35 +150,46 @@
   "creators": [
     {
       "wallet": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
-      "account": "UCa4Vq1kP8sZ2xN7mR3tY6wB",
+      "accounts": [
+        "UCa4Vq1kP8sZ2xN7mR3tY6wB",
+        "UCa7Ws3eD6rF9gT2hY5uJ8iK"
+      ],
       "total": "300000",
       "score": "300000",
       "payout": "24000000000"
     },
     {
       "wallet": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
-      "account": "UCb9Lm2nQ5rT8vX1yZ4cD7eF",
+      "accounts": [
+        "UCb9Lm2nQ5rT8vX1yZ4cD7eF"
+      ],
       "total": "180000",
       "score": "180000",
       "payout": "14400000000"
     },
     {
       "wallet": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
-      "account": "UCc3Hj6kL9mN2pQ5rS8tU1vW",
+      "accounts": [
+        "UCc3Hj6kL9mN2pQ5rS8tU1vW"
+      ],
       "total": "120000",
       "score": "120000",
       "payout": "9600000000"
     },
     {
       "wallet": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
-      "account": "UCd7Fg1hJ4kL7mN0pQ3rS6tU",
+      "accounts": [
+        "UCd7Fg1hJ4kL7mN0pQ3rS6tU"
+      ],
       "total": "40000",
       "score": "40000",
       "payout": "3200000000"
     },
     {
       "wallet": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
-      "account": "UCe2Xy5zA8bC1dE4fG7hJ0kL",
+      "accounts": [
+        "UCe2Xy5zA8bC1dE4fG7hJ0kL"
+      ],
       "total": "9000",
       "score": "0",
       "payout": "0"

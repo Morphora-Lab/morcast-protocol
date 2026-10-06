@@ -93,8 +93,11 @@ export const itemSchema = z.strictObject({
 /** Totals and payout of one creator (one wallet). */
 export const creatorSchema = z.strictObject({
   wallet: address,
-  /** The platform account paired with this wallet in the campaign; null if none. */
-  account: text.nullable(),
+  /**
+   * The platform accounts of the wallet's items in this campaign, sorted and unique. A creator
+   * may take part with several accounts; each account belongs to one wallet.
+   */
+  accounts: z.array(text),
   /** Q: sum of the metrics of the wallet's PASS items. */
   total: uint,
   /** s: Q if Q >= M, otherwise 0. */

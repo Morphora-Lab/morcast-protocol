@@ -15,7 +15,7 @@ import {
 /**
  * The example result dataset in examples/result-dataset.json, built from its inputs with the
  * SDK: a YouTube DEDICATED campaign with the specification's partial-delivery numbers, deployed
- * on a local Anvil node with script/DeployLocal.s.sol.
+ * on a local Anvil node with script/DeployLocal.s.sol. Creator `a` takes part with two channels.
  */
 export function exampleDataset(): ResultDataset {
   const startAt = 1_790_838_000n; // 2026-10-01 00:00 America/Los_Angeles
@@ -34,6 +34,7 @@ export function exampleDataset(): ResultDataset {
   } as const;
   const channels = {
     a: "UCa4Vq1kP8sZ2xN7mR3tY6wB",
+    a2: "UCa7Ws3eD6rF9gT2hY5uJ8iK",
     b: "UCb9Lm2nQ5rT8vX1yZ4cD7eF",
     c: "UCc3Hj6kL9mN2pQ5rS8tU1vW",
     d: "UCd7Fg1hJ4kL7mN0pQ3rS6tU",
@@ -47,13 +48,14 @@ export function exampleDataset(): ResultDataset {
     video: string,
     received: bigint,
     outcome: { metric: bigint } | { reasons: string[]; primary: string; measured: boolean },
+    channel: keyof typeof channels = creator,
   ): DatasetItem => {
     const submissionId = `sub-${String(index).padStart(4, "0")}`;
     const passed = "metric" in outcome;
     return {
       submissionId,
       wallet: wallets[creator],
-      account: channels[creator],
+      account: channels[channel],
       contentId: video,
       contentUrl: `https://www.youtube.com/watch?v=${video}`,
       receivedAt: received.toString(),
@@ -72,11 +74,14 @@ export function exampleDataset(): ResultDataset {
     item(1, "a", "Xk2mP4vL8qR", startAt + 48n * h, { metric: 300_000n }),
     item(2, "b", "Ld7Nq2wE5tY", startAt + 72n * h, { metric: 180_000n }),
     item(3, "c", "Pz9Rt3uI6oA", startAt + 96n * h, { metric: 120_000n }),
-    item(4, "a", "Hy5Tq8wZ3nB", startAt + 120n * h, {
-      reasons: ["EDITED"],
-      primary: "EDITED",
-      measured: true,
-    }),
+    item(
+      4,
+      "a",
+      "Hy5Tq8wZ3nB",
+      startAt + 120n * h,
+      { reasons: ["EDITED"], primary: "EDITED", measured: true },
+      "a2",
+    ),
     item(5, "d", "Bn4Mv7cX1zS", startAt + 144n * h, { metric: 40_000n }),
     item(6, "e", "Qw8Er5tY2uI", startAt + 168n * h, { metric: 9_000n }),
     item(7, "b", "Gh3Jk6lZ9xC", startAt + 192n * h, {
@@ -133,7 +138,9 @@ export function exampleDataset(): ResultDataset {
     items,
     creators: creators.map((c, i) => ({
       wallet: c.wallet,
-      account: channels[c.key],
+      accounts: [
+        ...new Set(items.filter((it) => it.wallet === c.wallet).map((it) => it.account)),
+      ].sort(),
       total: c.total.toString(),
       score: c.score.toString(),
       payout: (payouts[i]?.payout ?? 0n).toString(),
