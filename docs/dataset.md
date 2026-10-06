@@ -49,7 +49,7 @@ Schema version: `morcast.result.v1`. The schema is implemented in [`sdk/src/data
 | Field | Meaning |
 |---|---|
 | `wallet` | The creator's wallet |
-| `account` | The platform account paired with the wallet in this campaign |
+| `accounts` | The platform accounts of the wallet's items in this campaign, sorted. A creator may take part with several accounts; each account belongs to one wallet. |
 | `total` | `Q`: sum of the metrics of the wallet's `PASS` items |
 | `score` | `s`: `Q` if `Q ≥ M`, otherwise `0` |
 | `payout` | `P`: the wallet's share of the creator pool |
@@ -82,7 +82,7 @@ Only accepted submissions are items. A submission rejected at the moment it is s
 - revision `"0"` has no previous hash and no issues, and later revisions have a previous hash;
 - items are in order, submission IDs are unique, and every submission was received before `endAt`;
 - `PASS` items have no reasons; `FAIL` items have sorted reasons, a primary reason among them, and a metric of `0`;
-- no content ID is counted twice, and wallets and accounts are paired one to one;
+- no content ID is counted twice, each account belongs to one wallet, and each creator lists the accounts of its items;
 - Integration `PASS` items have valid segments and `metric = views × retention div 1,000,000`;
 - creator totals, scores, `S`, the settlement split and every payout follow [the settlement rules](settlement.md);
 - the Merkle leaves are exactly the non-zero payouts, and the root matches [the tree construction](hashing.md).

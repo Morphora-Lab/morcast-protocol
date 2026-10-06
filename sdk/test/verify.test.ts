@@ -199,11 +199,11 @@ describe("verifyResultDataset", () => {
       "items[3].contentId",
     ],
     [
-      "one account paired with two wallets",
+      "one account used by two wallets",
       (d) => {
         itemAt(d, 1).account = itemAt(d, 0).account;
       },
-      "items[1]",
+      "items[1].account",
     ],
     [
       "retention evidence outside an Integration campaign",
@@ -242,9 +242,23 @@ describe("verifyResultDataset", () => {
     [
       "a wrong creator account",
       (d) => {
-        creatorAt(d, 0).account = "UCsomeoneElse123456789ab";
+        creatorAt(d, 0).accounts = ["UCsomeoneElse123456789ab"];
       },
-      "creators[0].account",
+      "creators[0].accounts",
+    ],
+    [
+      "a creator's accounts out of order",
+      (d) => {
+        creatorAt(d, 0).accounts.reverse();
+      },
+      "creators[0].accounts",
+    ],
+    [
+      "a creator's accounts joined into one",
+      (d) => {
+        creatorAt(d, 0).accounts = [creatorAt(d, 0).accounts.join()];
+      },
+      "creators[0].accounts",
     ],
     [
       "a wrong recognized total",

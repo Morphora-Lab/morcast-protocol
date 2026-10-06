@@ -121,7 +121,6 @@ function checkItems(d: ResultDataset, fail: Fail): void {
   const integration = d.campaign.format === "INTEGRATION";
   const submissionIds = new Set<string>();
   const passedContent = new Map<string, number>();
-  const accountOfWallet = new Map<string, string>();
   const walletOfAccount = new Map<string, string>();
 
   d.items.forEach((item, i) => {
@@ -140,6 +139,14 @@ function checkItems(d: ResultDataset, fail: Fail): void {
     }
     if (!strictlySorted(item.reasons)) fail(`${path}.reasons`, "must be sorted and unique");
 
+    // Within a campaign, an account belongs to one wallet; a wallet may use several accounts.
+    const owner = walletOfAccount.get(item.account);
+    if (owner !== undefined && owner !== item.wallet) {
+      fail(`${path}.account`, `already used by ${owner}; an account belongs to one wallet`);
+    } else {
+      walletOfAccount.set(item.account, item.wallet);
+    }
+
     if (item.status === "PASS") {
       if (item.reasons.length > 0) fail(`${path}.reasons`, "must be empty for PASS");
       if (item.primaryReason !== null) fail(`${path}.primaryReason`, "must be null for PASS");
@@ -151,15 +158,6 @@ function checkItems(d: ResultDataset, fail: Fail): void {
       } else {
         passedContent.set(item.contentId, i);
       }
-
-      // Within a campaign, one wallet uses one account and one account one wallet.
-      const account = accountOfWallet.get(item.wallet) ?? item.account;
-      const wallet = walletOfAccount.get(item.account) ?? item.wallet;
-      if (account !== item.account || wallet !== item.wallet) {
-        fail(path, "a wallet and an account must be paired one to one");
-      }
-      accountOfWallet.set(item.wallet, account);
-      walletOfAccount.set(item.account, wallet);
     } else {
       if (item.reasons.length === 0) fail(`${path}.reasons`, "must not be empty for FAIL");
       if (item.primaryReason === null || !item.reasons.includes(item.primaryReason)) {
@@ -223,7 +221,7 @@ function checkCreators(d: ResultDataset, fail: Fail): boolean {
   // Expected: one creator per wallet with an item, ordered by wallet address.
   const wallets = [...new Set(d.items.map((item) => item.wallet))].sort();
   const listed = d.creators.map((creator) => creator.wallet);
-  if (wallets.join() !== listed.join()) {
+  if (!sameList(wallets, listed)) {
     fail("creators", "must list each wallet with an item exactly once, ordered by address");
     return false;
   }
@@ -239,9 +237,11 @@ function checkCreators(d: ResultDataset, fail: Fail): boolean {
     const score = creatorScore(total, threshold);
     if (n(creator.score) !== score) fail(`${path}.score`, `expected ${score}`);
 
-    const account = passed[0]?.account;
-    if (account !== undefined && creator.account !== account) {
-      fail(`${path}.account`, `expected ${account}, the account of its PASS items`);
+    const accounts = [
+      ...new Set(d.items.filter((it) => it.wallet === creator.wallet).map((it) => it.account)),
+    ].sort();
+    if (!sameList(creator.accounts, accounts)) {
+      fail(`${path}.accounts`, `expected [${accounts.join(", ")}], the accounts of its items`);
     }
   });
   return valid;
@@ -351,6 +351,11 @@ function lexicographicBefore(a: [bigint, string], b: [bigint, string]): boolean 
 
 function strictlySorted(values: readonly string[]): boolean {
   return values.every((value, i) => i === 0 || (values[i - 1] as string) < value);
+}
+
+/** Whether two lists hold the same values in the same order, compared one by one. */
+function sameList(a: readonly string[], b: readonly string[]): boolean {
+  return a.length === b.length && a.every((value, i) => value === b[i]);
 }
 
 function tryHash(input: unknown): Hex | null {
