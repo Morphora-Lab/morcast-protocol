@@ -6,13 +6,13 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, MORCa
 
 ## Status
 
-Feature-complete for protocol v1. Not deployed. Not audited.
+Feature-complete for protocol v1. Deployed on Base Sepolia for MORCast's staging; not deployed on Base mainnet. Not audited.
 
 | Component | State |
 |---|---|
 | Escrow contract (`MORCastEscrow`) | Implemented; unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
-| Deployment scripts | Implemented; not yet deployed |
+| Deployment scripts | Implemented; used for the Base Sepolia staging deployment ([Deployments](docs/deployment.md#deployments)) |
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
 | TypeScript SDK: document hashing, payout Merkle trees | Implemented; trees verified against the contract |
 | TypeScript SDK: result dataset and verifier (`morcast-verify`) | Implemented; verified end to end on a local node |
