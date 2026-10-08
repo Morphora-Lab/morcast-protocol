@@ -47,7 +47,7 @@ createCampaign ─► Funded ─┬─ cancel (t < startAt) ──────�
 
 ## Owner Actions
 
-The owner should be a multisig. Every action emits an event.
+Every owner action emits an event, so anyone can follow what the owner does.
 
 | Function | Effect | Effect on existing campaigns |
 |---|---|---|
@@ -87,6 +87,6 @@ This is the OpenZeppelin `StandardMerkleTree` leaf format for the value types `(
 | Setting | Base mainnet |
 |---|---|
 | Campaign tokens | USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` (Circle-issued, 6 decimals, not bridged USDbC) and MOR `0x7431aDa8a591C955a994a21710752EF9b882b8e3` (Morpheus MOR, 18 decimals) |
-| Owner | MORCast multisig |
-| Settler | MORCast settlement multisig |
+| Owner | MORCast's owner wallet |
+| Settler | MORCast's settler wallet |
 | Treasury | MORCast fee recipient |

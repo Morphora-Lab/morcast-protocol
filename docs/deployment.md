@@ -4,11 +4,11 @@ The escrow's code and economic rules cannot change after deployment. The owner c
 
 ## Base Mainnet
 
-Requirements: a funded deployer account (Foundry keystore, hardware wallet or other signer), the owner, settler and treasury addresses, and an Etherscan API key for source verification. The owner and the settler should be separate multisigs (for example Safe) with hardware signers. The deployer account gets no role in the contract.
+Requirements: a funded deployer account (Foundry keystore, hardware wallet or other signer), the owner, settler and treasury addresses, and an Etherscan API key for source verification. The owner and the settler should be separate wallets with their keys on hardware signers. The deployer account gets no role in the contract.
 
 ```sh
-export OWNER=0x...              # MORCast owner multisig
-export SETTLER=0x...            # MORCast settlement multisig
+export OWNER=0x...              # MORCast owner wallet
+export SETTLER=0x...            # MORCast settler wallet
 export TREASURY=0x...           # MORCast fee recipient
 export ETHERSCAN_API_KEY=...    # for --verify
 
@@ -78,4 +78,4 @@ No production deployment yet. Staging (Base Sepolia, chain 84532) runs version `
 | USDC | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` (Circle's test USDC) |
 | MOR (test) | `0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`: [`MockERC20`](../test/utils/Tokens.sol) "MorpheusAI (test)", 18 decimals. Anyone can mint it |
 
-Its owner, settler and treasury are one staging operator account, `0xB0742AC9890BEf1894747724077254F9553Cd946`, which holds no real funds. Production uses separate multisigs, as above.
+Its owner, settler and treasury are one staging operator account, `0xB0742AC9890BEf1894747724077254F9553Cd946`, which holds no real funds. Production uses separate owner and settler wallets, as above.

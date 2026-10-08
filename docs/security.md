@@ -14,8 +14,8 @@ Please report vulnerabilities privately through GitHub's "Report a vulnerability
 
 | Party | Trusted to | Cannot |
 |---|---|---|
-| Owner (MORCast multisig) | Replace the settler and the treasury. Choose tokens and pause creation for new campaigns. Void funded campaigns. Recover stray tokens | Move a campaign's funds anywhere except back to its brand. Change the formula, the fee, the deadlines or the 90-day maximum. Change a settlement |
-| Settler (MORCast multisig) | Settle each campaign with the recognized total and payout tree of the published result dataset | Settle outside `[Day 5, Day 10)` or twice. Change the fee recipient or the refund recipient. Move escrowed funds in any other way |
+| Owner (MORCast's owner wallet) | Replace the settler and the treasury. Choose tokens and pause creation for new campaigns. Void funded campaigns. Recover stray tokens | Move a campaign's funds anywhere except back to its brand. Change the formula, the fee, the deadlines or the 90-day maximum. Change a settlement |
+| Settler (MORCast's settler wallet) | Settle each campaign with the recognized total and payout tree of the published result dataset | Settle outside `[Day 5, Day 10)` or twice. Change the fee recipient or the refund recipient. Move escrowed funds in any other way |
 | Brand | Nothing beyond its own campaign's parameters | Cancel after `startAt`. Withdraw before settlement or Day 10. Affect other campaigns |
 | Creators and anyone else | Nothing | Claim anything but an existing, unclaimed leaf. Redirect a payout |
 | Token issuers | Circle (USDC) can pause transfers and blacklist addresses | MOR on Base (`MOROFT`, not upgradeable) has no pause, blacklist or transfer fee |
@@ -58,7 +58,7 @@ For every campaign inside its settlement window, a compromised or dishonest sett
 The owner can appoint the settler, so a compromised owner has the same reach. In addition, it can void funded campaigns (their budgets go back to the brands) and redirect future fee withdrawals. Neither role can take escrowed funds in any other way. This is the protocol's trust model, with MORCast as the single trusted verifier.
 
 Mitigations:
-- Use separate multisigs with hardware signers for the owner and the settler.
+- Keep the owner and the settler in separate wallets, with their keys on hardware signers.
 - Settle only from a published dataset that passes `morcast-verify`.
 - Monitor every `CampaignSettled` event against the published datasets, and every owner event (`SettlerUpdated`, `TreasuryUpdated`, `CampaignTokenUpdated`, `CreationPausedUpdated`, `CampaignVoided`, `TokensRecovered`, ownership transfers).
 

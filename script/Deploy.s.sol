@@ -8,7 +8,7 @@ import {MORCastEscrow} from "../src/MORCastEscrow.sol";
 /// @notice Deploys MORCastEscrow.
 /// @dev Environment variables:
 ///
-///        OWNER     owner of the escrow. Should be a multisig          (required)
+///        OWNER     owner of the escrow, a wallet MORCast holds        (required)
 ///        SETTLER   the address allowed to settle campaigns            (required)
 ///        TREASURY  the address that receives protocol fees            (required)
 ///        USDC      USDC token address        (required, except on Base mainnet)

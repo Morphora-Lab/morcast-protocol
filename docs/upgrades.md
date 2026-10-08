@@ -11,7 +11,7 @@ The escrow cannot be upgraded. A new version is a new deployment at a new addres
 
 ## Releasing a New Version
 
-1. Deploy and verify the new version (see [Deployment](deployment.md)). The same owner, settler and treasury multisigs can serve several versions.
+1. Deploy and verify the new version (see [Deployment](deployment.md)). The same owner, settler and treasury wallets can serve several versions.
 2. Point new deposit requests to the new address.
 3. On the previous version, the owner pauses campaign creation (`setCreationPaused(true)`), so no brand deposits there by mistake.
 4. The previous version keeps running for its campaigns, with settlement between Day 5 and Day 10, refunds and claims. Claims never expire, so a deployment is never switched off.
