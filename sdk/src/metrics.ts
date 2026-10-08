@@ -25,8 +25,8 @@ export interface RetentionSample {
  * Accepts JSON number syntax, including exponents.
  *
  * @example
- * trunc6("0.4567891234"); // 456_789n
- * trunc6("2.5E-1");       // 250_000n
+ * trunc6("0.4567891234"). // 456_789n
+ * trunc6("2.5E-1").       // 250_000n
  */
 export function trunc6(value: string): bigint {
   const { digits, exponent } = parseDecimal(value);
@@ -109,7 +109,7 @@ export function retentionFactor(
  * @param retention R_u in millionths, from {@link retentionFactor}. At most 1,000,000.
  *
  * @example
- * integrationMetric(123_457n, 456_789n); // 56_393n
+ * integrationMetric(123_457n, 456_789n). // 56_393n
  */
 export function integrationMetric(views: bigint, retention: bigint): bigint {
   assertUint256(views, "views");

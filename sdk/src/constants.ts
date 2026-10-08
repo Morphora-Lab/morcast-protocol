@@ -1,5 +1,5 @@
 /**
- * Constants of the escrow contract. Times are in seconds; `Day N` means `endAt + N days`.
+ * Constants of the escrow contract. Times are in seconds. `Day N` means `endAt + N days`.
  */
 
 /**

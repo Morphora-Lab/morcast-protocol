@@ -8,7 +8,7 @@ import {MORCastEscrow} from "../src/MORCastEscrow.sol";
 /// @notice Deploys MORCastEscrow.
 /// @dev Environment variables:
 ///
-///        OWNER     owner of the escrow; should be a multisig          (required)
+///        OWNER     owner of the escrow. Should be a multisig          (required)
 ///        SETTLER   the address allowed to settle campaigns            (required)
 ///        TREASURY  the address that receives protocol fees            (required)
 ///        USDC      USDC token address        (required, except on Base mainnet)
@@ -55,7 +55,7 @@ contract Deploy is Script {
 
     /// @notice Token addresses to deploy with on `chainId`, given the configured addresses
     ///         (zero when not configured).
-    /// @dev On Base mainnet the canonical tokens are always used; a configured address must
+    /// @dev On Base mainnet the canonical tokens are always used. A configured address must
     ///      equal the canonical one. On every other chain both addresses must be configured.
     function resolveTokens(uint256 chainId, address usdc, address mor)
         public

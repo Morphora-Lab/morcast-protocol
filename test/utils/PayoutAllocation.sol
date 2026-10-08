@@ -11,7 +11,7 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 ///        rem_i    = (pool × s_i) mod S
 ///        leftover = pool − Σ base_i            (always fewer than the number of creators)
 ///        P_i      = base_i + 1 for the first `leftover` creators ordered by rem_i descending,
-///                   then by wallet address ascending; otherwise P_i = base_i
+///                   then by wallet address ascending. Otherwise P_i = base_i
 ///
 ///      The result always satisfies Σ P_i == pool.
 library PayoutAllocation {

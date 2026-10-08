@@ -11,8 +11,8 @@ The campaign manifest and the result dataset are JSON documents. Each is hashed 
 3. Object members are sorted by key, comparing keys as sequences of UTF-16 code units. Keys are unique.
 4. There is no whitespace between tokens.
 5. Strings are written literally in UTF-8, except for these escapes:
-   - `"` becomes `\"`, and `\` becomes `\\`;
-   - U+0008, U+0009, U+000A, U+000C and U+000D become `\b`, `\t`, `\n`, `\f` and `\r`;
+   - `"` becomes `\"`, and `\` becomes `\\`
+   - U+0008, U+0009, U+000A, U+000C and U+000D become `\b`, `\t`, `\n`, `\f` and `\r`
    - every other character below U+0020 becomes `\u00xx`, with lowercase hexadecimal digits.
 
    Strings must be valid Unicode, with no unpaired surrogates.
@@ -59,5 +59,5 @@ valid if h == root
 
 | File | Content | Checked by |
 |---|---|---|
-| [`vectors/canonical.json`](../vectors/canonical.json) | Canonical texts and hashes, produced by an independent serializer and hashed with Foundry's `cast keccak` | SDK tests; Solidity `keccak256` |
-| [`vectors/merkle.json`](../vectors/merkle.json) | Payout trees with roots, leaves and proofs, produced by the SDK | SDK tests; Solidity tests prove every leaf and claim a full tree through the escrow |
+| [`vectors/canonical.json`](../vectors/canonical.json) | Canonical texts and hashes, produced by an independent serializer and hashed with Foundry's `cast keccak` | SDK tests. Solidity `keccak256` |
+| [`vectors/merkle.json`](../vectors/merkle.json) | Payout trees with roots, leaves and proofs, produced by the SDK | SDK tests. Solidity tests prove every leaf and claim a full tree through the escrow |

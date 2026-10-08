@@ -150,7 +150,7 @@ function printReport(
   if (report.valid && d !== null) {
     const leaves = d.merkle.leaves.length;
     env.out(
-      `Dataset      valid: ${d.items.length} items, ${d.creators.length} creators, ${leaves} payouts`,
+      `Dataset      valid, with ${d.items.length} items, ${d.creators.length} creators and ${leaves} payouts`,
     );
   } else {
     env.out(`Dataset      ${report.errors.length} error(s)`);
@@ -160,7 +160,7 @@ function printReport(
   if (chain !== null) {
     if (chain.chainErrors.length === 0) {
       const status = chain.chainStatus ?? "unknown";
-      env.out(`On-chain     ${status}; the dataset matches the campaign`);
+      env.out(`On-chain     ${status}, and the dataset matches the campaign`);
     } else {
       env.out(`On-chain     ${chain.chainErrors.length} mismatch(es)`);
       for (const error of chain.chainErrors) env.out(`  ${error.path}: ${error.message}`);

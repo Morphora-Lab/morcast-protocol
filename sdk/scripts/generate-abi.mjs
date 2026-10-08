@@ -1,5 +1,5 @@
 // Writes src/abi.ts from the compiled MORCastEscrow artifact: the contract's ABI and the
-// keccak256 hash of its runtime code. Run `forge build` first; Foundry's `cast` computes the hash,
+// keccak256 hash of its runtime code. Run `forge build` first. Foundry's `cast` computes the hash,
 // because Node's crypto module has no Keccak-256.
 // With --check, exits with an error if src/abi.ts is out of date instead of writing it.
 //

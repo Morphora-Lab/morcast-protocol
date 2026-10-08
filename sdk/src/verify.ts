@@ -4,7 +4,7 @@
  * Anyone can run these checks on a dataset: its structure, every derived value (creator totals,
  * scores, settlement totals, payouts, Merkle leaves and root) and its internal consistency.
  * The measurements themselves (metrics, statuses) are MORCast's responsibility and are taken as
- * published; everything computed from them is recomputed here.
+ * published. Everything computed from them is recomputed here.
  */
 
 import type { Hex } from "viem";
@@ -34,7 +34,7 @@ export interface VerificationReport {
   valid: boolean;
   /** keccak256 of the canonical dataset, or null if the input is not a canonical document. */
   resultHash: Hex | null;
-  /** Every failed check; empty when valid. */
+  /** Every failed check. Empty when valid. */
   errors: VerificationError[];
   /** The typed dataset, when the input matches the schema. */
   dataset: ResultDataset | null;
@@ -139,10 +139,10 @@ function checkItems(d: ResultDataset, fail: Fail): void {
     }
     if (!strictlySorted(item.reasons)) fail(`${path}.reasons`, "must be sorted and unique");
 
-    // Within a campaign, an account belongs to one wallet; a wallet may use several accounts.
+    // Within a campaign, an account belongs to one wallet. A wallet may use several accounts.
     const owner = walletOfAccount.get(item.account);
     if (owner !== undefined && owner !== item.wallet) {
-      fail(`${path}.account`, `already used by ${owner}; an account belongs to one wallet`);
+      fail(`${path}.account`, `already used by ${owner}, and an account belongs to one wallet`);
     } else {
       walletOfAccount.set(item.account, item.wallet);
     }
@@ -279,7 +279,7 @@ function checkTotalsAndMerkle(d: ResultDataset, creatorsValid: boolean, fail: Fa
     if (n(creator.payout) !== payout) fail(`creators[${i}].payout`, `expected ${payout}`);
   });
 
-  // Leaves: every non-zero payout, in wallet order; root: the payout tree over those leaves.
+  // Leaves: every non-zero payout, in wallet order. Root: the payout tree over those leaves.
   const leaves = d.creators
     .filter((creator) => n(creator.payout) > 0n)
     .map((creator) => ({ wallet: creator.wallet, amount: creator.payout }));

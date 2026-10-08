@@ -170,7 +170,7 @@ contract MORCastEscrowTest is EscrowFixture {
     }
 
     /// @notice An `endAt` given in milliseconds instead of seconds would lock the budget for
-    ///         thousands of years after the start; the duration cap rejects it at creation.
+    ///         thousands of years after the start. The duration cap rejects it at creation.
     function test_createCampaign_rejectsEndAtInMilliseconds() public {
         uint64 endAtMillis = endAt * 1000;
         vm.expectRevert(
@@ -458,7 +458,7 @@ contract MORCastEscrowTest is EscrowFixture {
         Payout[] memory payouts = _specPayouts();
         _settle(id, 640_000, _root(id, payouts));
 
-        // A relayer submits the claim; the funds still go to the creator's wallet.
+        // A relayer submits the claim. The funds still go to the creator's wallet.
         _claim(id, payouts, 1, stranger);
 
         assertEq(usdc.balanceOf(payouts[1].wallet), 14_400e6);
@@ -624,7 +624,7 @@ contract MORCastEscrowTest is EscrowFixture {
 
         assertEq(usdc.balanceOf(brand), brandBefore + 36_000e6);
         assertTrue(escrow.getCampaign(id).refundPaid);
-        // The campaign stays settled; creators can still claim.
+        // The campaign stays settled. Creators can still claim.
         assertEq(uint8(escrow.getCampaign(id).status), uint8(IMORCastEscrow.Status.Settled));
     }
 
