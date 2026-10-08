@@ -6,7 +6,7 @@ How creator results become the recognized total `S`, how the budget is divided a
 |---|---|---|
 | Creator scores and `S` | Off-chain | [`sdk/src/settlement.ts`](../sdk/src/settlement.ts) |
 | Budget split | On-chain, at `settle` | [`SettlementMath`](../src/libraries/SettlementMath.sol), mirrored in the SDK |
-| Creator payouts | Off-chain; each payout becomes a Merkle leaf | [`sdk/src/payouts.ts`](../sdk/src/payouts.ts) |
+| Creator payouts | Off-chain. Each payout becomes a Merkle leaf | [`sdk/src/payouts.ts`](../sdk/src/payouts.ts) |
 
 ## Symbols
 
@@ -42,7 +42,7 @@ All arithmetic uses integers, and every division rounds down. The product `B × 
 
 ## Properties
 
-- `fee + pool + refund = B`: no base unit is created or lost.
+- `fee + pool + refund = B`, so no base unit is created or lost.
 - `G ≤ B`, `S ≥ T ⇒ G = B`, and `S = 0 ⇒ G = 0`.
 - `G` is a multiple of 5, so the 20% / 80% split is exact. Rounding dust, at most 4 base units, stays with the brand.
 - More recognized delivery never lowers `G`.

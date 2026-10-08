@@ -176,7 +176,7 @@ contract OwnerTest is EscrowFixture {
     // setCampaignToken
     // ===========================================================================================
 
-    /// @notice Disallowing a token stops new campaigns in it; existing ones still pay out.
+    /// @notice Disallowing a token stops new campaigns in it. Existing ones still pay out.
     function test_disallowedToken_blocksOnlyNewCampaigns() public {
         uint256 id = _createCampaign(address(mor), 100e18, TARGET);
 
@@ -283,7 +283,7 @@ contract OwnerTest is EscrowFixture {
     // recoverTokens
     // ===========================================================================================
 
-    /// @notice Only tokens beyond what campaigns are owed can be recovered; every campaign can
+    /// @notice Only tokens beyond what campaigns are owed can be recovered. Every campaign can
     ///         still be paid in full afterwards.
     function test_recoverTokens_returnsOnlyStrayTokens() public {
         uint256 first = _createCampaign();

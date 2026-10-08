@@ -7,12 +7,12 @@
 | Role | Address | Powers |
 |---|---|---|
 | Brand | Caller of `createCampaign` | Cancel before the start. Withdraw the refund after settlement. Withdraw the whole budget from Day 10 if the campaign was not settled. |
-| Settler | Set at deployment; replaceable by the owner | Settle each campaign once, inside `[Day 5, Day 10)`. No other power. |
-| Treasury | Set at deployment; replaceable by the owner | Receives protocol fees. |
-| Owner | Set at deployment; transferred in two steps | Operate the escrow (see [Owner Actions](#owner-actions)). The owner can never move a campaign's money anywhere except back to the brand that deposited it. |
+| Settler | Set at deployment. Replaceable by the owner | Settle each campaign once, inside `[Day 5, Day 10)`. No other power. |
+| Treasury | Set at deployment. Replaceable by the owner | Receives protocol fees. |
+| Owner | Set at deployment. Transferred in two steps | Operate the escrow (see [Owner Actions](#owner-actions)). The owner can never move a campaign's money anywhere except back to the brand that deposited it. |
 | Anyone | Any address | Submit a creator claim (funds always go to the leaf's wallet). Trigger the fee transfer to the treasury. |
 
-The code cannot be upgraded, and the economic rules (the formula, the 20% fee, Day 5, Day 10 and the 90-day maximum) are constants. A new version is a new deployment; see [Versions and Upgrades](upgrades.md).
+The code cannot be upgraded, and the economic rules (the formula, the 20% fee, Day 5, Day 10 and the 90-day maximum) are constants. A new version is a new deployment. See [Versions and Upgrades](upgrades.md).
 
 ## Timeline
 
@@ -54,10 +54,10 @@ The owner should be a multisig. Every action emits an event.
 | `setSettler(address)` | Replaces the settler. The zero address disables settlement. | The new settler settles them. With settlement disabled, they fall back to the Day-10 refund. |
 | `setTreasury(address)` | Replaces the fee recipient | Fees withdrawn from then on go to the new treasury. |
 | `setCampaignToken(token, allowed)` | Allows or disallows a token for new campaigns | None |
-| `setCreationPaused(paused)` | Pauses or resumes `createCampaign` | None: cancellation, settlement, claims and refunds keep working. |
-| `voidCampaign(id)` | Ends a funded campaign; its whole budget goes back to its brand. | Only the voided campaign |
-| `recoverTokens(token, to)` | Sends `to` the tokens held beyond `totalOwed(token)`, such as tokens transferred to the escrow by mistake | None: campaign funds cannot be recovered. |
-| `transferOwnership(address)`, `acceptOwnership()` | Two-step ownership transfer: the new owner must accept | None |
+| `setCreationPaused(paused)` | Pauses or resumes `createCampaign` | None. Cancellation, settlement, claims and refunds keep working. |
+| `voidCampaign(id)` | Ends a funded campaign. Its whole budget goes back to its brand. | Only the voided campaign |
+| `recoverTokens(token, to)` | Sends `to` the tokens held beyond `totalOwed(token)`, such as tokens transferred to the escrow by mistake | None. Campaign funds cannot be recovered. |
+| `transferOwnership(address)`, `acceptOwnership()` | Two-step ownership transfer, which the new owner must accept | None |
 
 `renounceOwnership()` removes the owner permanently. The settler, treasury and allowed tokens then stay fixed, and the pause, voiding and recovery become unavailable.
 

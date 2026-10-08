@@ -9,7 +9,7 @@ import {IMORCastEscrow} from "../../src/interfaces/IMORCastEscrow.sol";
 import {MerkleTreeBuilder} from "../utils/MerkleTreeBuilder.sol";
 
 /// @notice Runs the escrow against the real USDC and MOR contracts on a fork of Base mainnet.
-/// @dev Requires the BASE_RPC_URL environment variable; the suite is skipped without it.
+/// @dev Requires the BASE_RPC_URL environment variable. The suite is skipped without it.
 ///      Balances are set with `deal`, so no real funds are involved.
 contract BaseForkTest is Test {
     /// @dev Circle-issued USDC on Base (6 decimals).

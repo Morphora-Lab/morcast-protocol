@@ -6,17 +6,17 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, MORCa
 
 ## Status
 
-Feature-complete for protocol v1. Deployed on Base Sepolia for MORCast's staging; not deployed on Base mainnet. Not audited.
+Feature-complete for protocol v1. Deployed on Base Sepolia for MORCast's staging. Not deployed on Base mainnet. Not audited.
 
 | Component | State |
 |---|---|
-| Escrow contract (`MORCastEscrow`) | Implemented; unit, invariant and Base fork tests |
+| Escrow contract (`MORCastEscrow`) | Implemented. Unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
-| Deployment scripts | Implemented; used for the Base Sepolia staging deployment ([Deployments](docs/deployment.md#deployments)) |
+| Deployment scripts | Implemented. Used for the Base Sepolia staging deployment ([Deployments](docs/deployment.md#deployments)) |
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
-| TypeScript SDK: document hashing, payout Merkle trees | Implemented; trees verified against the contract |
-| TypeScript SDK: result dataset and verifier (`morcast-verify`) | Implemented; verified end to end on a local node |
-| Security | Internal review completed, no critical, high or medium findings; external audit pending |
+| TypeScript SDK: document hashing, payout Merkle trees | Implemented. Trees verified against the contract |
+| TypeScript SDK: result dataset and verifier (`morcast-verify`) | Implemented. Verified end to end on a local node |
+| Security | Internal review completed, no critical, high or medium findings. External audit pending |
 
 ## Usage
 
@@ -97,7 +97,7 @@ The TypeScript SDK lives in [`sdk/`](sdk) and has its own [instructions](sdk/REA
 |---|---|---|
 | Unit | `test/*.t.sol` | Every function, revert path and time boundary. |
 | Fuzz | `testFuzz_*` functions | Settlement and payout properties for random inputs. |
-| Invariant | `test/invariant/` | Across random multi-campaign sequences: escrow balances equal outstanding obligations, and settled campaigns follow the formula. |
+| Invariant | `test/invariant/` | Across random multi-campaign sequences, escrow balances equal outstanding obligations and settled campaigns follow the formula. |
 | Fork | `test/fork/` | Full lifecycle with the real USDC and MOR contracts on Base mainnet. Skipped unless `BASE_RPC_URL` is set. |
 | Vectors | `vectors/` | Numeric examples from the specification, shared with off-chain implementations. |
 | End-to-end | `scripts/e2e-local.sh` | On a local Anvil node: deploy, create the example campaign, settle it from `examples/result-dataset.json`, verify it on-chain and claim every payout with SDK proofs. |
@@ -110,15 +110,15 @@ BASE_RPC_URL=https://mainnet.base.org forge test --match-path "test/fork/*"
 
 ## Releases
 
-Versions follow semantic versioning; a tag such as `v1.0.0-rc.1` marks a pre-release. Pushing a version tag on `main` runs the [release workflow](.github/workflows/release.yml): it tests and packs the SDK, attests the package's build provenance and publishes a GitHub release with the package attached. The workflows pin every action to a commit hash, and Dependabot proposes updates to them and to the SDK's packages weekly.
+Versions follow semantic versioning. A tag such as `v1.0.0-rc.1` marks a pre-release. Pushing a version tag on `main` runs the [release workflow](.github/workflows/release.yml). It tests and packs the SDK, attests the package's build provenance and publishes a GitHub release with the package attached. The workflows pin every action to a commit hash, and Dependabot proposes updates to them and to the SDK's packages weekly.
 
 | Release | State |
 |---|---|
-| `v1.0.0-rc.1` | Release candidate of protocol v1: feature-complete, internally reviewed; external audit pending, not deployed |
+| `v1.0.0-rc.1` | Release candidate of protocol v1: feature-complete, internally reviewed. External audit pending, not deployed |
 | `v1.0.0-rc.2` | Adds the escrow's code hash to the SDK (`ESCROW_CODE_HASH`, `isGenuineEscrow`) |
-| `v1.0.0-rc.3` | A creator may take part in a campaign with several accounts: each creator in a result dataset lists its `accounts`, and each account belongs to one wallet |
+| `v1.0.0-rc.3` | A creator may take part in a campaign with several accounts. Each creator in a result dataset lists its `accounts`, and each account belongs to one wallet |
 
-The escrow's `VERSION()` names the contract version a deployment runs; see [Versions and upgrades](docs/upgrades.md).
+The escrow's `VERSION()` names the contract version a deployment runs. See [Versions and upgrades](docs/upgrades.md).
 
 ## License
 

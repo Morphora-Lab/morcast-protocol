@@ -32,7 +32,7 @@ contract EscrowInvariantsTest is StdInvariant, Test {
             new MORCastEscrow(makeAddr("owner"), makeAddr("settler"), makeAddr("treasury"), tokens);
         handler = new EscrowHandler(escrow, usdc, mor);
 
-        // Only the handler's actions are called; views and helpers are excluded.
+        // Only the handler's actions are called. Views and helpers are excluded.
         bytes4[] memory selectors = new bytes4[](14);
         selectors[0] = EscrowHandler.createCampaign.selector;
         selectors[1] = EscrowHandler.cancel.selector;
@@ -61,7 +61,7 @@ contract EscrowInvariantsTest is StdInvariant, Test {
 
     /// @notice The escrow holds exactly what it still owes according to its own records
     ///         (funded budgets, unpaid fees, unpaid refunds and unclaimed creator pools), plus
-    ///         stray tokens; `totalOwed` always equals what it owes.
+    ///         stray tokens. `totalOwed` always equals what it owes.
     function invariant_balancesMatchOutstandingObligations() public view {
         uint256 owedUsdc;
         uint256 owedMor;

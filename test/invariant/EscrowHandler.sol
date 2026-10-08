@@ -149,7 +149,7 @@ contract EscrowHandler is Test {
             recognized += scores[i];
         }
 
-        // Payouts follow the off-chain rule; only non-zero payouts become Merkle leaves.
+        // Payouts follow the off-chain rule. Only non-zero payouts become Merkle leaves.
         (,, uint256 pool,) = SettlementMath.split(c.budget, c.target, recognized);
         uint256[] memory amounts = PayoutAllocation.allocate(pool, wallets, scores);
         for (uint256 i; i < n; i++) {
@@ -252,7 +252,7 @@ contract EscrowHandler is Test {
         calls["toggleCampaignToken"]++;
     }
 
-    /// @notice The owner voids a funded campaign; its budget goes back to the brand.
+    /// @notice The owner voids a funded campaign. Its budget goes back to the brand.
     function voidCampaign(uint256 idSeed) external {
         (bool found, uint256 id) = _find(idSeed, _isFunded);
         if (!found) return;
