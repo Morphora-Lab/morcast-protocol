@@ -42,6 +42,18 @@ export OWNER=0x... SETTLER=0x... TREASURY=0x... USDC=0x... MOR=0x...
 forge script script/Deploy.s.sol --rpc-url <rpc-url> --account <keystore-name> --broadcast
 ```
 
+## Test Builds With Short Days
+
+A whole campaign takes about two weeks with real days, from the request to the settlement window. To run one in about an hour on a test network, `scripts/deploy-short-days.sh` deploys a test build whose campaign days last `DAY_SECONDS` seconds. Settlement opens after 5 of those days and closes after 10, and a campaign lasts at most 90. The rest of the code is the same.
+
+```sh
+export OWNER=0x... SETTLER=0x... TREASURY=0x... USDC=0x... MOR=0x...
+RPC_URL=https://sepolia.base.org DAY_SECONDS=300 \
+  scripts/deploy-short-days.sh --account <keystore-name> --broadcast
+```
+
+The script builds the test build in a temporary copy of the project, so `src` never changes. Its code hash differs from `ESCROW_CODE_HASH`, so `isGenuineEscrow` answers `false` for it, and it must never hold real funds. The script refuses Base mainnet. Check the build with `SETTLEMENT_OPENS_AFTER()`, which returns `5 × DAY_SECONDS`. MORCast's platform accepts a test build only on a test network whose campaign day has the same length.
+
 ## Local Development
 
 ```sh
