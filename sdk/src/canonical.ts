@@ -93,7 +93,7 @@ function serialize(value: unknown, path: string): string {
   }
 
   if (typeof value === "number" || typeof value === "bigint") {
-    throw new TypeError(`${path} is a number; encode integers as decimal strings`);
+    throw new TypeError(`${path} is a number, but integers are encoded as decimal strings`);
   }
   throw new TypeError(`${path} has unsupported type ${typeof value}`);
 }

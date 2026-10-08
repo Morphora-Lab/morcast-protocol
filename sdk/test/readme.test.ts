@@ -38,7 +38,7 @@ describe("README example", () => {
     const payouts = allocatePayouts(pool, scores);
     expect(payouts.map((p) => p.payout)).toEqual([24_000_000_000n, 14_400_000_000n, 0n]);
 
-    // The zero payout is left out of the tree; both remaining leaves have valid proofs.
+    // The zero payout is left out of the tree. Both remaining leaves have valid proofs.
     const tree = buildPayoutTree(
       1n,
       payouts.map((p) => ({ wallet: p.wallet, amount: p.payout })),

@@ -38,7 +38,7 @@ export const campaignSchema = z.strictObject({
   /** The campaign token (USDC or MOR). */
   token: address,
   platform: z.enum(["X", "YOUTUBE"]),
-  /** YouTube format; null for X campaigns. */
+  /** YouTube format. Null for X campaigns. */
   format: z.enum(["DEDICATED", "INTEGRATION"]).nullable(),
   /** B, in token base units. */
   budget: uint,
@@ -76,17 +76,17 @@ export const itemSchema = z.strictObject({
   /** When MORCast received the submission, unix seconds. */
   receivedAt: uint,
   status: z.enum(["PASS", "FAIL"]),
-  /** All applicable reason codes, sorted and unique; empty for PASS. */
+  /** All applicable reason codes, sorted and unique. Empty for PASS. */
   reasons: z.array(reasonCode),
-  /** The reason that decided a FAIL; null for PASS. */
+  /** The reason that decided a FAIL. Null for PASS. */
   primaryReason: reasonCode.nullable(),
-  /** q in the primary metric; "0" for FAIL. */
+  /** q in the primary metric. "0" for FAIL. */
   metric: uint,
-  /** When the metric was retrieved, unix seconds; null if never measured. */
+  /** When the metric was retrieved, unix seconds. Null if never measured. */
   retrievedAt: uint.nullable(),
-  /** Reference to the evidence bundle; null if none was captured. */
+  /** Reference to the evidence bundle. Null if none was captured. */
   evidence: text.nullable(),
-  /** Retention evidence for Integration items; null otherwise. */
+  /** Retention evidence for Integration items. Null otherwise. */
   integration: integrationSchema.nullable(),
 });
 
@@ -95,7 +95,7 @@ export const creatorSchema = z.strictObject({
   wallet: address,
   /**
    * The platform accounts of the wallet's items in this campaign, sorted and unique. A creator
-   * may take part with several accounts; each account belongs to one wallet.
+   * may take part with several accounts. Each account belongs to one wallet.
    */
   accounts: z.array(text),
   /** Q: sum of the metrics of the wallet's PASS items. */
@@ -112,7 +112,7 @@ export const issueSchema = z.strictObject({
   /** Wallet of the creator or brand that raised the issue. */
   raisedBy: address,
   raisedAt: uint,
-  /** The submission the issue concerns; null for campaign-wide issues. */
+  /** The submission the issue concerns. Null for campaign-wide issues. */
   submissionId: text.nullable(),
   summary: text,
   outcome: z.enum(["UPHELD", "REJECTED"]),
@@ -127,9 +127,9 @@ export const resultDatasetSchema = z.strictObject({
   /** Address of the escrow contract that holds the campaign. */
   escrow: address,
   campaignId: uint,
-  /** "0" for the first publication; increases by one with every revision. */
+  /** "0" for the first publication. Increases by one with every revision. */
   revision: uint,
-  /** resultHash of the previous revision; null for revision "0". */
+  /** resultHash of the previous revision. Null for revision "0". */
   previousResultHash: bytes32.nullable(),
   /** Publication time, unix seconds. */
   publishedAt: uint,
@@ -148,7 +148,7 @@ export const resultDatasetSchema = z.strictObject({
     refund: uint,
   }),
   merkle: z.strictObject({
-    /** Root passed to `settle`; all zeros when there are no leaves. */
+    /** Root passed to `settle`. All zeros when there are no leaves. */
     root: bytes32,
     /** Creators with a non-zero payout, ordered by wallet address. */
     leaves: z.array(z.strictObject({ wallet: address, amount: uint })),

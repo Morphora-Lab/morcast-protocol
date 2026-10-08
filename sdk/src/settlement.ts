@@ -64,7 +64,7 @@ export function split(budget: bigint, target: bigint, recognized: bigint): Split
   // Delivery above the target is not paid for.
   const capped = recognized < target ? recognized : target;
 
-  // floor(B × min(S, T) / T); never larger than B because min(S, T) <= T.
+  // floor(B × min(S, T) / T). Never larger than B because min(S, T) <= T.
   const raw = (budget * capped) / target;
 
   // Round down to a multiple of 5 so that the 20% / 80% split is exact. The dropped remainder
@@ -79,8 +79,8 @@ export function split(budget: bigint, target: bigint, recognized: bigint): Split
  * The creator threshold `M = ceil(T / 100)`: a creator whose total is below `M` scores zero.
  *
  * @example
- * creatorThreshold(1_000_000n); // 10_000n
- * creatorThreshold(3_000n);     // 30n
+ * creatorThreshold(1_000_000n). // 10_000n
+ * creatorThreshold(3_000n).     // 30n
  */
 export function creatorThreshold(target: bigint): bigint {
   assertUint256(target, "target");

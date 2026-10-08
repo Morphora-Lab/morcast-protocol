@@ -108,10 +108,10 @@ export async function isGenuineEscrow(
  *
  * The campaign terms (brand, token, budget, target, dates, manifest hash) must always match.
  * Once the campaign is settled, the settlement (recognized total, split, Merkle root and result
- * hash) must match too; a mismatching result hash means this is not the settled revision.
+ * hash) must match too. A mismatching result hash means this is not the settled revision.
  *
  * @param resultHash The dataset's hash, from `verifyResultDataset`.
- * @returns Every mismatch; empty when the dataset agrees with the chain.
+ * @returns Every mismatch. Empty when the dataset agrees with the chain.
  */
 export function compareWithChain(
   dataset: ResultDataset,
@@ -151,7 +151,7 @@ export function compareWithChain(
     if (resultHash.toLowerCase() !== chain.resultHash.toLowerCase()) {
       errors.push({
         path: "resultHash",
-        message: `the campaign was settled with ${chain.resultHash}; this is not the settled revision`,
+        message: `the campaign was settled with ${chain.resultHash}, so this is not the settled revision`,
       });
     }
   }

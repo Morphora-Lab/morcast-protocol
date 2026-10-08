@@ -4,7 +4,7 @@ TypeScript implementation of the MORCast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.3`, released with protocol release candidate `v1.0.0-rc.3`. The package is attached to each GitHub release; it is not on npm.
+Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.3`, released with protocol release candidate `v1.0.0-rc.3`. The package is attached to each GitHub release. It is not on npm.
 
 ## Install
 
@@ -127,6 +127,6 @@ pnpm typecheck
 pnpm build       # emits dist/, including the morcast-verify command (dist/bin.js)
 ```
 
-`src/abi.ts` (ABI and code hash) is generated from the compiled contract: `forge build && node sdk/scripts/generate-abi.mjs` from the repository root. CI fails if it is out of date.
+`src/abi.ts` (ABI and code hash) is generated from the compiled contract by running `forge build && node sdk/scripts/generate-abi.mjs` from the repository root. CI fails if it is out of date.
 
-`test/fixtures/example.ts` builds [`examples/result-dataset.json`](../examples/result-dataset.json); a test fails if they differ. After changing the fixture, run `UPDATE_EXAMPLES=1 pnpm test` to rewrite the file.
+`test/fixtures/example.ts` builds [`examples/result-dataset.json`](../examples/result-dataset.json). A test fails if they differ. After changing the fixture, run `UPDATE_EXAMPLES=1 pnpm test` to rewrite the file.

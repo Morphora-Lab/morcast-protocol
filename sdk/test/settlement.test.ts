@@ -93,7 +93,7 @@ describe("creator scoring", () => {
   });
 
   it("reproduces the specification's threshold example", () => {
-    // 100 creators just below M: nothing is recognized.
+    // 100 creators just below M. Nothing is recognized.
     const scores = Array.from({ length: 100 }, () => creatorScore(9_999n, 10_000n));
     expect(recognizedTotal(scores)).toBe(0n);
   });

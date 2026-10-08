@@ -63,7 +63,7 @@ describe("morcast-verify", () => {
   it("reports a valid dataset with exit code 0", async () => {
     const result = await run(["result.json"], files);
     expect(result.code).toBe(0);
-    expect(result.out).toContain("Dataset      valid: 8 items, 5 creators, 4 payouts");
+    expect(result.out).toContain("Dataset      valid, with 8 items, 5 creators and 4 payouts");
     expect(result.out).toContain(`resultHash   ${hashCanonical(example)}`);
   });
 
@@ -84,7 +84,7 @@ describe("morcast-verify", () => {
     const chain = { chainId: 31_337, campaign: settledCampaign() };
     const result = await run(["result.json", "--rpc-url", "http://rpc"], files, chain);
     expect(result.code).toBe(0);
-    expect(result.out).toContain("On-chain     Settled; the dataset matches the campaign");
+    expect(result.out).toContain("On-chain     Settled, and the dataset matches the campaign");
   });
 
   it("reports a different chain", async () => {
