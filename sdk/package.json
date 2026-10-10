@@ -33,11 +33,11 @@
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
-    "viem": "^2.57.1",
+    "viem": "^2.57.3",
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.14",
+    "@biomejs/biome": "2.5.15",
     "@types/node": "^22.20.4",
     "typescript": "6.0.3",
     "vitest": "^5.0.3"
