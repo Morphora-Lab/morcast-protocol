@@ -7,6 +7,9 @@
 # The contract libraries (forge-std, OpenZeppelin Contracts) are Git submodules pinned in
 # foundry.lock. They are updated by hand, after reviewing their changes, because they are part of
 # the audited contract.
+#
+# @types/node follows the Node.js version the SDK is built and tested with, so its majors wait
+# for a move to a new Node.js.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -29,3 +32,6 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
