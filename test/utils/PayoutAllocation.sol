@@ -4,7 +4,7 @@ pragma solidity 0.8.37;
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 /// @notice Reference implementation of the creator payout rule, used by tests to build
-///         realistic Merkle trees. Off-chain, MORCast computes payouts with the same rule.
+///         realistic Merkle trees. Off-chain, Morcast computes payouts with the same rule.
 /// @dev For creators with scores s_i > 0 and S = Σ s_i:
 ///
 ///        base_i   = (pool × s_i) div S

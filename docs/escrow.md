@@ -2,6 +2,8 @@
 
 [`MORCastEscrow`](../src/MORCastEscrow.sol) holds campaign budgets, settles each campaign once from the recognized total, and pays out the protocol fee, creator claims and the brand refund. Events and errors are defined in [`IMORCastEscrow`](../src/interfaces/IMORCastEscrow.sol).
 
+The contract and its interface keep the names they were released with. The names and the comments in `src` are part of the code that the code hash identifies, so they change only with a new version of the contract.
+
 ## Roles
 
 | Role | Address | Powers |
@@ -87,6 +89,6 @@ This is the OpenZeppelin `StandardMerkleTree` leaf format for the value types `(
 | Setting | Base mainnet |
 |---|---|
 | Campaign tokens | USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` (Circle-issued, 6 decimals, not bridged USDbC) and MOR `0x7431aDa8a591C955a994a21710752EF9b882b8e3` (Morpheus MOR, 18 decimals) |
-| Owner | MORCast's owner wallet |
-| Settler | MORCast's settler wallet |
-| Treasury | MORCast fee recipient |
+| Owner | Morcast's owner wallet |
+| Settler | Morcast's settler wallet |
+| Treasury | Morcast fee recipient |

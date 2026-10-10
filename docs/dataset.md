@@ -1,6 +1,6 @@
 # Result Dataset
 
-The document MORCast publishes for every campaign after measurement. It lists each accepted submission with its status and metric, each creator's total, score and payout, the settlement totals and the Merkle leaves. `resultHash`, passed to `settle`, is the [canonical hash](hashing.md) of this document, so anyone can check that a settlement matches what was published.
+The document Morcast publishes for every campaign after measurement. It lists each accepted submission with its status and metric, each creator's total, score and payout, the settlement totals and the Merkle leaves. `resultHash`, passed to `settle`, is the [canonical hash](hashing.md) of this document, so anyone can check that a settlement matches what was published.
 
 Schema version: `morcast.result.v1`. The schema is implemented in [`sdk/src/dataset.ts`](../sdk/src/dataset.ts), and a complete example is [`examples/result-dataset.json`](../examples/result-dataset.json).
 
@@ -35,7 +35,7 @@ Schema version: `morcast.result.v1`. The schema is implemented in [`sdk/src/data
 | `wallet` | Submitting wallet |
 | `account` | Platform account of the content's author: X user ID or YouTube channel ID |
 | `contentId`, `contentUrl` | X post ID or YouTube video ID, and its URL |
-| `receivedAt` | When MORCast received the submission (before `endAt`) |
+| `receivedAt` | When Morcast received the submission (before `endAt`) |
 | `status` | `PASS` or `FAIL` |
 | `reasons` | All applicable reason codes, sorted and unique. Empty for `PASS`. |
 | `primaryReason` | The reason that decided a `FAIL`. `null` for `PASS` |
@@ -62,14 +62,14 @@ Schema version: `morcast.result.v1`. The schema is implemented in [`sdk/src/data
 | `raisedBy` | Wallet of the creator or brand that raised it |
 | `raisedAt`, `decidedAt` | When it was raised and decided |
 | `submissionId` | The submission it concerns. `null` for campaign-wide issues |
-| `summary`, `decision` | What was raised and what MORCast decided |
+| `summary`, `decision` | What was raised and what Morcast decided |
 | `outcome` | `UPHELD` or `REJECTED` |
 
 Issues are raised after the first publication, so revision `"0"` has none.
 
 ## Reason Codes
 
-A `FAIL` item lists why it failed as upper-case codes (digits and underscores allowed), for example `NOT_PUBLIC`, `EDITED`, `NOT_MEASURABLE`, `MEDIA_MISMATCH` or `FRAUD`. The codes and the checks behind them belong to the MORCast platform's verification rules. The dataset records their outcome, and the verifier takes them as published.
+A `FAIL` item lists why it failed as upper-case codes (digits and underscores allowed), for example `NOT_PUBLIC`, `EDITED`, `NOT_MEASURABLE`, `MEDIA_MISMATCH` or `FRAUD`. The codes and the checks behind them belong to the Morcast platform's verification rules. The dataset records their outcome, and the verifier takes them as published.
 
 Only accepted submissions are items. A submission rejected at the moment it is submitted, for example content the wallet does not own or a video that was already submitted, never appears in a dataset.
 
@@ -87,7 +87,7 @@ Only accepted submissions are items. A submission rejected at the moment it is s
 - creator totals, scores, `S`, the settlement split and every payout follow [the settlement rules](settlement.md)
 - the Merkle leaves are exactly the non-zero payouts, and the root matches [the tree construction](hashing.md).
 
-Metrics and statuses are MORCast's measurements and are taken as published. Everything derived from them is recomputed.
+Metrics and statuses are Morcast's measurements and are taken as published. Everything derived from them is recomputed.
 
 With an RPC endpoint, the campaign terms are also compared with the escrow. Once the campaign is settled, `S`, the split, the Merkle root and `resultHash` must match too.
 

@@ -20,7 +20,7 @@ Funds are never moved between versions. No function can move escrowed funds, so 
 
 ## Off-Chain Requirements
 
-Systems that work with MORCast campaigns must:
+Systems that work with Morcast campaigns must:
 
 - identify every campaign by `(chainId, escrow, campaignId)`
 - keep a registry of deployments with the address, version, deployment block, and whether new campaigns may use it

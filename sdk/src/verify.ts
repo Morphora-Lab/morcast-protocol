@@ -3,7 +3,7 @@
  *
  * Anyone can run these checks on a dataset: its structure, every derived value (creator totals,
  * scores, settlement totals, payouts, Merkle leaves and root) and its internal consistency.
- * The measurements themselves (metrics, statuses) are MORCast's responsibility and are taken as
+ * The measurements themselves (metrics, statuses) are Morcast's responsibility and are taken as
  * published. Everything computed from them is recomputed here.
  */
 

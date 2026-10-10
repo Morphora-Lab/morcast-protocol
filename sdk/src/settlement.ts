@@ -24,7 +24,7 @@ export const FEE_DIVISOR = 5n;
 export interface Split {
   /** G: the part of the budget spent on recognized delivery (fee + pool). */
   spent: bigint;
-  /** The protocol fee: 20% of G, paid to the MORCast treasury. */
+  /** The protocol fee: 20% of G, paid to the Morcast treasury. */
   fee: bigint;
   /** The creator pool: 80% of G, claimed by creators against the Merkle root. */
   pool: bigint;

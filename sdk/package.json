@@ -1,7 +1,7 @@
 {
   "name": "@morcast/protocol",
   "version": "1.0.0-rc.3",
-  "description": "Settlement arithmetic, creator payouts, campaign metrics, document hashing, payout Merkle trees and result dataset verification for the MORCast Payment Protocol.",
+  "description": "Settlement arithmetic, creator payouts, campaign metrics, document hashing, payout Merkle trees and result dataset verification for the Morcast Payment Protocol.",
   "license": "MIT",
   "private": true,
   "type": "module",
