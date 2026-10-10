@@ -4,8 +4,8 @@ pragma solidity 0.8.37;
 import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {Test} from "forge-std/Test.sol";
 
-import {MORCastEscrow} from "../../src/MORCastEscrow.sol";
-import {IMORCastEscrow} from "../../src/interfaces/IMORCastEscrow.sol";
+import {MorcastEscrow} from "../../src/MorcastEscrow.sol";
+import {IMorcastEscrow} from "../../src/interfaces/IMorcastEscrow.sol";
 import {SettlementMath} from "../../src/libraries/SettlementMath.sol";
 import {MockERC20} from "../utils/Tokens.sol";
 import {EscrowHandler} from "./EscrowHandler.sol";
@@ -17,7 +17,7 @@ import {EscrowHandler} from "./EscrowHandler.sol";
 contract EscrowInvariantsTest is StdInvariant, Test {
     MockERC20 internal usdc;
     MockERC20 internal mor;
-    MORCastEscrow internal escrow;
+    MorcastEscrow internal escrow;
     EscrowHandler internal handler;
 
     function setUp() public {
@@ -29,7 +29,7 @@ contract EscrowInvariantsTest is StdInvariant, Test {
         tokens[0] = address(usdc);
         tokens[1] = address(mor);
         escrow =
-            new MORCastEscrow(makeAddr("owner"), makeAddr("settler"), makeAddr("treasury"), tokens);
+            new MorcastEscrow(makeAddr("owner"), makeAddr("settler"), makeAddr("treasury"), tokens);
         handler = new EscrowHandler(escrow, usdc, mor);
 
         // Only the handler's actions are called. Views and helpers are excluded.
@@ -67,7 +67,7 @@ contract EscrowInvariantsTest is StdInvariant, Test {
         uint256 owedMor;
 
         for (uint256 id = 1; id <= escrow.campaignCount(); id++) {
-            IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+            IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
             uint256 owed = _outstanding(c);
             if (c.token == address(usdc)) owedUsdc += owed;
             else owedMor += owed;
@@ -88,8 +88,8 @@ contract EscrowInvariantsTest is StdInvariant, Test {
     ///         more than its budget, and never pays creators more than the pool.
     function invariant_settledCampaignsFollowFormula() public view {
         for (uint256 id = 1; id <= escrow.campaignCount(); id++) {
-            IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
-            if (c.status != IMORCastEscrow.Status.Settled) continue;
+            IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
+            if (c.status != IMorcastEscrow.Status.Settled) continue;
 
             (uint256 spent, uint256 fee, uint256 pool, uint256 refund) =
                 SettlementMath.split(c.budget, c.target, c.recognized);
@@ -111,9 +111,9 @@ contract EscrowInvariantsTest is StdInvariant, Test {
     }
 
     /// @dev What the escrow still owes for one campaign.
-    function _outstanding(IMORCastEscrow.Campaign memory c) private pure returns (uint256) {
-        if (c.status == IMORCastEscrow.Status.Funded) return c.budget;
-        if (c.status != IMORCastEscrow.Status.Settled) return 0; // Cancelled or Refunded
+    function _outstanding(IMorcastEscrow.Campaign memory c) private pure returns (uint256) {
+        if (c.status == IMorcastEscrow.Status.Funded) return c.budget;
+        if (c.status != IMorcastEscrow.Status.Settled) return 0; // Cancelled or Refunded
 
         uint256 owed = c.pool - c.creatorClaimed;
         if (!c.feePaid) owed += c.fee;

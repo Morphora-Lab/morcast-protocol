@@ -3,9 +3,9 @@ pragma solidity 0.8.37;
 
 import {Script, console} from "forge-std/Script.sol";
 
-import {MORCastEscrow} from "../src/MORCastEscrow.sol";
+import {MorcastEscrow} from "../src/MorcastEscrow.sol";
 
-/// @notice Deploys MORCastEscrow.
+/// @notice Deploys MorcastEscrow.
 /// @dev Environment variables:
 ///
 ///        OWNER     owner of the escrow, a wallet Morcast holds        (required)
@@ -29,7 +29,7 @@ contract Deploy is Script {
     /// @dev Morpheus MOR on Base (18 decimals).
     address public constant BASE_MOR = 0x7431aDa8a591C955a994a21710752EF9b882b8e3;
 
-    function run() external returns (MORCastEscrow escrow) {
+    function run() external returns (MorcastEscrow escrow) {
         address owner = vm.envAddress("OWNER");
         address settler = vm.envAddress("SETTLER");
         address treasury = vm.envAddress("TREASURY");
@@ -41,11 +41,11 @@ contract Deploy is Script {
         tokens[1] = mor;
 
         vm.startBroadcast();
-        escrow = new MORCastEscrow(owner, settler, treasury, tokens);
+        escrow = new MorcastEscrow(owner, settler, treasury, tokens);
         vm.stopBroadcast();
 
         console.log("Chain ID     ", block.chainid);
-        console.log("MORCastEscrow", address(escrow));
+        console.log("MorcastEscrow", address(escrow));
         console.log("OWNER        ", owner);
         console.log("SETTLER      ", settler);
         console.log("TREASURY     ", treasury);

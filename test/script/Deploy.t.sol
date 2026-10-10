@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 
 import {Deploy} from "../../script/Deploy.s.sol";
 import {DeployLocal} from "../../script/DeployLocal.s.sol";
-import {MORCastEscrow} from "../../src/MORCastEscrow.sol";
+import {MorcastEscrow} from "../../src/MorcastEscrow.sol";
 import {MockERC20} from "../utils/Tokens.sol";
 
 /// @notice Tests for the deployment scripts.
@@ -64,7 +64,7 @@ contract DeployTest is Test {
         vm.setEnv("USDC", vm.toString(address(usdc)));
         vm.setEnv("MOR", vm.toString(address(mor)));
 
-        MORCastEscrow escrow = deployer.run();
+        MorcastEscrow escrow = deployer.run();
 
         assertEq(escrow.owner(), address(0x0A11));
         assertEq(escrow.settler(), address(0x5E77));
@@ -78,7 +78,7 @@ contract DeployTest is Test {
     // -------------------------------------------------------------------------------------------
 
     function test_deployLocal_deploysMocksAndFundsBrand() public {
-        (MORCastEscrow escrow, MockERC20 usdc, MockERC20 mor) = new DeployLocal().run();
+        (MorcastEscrow escrow, MockERC20 usdc, MockERC20 mor) = new DeployLocal().run();
 
         assertTrue(escrow.isCampaignToken(address(usdc)));
         assertTrue(escrow.isCampaignToken(address(mor)));

@@ -8,7 +8,7 @@
  */
 export const ESCROW_VERSION = "1.0.0";
 
-/** Settlement opens on Day 5 (`MORCastEscrow.SETTLEMENT_OPENS_AFTER`). */
+/** Settlement opens on Day 5 (`MorcastEscrow.SETTLEMENT_OPENS_AFTER`). */
 export const SETTLEMENT_OPENS_AFTER = 5n * 86_400n;
 
 /** Settlement closes, and the full refund opens, on Day 10 (`SETTLEMENT_CLOSES_AFTER`). */

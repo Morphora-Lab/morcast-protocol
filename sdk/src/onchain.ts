@@ -14,7 +14,7 @@ export const CAMPAIGN_STATUSES = ["None", "Funded", "Cancelled", "Settled", "Ref
 
 export type CampaignStatus = (typeof CAMPAIGN_STATUSES)[number];
 
-/** The fields of `MORCastEscrow.getCampaign` that a dataset can be compared with. */
+/** The fields of `MorcastEscrow.getCampaign` that a dataset can be compared with. */
 export interface OnChainCampaign {
   status: CampaignStatus;
   brand: Address;
@@ -87,7 +87,7 @@ export function isSupportedEscrowVersion(version: string): boolean {
 }
 
 /**
- * Whether the contract at `escrow` runs this version's MORCastEscrow code: its runtime code hash
+ * Whether the contract at `escrow` runs this version's MorcastEscrow code: its runtime code hash
  * equals `ESCROW_CODE_HASH`. Every genuine deployment of the version has exactly this code, so a
  * different hash means a different contract, whatever its functions answer. Use it before
  * trusting an address with funds, for example before sending a brand a deposit request.

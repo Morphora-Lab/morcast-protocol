@@ -24,7 +24,7 @@ Base's sequencer orders transactions and sets timestamps. Deadlines are whole da
 
 ## Review Scope and Method
 
-- **Code:** `src/MORCastEscrow.sol`, `src/libraries/SettlementMath.sol`, `src/interfaces/IMORCastEscrow.sol`.
+- **Code:** `src/MorcastEscrow.sol`, `src/libraries/SettlementMath.sol`, `src/interfaces/IMorcastEscrow.sol`.
 - **Manual review:** access control, the status machine, reentrancy and call ordering, arithmetic and rounding, Merkle proofs and leaf encoding, token behaviour, deadlines, isolation between campaigns, owner powers, and denial of service.
 - **Static analysis:**
   - Slither 0.11.6 (all detectors), Aderyn 0.6.8 and the Foundry linter

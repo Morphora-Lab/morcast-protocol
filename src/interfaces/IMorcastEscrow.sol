@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-/// @title IMORCastEscrow
-/// @notice Public interface of the MORCast campaign escrow.
+/// @title IMorcastEscrow
+/// @notice Public interface of the Morcast campaign escrow.
 /// @dev Lifecycle of a campaign (Day N means `endAt + N days`):
 ///
 ///        createCampaign ─► Funded ─┬─ cancel (t < startAt) ──────────► Cancelled
@@ -17,15 +17,15 @@ pragma solidity ^0.8.24;
 ///        - Brand:    the address that created the campaign. It can cancel before the start,
 ///                    withdraw the refund after settlement, and withdraw the whole budget if
 ///                    the campaign was never settled.
-///        - Settler:  the MORCast address allowed to settle each campaign once, inside the
+///        - Settler:  the Morcast address allowed to settle each campaign once, inside the
 ///                    settlement window. It has no other power.
-///        - Treasury: the MORCast address that receives protocol fees.
+///        - Treasury: the Morcast address that receives protocol fees.
 ///        - Owner:    operates the escrow (see the owner actions below). It can never move a
 ///                    campaign's money anywhere except back to the brand that deposited it.
 ///                    Ownership is transferred in two steps (OpenZeppelin Ownable2Step).
 ///        - Anyone:   may submit a creator claim (funds always go to the wallet in the Merkle
 ///                    leaf) or trigger the fee transfer to the treasury.
-interface IMORCastEscrow {
+interface IMorcastEscrow {
     // -------------------------------------------------------------------------------------------
     // Types
     // -------------------------------------------------------------------------------------------
@@ -38,10 +38,10 @@ interface IMORCastEscrow {
         Funded,
         /// The brand cancelled before `startAt` and received the whole budget back.
         Cancelled,
-        /// MORCast settled the campaign. Fee, creator claims and refund are payable.
+        /// Morcast settled the campaign. Fee, creator claims and refund are payable.
         Settled,
-        /// The whole budget went back to the brand without settlement: the brand withdrew it from
-        /// Day 10, or the owner voided the campaign.
+        /// The whole budget went back to the brand without settlement. Either the brand withdrew
+        /// it from Day 10, or the owner voided the campaign.
         Refunded
     }
 
@@ -240,15 +240,15 @@ interface IMORCastEscrow {
     /// @param resultHash Hash of the published result dataset.
     function settle(uint256 id, uint256 recognized, bytes32 merkleRoot, bytes32 resultHash) external;
 
-    /// @notice Pays a creator payout proven by a Merkle proof. Anyone may submit it; the funds
-    ///         always go to `wallet`.
+    /// @notice Pays a creator payout proven by a Merkle proof. Anyone may submit it, and the
+    ///         funds always go to `wallet`.
     function claim(uint256 id, address wallet, uint256 amount, bytes32[] calldata proof) external;
 
     /// @notice Sends the protocol fee of a settled campaign to the treasury. Anyone may call it.
     function withdrawFee(uint256 id) external;
 
-    /// @notice Sends the brand its money: the refund of a settled campaign, or the whole budget
-    ///         of a campaign that was not settled before Day 10.
+    /// @notice Sends the brand its money. That is the refund of a settled campaign, or the whole
+    ///         budget of a campaign that was not settled before Day 10.
     function withdrawBrand(uint256 id) external;
 
     // -------------------------------------------------------------------------------------------
@@ -256,7 +256,7 @@ interface IMORCastEscrow {
     // -------------------------------------------------------------------------------------------
 
     /// @notice Replaces the settler, for example after its key was lost or exposed. The zero
-    ///         address disables settlement; unsettled campaigns then fall back to the Day-10
+    ///         address disables settlement, and unsettled campaigns then fall back to the Day-10
     ///         refund.
     function setSettler(address newSettler) external;
 
@@ -283,7 +283,8 @@ interface IMORCastEscrow {
     // Views
     // -------------------------------------------------------------------------------------------
 
-    /// @notice The only address allowed to settle campaigns; zero when settlement is disabled.
+    /// @notice The only address allowed to settle campaigns. It is zero when settlement is
+    ///         disabled.
     function settler() external view returns (address);
 
     /// @notice The address that receives protocol fees.
@@ -311,7 +312,7 @@ interface IMORCastEscrow {
     /// @notice Longest allowed campaign window, `endAt − startAt` (90 days).
     function MAX_CAMPAIGN_DURATION() external view returns (uint256);
 
-    /// @notice Number of campaigns created so far; also the ID of the latest campaign.
+    /// @notice Number of campaigns created so far, which is also the ID of the latest campaign.
     function campaignCount() external view returns (uint256);
 
     /// @notice Returns everything stored about a campaign. Unknown IDs return an empty struct

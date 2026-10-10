@@ -10,7 +10,7 @@ Feature-complete for protocol v1. Deployed on Base Sepolia for Morcast's staging
 
 | Component | State |
 |---|---|
-| Escrow contract (`MORCastEscrow`) | Implemented. Unit, invariant and Base fork tests |
+| Escrow contract (`MorcastEscrow`) | Implemented. Unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
 | Deployment scripts | Implemented. Used for the Base Sepolia staging deployment ([Deployments](docs/deployment.md#deployments)) |
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
@@ -48,7 +48,7 @@ The owner, a wallet Morcast holds, operates the escrow. It can replace the settl
 Anyone can check a published result dataset, and compare it with the escrow, with the SDK package from a [release](#releases):
 
 ```sh
-npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.3/morcast-protocol-1.0.0-rc.3.tgz \
+npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.4/morcast-protocol-1.0.0-rc.4.tgz \
   morcast-verify result.json --rpc-url https://mainnet.base.org
 ```
 
@@ -117,6 +117,7 @@ Versions follow semantic versioning. A tag such as `v1.0.0-rc.1` marks a pre-rel
 | `v1.0.0-rc.1` | Release candidate of protocol v1: feature-complete, internally reviewed. External audit pending, not deployed |
 | `v1.0.0-rc.2` | Adds the escrow's code hash to the SDK (`ESCROW_CODE_HASH`, `isGenuineEscrow`) |
 | `v1.0.0-rc.3` | A creator may take part in a campaign with several accounts. Each creator in a result dataset lists its `accounts`, and each account belongs to one wallet |
+| `v1.0.0-rc.4` | The contract takes the product's name, `MorcastEscrow`. Its rules and its ABI are the same. Its code hash is new, so a deployment of an earlier release is not this release's escrow |
 
 The escrow's `VERSION()` names the contract version a deployment runs. See [Versions and upgrades](docs/upgrades.md).
 

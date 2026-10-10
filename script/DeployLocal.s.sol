@@ -3,7 +3,7 @@ pragma solidity 0.8.37;
 
 import {Script, console} from "forge-std/Script.sol";
 
-import {MORCastEscrow} from "../src/MORCastEscrow.sol";
+import {MorcastEscrow} from "../src/MorcastEscrow.sol";
 import {MockERC20} from "../test/utils/Tokens.sol";
 
 /// @notice Deploys mock USDC and MOR tokens and an escrow that accepts them, for local
@@ -26,7 +26,7 @@ contract DeployLocal is Script {
     address internal constant ANVIL_ACCOUNT_2 = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC;
     address internal constant ANVIL_ACCOUNT_3 = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
 
-    function run() external returns (MORCastEscrow escrow, MockERC20 usdc, MockERC20 mor) {
+    function run() external returns (MorcastEscrow escrow, MockERC20 usdc, MockERC20 mor) {
         require(block.chainid == 31_337, "DeployLocal: Anvil only");
 
         address owner = vm.envOr("OWNER", ANVIL_ACCOUNT_0);
@@ -40,12 +40,12 @@ contract DeployLocal is Script {
         address[] memory tokens = new address[](2);
         tokens[0] = address(usdc);
         tokens[1] = address(mor);
-        escrow = new MORCastEscrow(owner, settler, treasury, tokens);
+        escrow = new MorcastEscrow(owner, settler, treasury, tokens);
         usdc.mint(brand, 1_000_000e6);
         mor.mint(brand, 1_000_000e18);
         vm.stopBroadcast();
 
-        console.log("MORCastEscrow", address(escrow));
+        console.log("MorcastEscrow", address(escrow));
         console.log("USDC (mock)  ", address(usdc));
         console.log("MOR (mock)   ", address(mor));
         console.log("OWNER        ", owner);

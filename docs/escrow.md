@@ -1,8 +1,6 @@
 # Escrow Contract
 
-[`MORCastEscrow`](../src/MORCastEscrow.sol) holds campaign budgets, settles each campaign once from the recognized total, and pays out the protocol fee, creator claims and the brand refund. Events and errors are defined in [`IMORCastEscrow`](../src/interfaces/IMORCastEscrow.sol).
-
-The contract and its interface keep the names they were released with. The names and the comments in `src` are part of the code that the code hash identifies, so they change only with a new version of the contract.
+[`MorcastEscrow`](../src/MorcastEscrow.sol) holds campaign budgets, settles each campaign once from the recognized total, and pays out the protocol fee, creator claims and the brand refund. Events and errors are defined in [`IMorcastEscrow`](../src/interfaces/IMorcastEscrow.sol).
 
 ## Roles
 

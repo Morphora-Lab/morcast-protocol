@@ -7,17 +7,17 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
 
-import {IMORCastEscrow} from "./interfaces/IMORCastEscrow.sol";
+import {IMorcastEscrow} from "./interfaces/IMorcastEscrow.sol";
 import {SettlementMath} from "./libraries/SettlementMath.sol";
 
-/// @title MORCastEscrow
-/// @notice Escrow for MORCast creator campaigns.
+/// @title MorcastEscrow
+/// @notice Escrow for Morcast creator campaigns.
 ///
 ///         A brand escrows a budget in an allowed token (USDC or MOR). After the campaign,
-///         MORCast measures and verifies performance off-chain, publishes the result dataset and
+///         Morcast measures and verifies performance off-chain, publishes the result dataset and
 ///         settles the campaign once with the recognized total S. The contract derives the fee,
 ///         the creator pool and the brand refund from S with a fixed formula, pays creators
-///         against a Merkle root, and returns the whole budget to the brand if MORCast does not
+///         against a Merkle root, and returns the whole budget to the brand if Morcast does not
 ///         settle in time.
 ///
 /// @dev Design rules:
@@ -26,7 +26,7 @@ import {SettlementMath} from "./libraries/SettlementMath.sol";
 ///        - The code cannot be upgraded. The economic rules (the formula, the fee, Day 5, Day 10
 ///          and the 90-day maximum) are constants. A new version is a new deployment.
 ///        - The settler's only power is `settle`, once per campaign, inside the settlement window.
-///        - The owner operates the escrow: it can replace the settler and the treasury, allow
+///        - The owner operates the escrow. It can replace the settler and the treasury, allow
 ///          tokens and pause creation for new campaigns, void a funded campaign (the budget goes
 ///          back to its brand) and recover tokens that no campaign is owed. It can never move a
 ///          campaign's money anywhere else.
@@ -37,27 +37,27 @@ import {SettlementMath} from "./libraries/SettlementMath.sol";
 ///          SafeERC20, and every function that moves tokens is also protected by a reentrancy
 ///          guard.
 ///        - Settlement is final and entitlements never expire.
-contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient {
+contract MorcastEscrow is IMorcastEscrow, Ownable2Step, ReentrancyGuardTransient {
     using SafeERC20 for IERC20;
 
     // -------------------------------------------------------------------------------------------
     // Constants
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     /// @dev The code cannot be upgraded, so every new version is a new deployment with its own
     ///      address. Off-chain systems use this value to tell deployments apart.
     string public constant VERSION = "1.0.0";
 
-    /// @inheritdoc IMORCastEscrow
-    /// @dev Day 5: results are published by Day 4 and reviewed until at least Day 5.
+    /// @inheritdoc IMorcastEscrow
+    /// @dev Day 5. Results are published by Day 4 and reviewed until at least Day 5.
     uint256 public constant SETTLEMENT_OPENS_AFTER = 5 days;
 
-    /// @inheritdoc IMORCastEscrow
-    /// @dev Day 10: settlement is no longer possible and the brand may take the budget back.
+    /// @inheritdoc IMorcastEscrow
+    /// @dev Day 10. Settlement is no longer possible and the brand may take the budget back.
     uint256 public constant SETTLEMENT_CLOSES_AFTER = 10 days;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     /// @dev Once a campaign has started, its budget stays escrowed until settlement or the Day-10
     ///      refund, so a wrong `endAt` (for example milliseconds instead of seconds) would lock
     ///      the budget for a very long time. Capping the length rules that out.
@@ -67,31 +67,31 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // Storage
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     address public settler;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     address public treasury;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     bool public creationPaused;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     mapping(address token => bool) public isCampaignToken;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     /// @dev Increased by every deposit and decreased by every payout, so for each token it always
     ///      equals the sum of what the campaigns in that token are still owed. The escrow's
     ///      balance above this amount belongs to no campaign and is what `recoverTokens` returns.
     mapping(address token => uint256) public totalOwed;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     uint256 public campaignCount;
 
     /// @dev Campaign ID => campaign. IDs start at 1, so ID 0 never exists.
     mapping(uint256 id => Campaign) private _campaigns;
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     /// @dev Keyed by leaf hash. The leaf includes the campaign ID, so one global mapping is
     ///      enough to track claims of all campaigns.
     mapping(bytes32 leaf => bool) public claimed;
@@ -100,7 +100,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // Constructor
     // -------------------------------------------------------------------------------------------
 
-    /// @param initialOwner    Owner of the escrow; should be a multisig.
+    /// @param initialOwner    Owner of the escrow, a wallet Morcast holds.
     /// @param initialSettler  The only address allowed to settle campaigns.
     /// @param initialTreasury The address that receives protocol fees.
     /// @param initialTokens   Tokens allowed for campaigns (on Base: USDC and MOR).
@@ -110,7 +110,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         address initialTreasury,
         address[] memory initialTokens
     ) Ownable(initialOwner) {
-        // A settler is required at deployment; the owner can disable it later if needed.
+        // A settler is required at deployment. The owner can disable it later if needed.
         if (initialSettler == address(0)) revert ZeroAddress();
         _setSettler(initialSettler);
         _setTreasury(initialTreasury);
@@ -123,7 +123,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // Brand: create and cancel
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function createCampaign(
         address token,
         uint256 budget,
@@ -145,7 +145,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         if (target == 0) revert InvalidTarget();
 
         // The campaign window [startAt, endAt) must not be empty and must last at most 90 days.
-        // `endAt - startAt` cannot underflow: the first condition is checked first.
+        // `endAt - startAt` cannot underflow, because the first condition is checked first.
         if (startAt >= endAt || endAt - startAt > MAX_CAMPAIGN_DURATION) {
             revert InvalidSchedule(startAt, endAt);
         }
@@ -178,7 +178,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         if (received != budget) revert DepositMismatch(budget, received);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function cancel(uint256 id) external nonReentrant {
         Campaign storage campaign = _load(id);
 
@@ -202,7 +202,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // Settler: settle
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function settle(uint256 id, uint256 recognized, bytes32 merkleRoot, bytes32 resultHash)
         external
     {
@@ -220,7 +220,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
             revert OutsideSettlementWindow(opensAt, closesAt);
         }
 
-        // The split is computed here from S; the settler cannot choose the amounts directly.
+        // The split is computed here from S. The settler cannot choose the amounts directly.
         (uint256 spent, uint256 fee, uint256 pool, uint256 refund) =
             SettlementMath.split(campaign.budget, campaign.target, recognized);
 
@@ -230,8 +230,8 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         // Every settlement refers to a published result dataset, even when nothing is paid.
         if (resultHash == bytes32(0)) revert MissingResultHash();
 
-        // The campaign is still owed its whole budget: fee + pool + refund == budget, so
-        // `totalOwed` does not change here.
+        // The campaign is still owed its whole budget, because fee + pool + refund == budget.
+        // So `totalOwed` does not change here.
         campaign.status = Status.Settled;
         campaign.recognized = recognized;
         campaign.spent = spent;
@@ -251,7 +251,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // After settlement: claim, fee, refund
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function claim(uint256 id, address wallet, uint256 amount, bytes32[] calldata proof)
         external
         nonReentrant
@@ -266,7 +266,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         // The leaf must be part of the tree whose root was fixed at settlement.
         if (!MerkleProof.verifyCalldata(proof, campaign.merkleRoot, leaf)) revert InvalidProof();
 
-        // Defence in depth: even a wrong tree can never pay out more than the creator pool.
+        // Defence in depth. Even a wrong tree can never pay out more than the creator pool.
         uint256 remaining = campaign.pool - campaign.creatorClaimed;
         if (amount > remaining) revert PoolExceeded(amount, remaining);
 
@@ -284,7 +284,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         IERC20(campaign.token).safeTransfer(wallet, amount);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function withdrawFee(uint256 id) external nonReentrant {
         Campaign storage campaign = _load(id);
         if (campaign.status != Status.Settled) revert InvalidStatus(campaign.status);
@@ -301,7 +301,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         if (fee != 0) IERC20(campaign.token).safeTransfer(recipient, fee);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function withdrawBrand(uint256 id) external nonReentrant {
         Campaign storage campaign = _load(id);
         if (msg.sender != campaign.brand) revert NotBrand();
@@ -309,7 +309,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         Status status = campaign.status;
 
         if (status == Status.Settled) {
-            // Case 1: the campaign was settled. The brand receives B − G, once.
+            // Case 1. The campaign was settled. The brand receives B − G, once.
             if (campaign.refundPaid) revert AlreadyWithdrawn();
 
             campaign.refundPaid = true;
@@ -320,7 +320,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
             // A zero refund (target reached) is marked as paid without a transfer.
             if (refund != 0) IERC20(campaign.token).safeTransfer(msg.sender, refund);
         } else if (status == Status.Funded) {
-            // Case 2: the campaign was never settled. From Day 10 the brand receives the whole
+            // Case 2. The campaign was never settled. From Day 10 the brand receives the whole
             // budget, and the campaign can no longer be settled.
             (, uint256 closesAt) = _settlementWindow(campaign.endAt);
             if (block.timestamp < closesAt) revert RefundNotAvailable(closesAt);
@@ -341,30 +341,30 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // Owner actions
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
-    /// @dev The zero address is allowed: it disables settlement, which only ever leads to the
+    /// @inheritdoc IMorcastEscrow
+    /// @dev The zero address is allowed. It disables settlement, which only ever leads to the
     ///      brands' full refunds from Day 10.
     function setSettler(address newSettler) external onlyOwner {
         _setSettler(newSettler);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function setTreasury(address newTreasury) external onlyOwner {
         _setTreasury(newTreasury);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function setCampaignToken(address token, bool allowed) external onlyOwner {
         _setCampaignToken(token, allowed);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function setCreationPaused(bool paused) external onlyOwner {
         creationPaused = paused;
         emit CreationPausedUpdated(paused);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     /// @dev Only a funded campaign can be voided, and its budget can only go to its brand. Used
     ///      to release a budget deposited by mistake without waiting for the settlement window,
     ///      or to return every budget to its brand in an emergency.
@@ -381,7 +381,7 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         IERC20(campaign.token).safeTransfer(brand, budget);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     /// @dev The amount is the balance above `totalOwed[token]`, so campaign funds are never
     ///      touched. For a token no campaign uses, that is the whole balance.
     function recoverTokens(address token, address to) external nonReentrant onlyOwner {
@@ -398,17 +398,17 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
     // Views
     // -------------------------------------------------------------------------------------------
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function getCampaign(uint256 id) external view returns (Campaign memory) {
         return _campaigns[id];
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function isClaimed(uint256 id, address wallet, uint256 amount) external view returns (bool) {
         return claimed[_leafHash(id, wallet, amount)];
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function settlementWindow(uint256 id)
         external
         view
@@ -417,12 +417,12 @@ contract MORCastEscrow is IMORCastEscrow, Ownable2Step, ReentrancyGuardTransient
         return _settlementWindow(_load(id).endAt);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function leafHash(uint256 id, address wallet, uint256 amount) external pure returns (bytes32) {
         return _leafHash(id, wallet, amount);
     }
 
-    /// @inheritdoc IMORCastEscrow
+    /// @inheritdoc IMorcastEscrow
     function computeSplit(uint256 budget, uint256 target, uint256 recognized)
         external
         pure

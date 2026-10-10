@@ -3,7 +3,7 @@ pragma solidity 0.8.37;
 
 import {IERC20Errors} from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 
-import {IMORCastEscrow} from "../src/interfaces/IMORCastEscrow.sol";
+import {IMorcastEscrow} from "../src/interfaces/IMorcastEscrow.sol";
 import {EscrowFixture} from "./utils/EscrowFixture.sol";
 import {MerkleTreeBuilder} from "./utils/MerkleTreeBuilder.sol";
 
@@ -16,7 +16,7 @@ contract ClaimBatcher {
         bytes32[] proof;
     }
 
-    function claimAll(IMORCastEscrow escrow, Claim[] calldata claims) external {
+    function claimAll(IMorcastEscrow escrow, Claim[] calldata claims) external {
         for (uint256 i; i < claims.length; i++) {
             escrow.claim(claims[i].id, claims[i].wallet, claims[i].amount, claims[i].proof);
         }
@@ -56,7 +56,7 @@ contract SecurityTest is EscrowFixture {
         vm.prank(stranger);
         escrow.claim(id, payouts[0].wallet, payouts[0].amount, proof);
 
-        vm.expectRevert(IMORCastEscrow.AlreadyClaimed.selector);
+        vm.expectRevert(IMorcastEscrow.AlreadyClaimed.selector);
         vm.prank(payouts[0].wallet);
         escrow.claim(id, payouts[0].wallet, payouts[0].amount, proof);
 
@@ -137,7 +137,7 @@ contract SecurityTest is EscrowFixture {
 
         _claim(id, payouts, 0, creator);
         bytes32[] memory proof = MerkleTreeBuilder.proof(_leaves(id, payouts), 1);
-        vm.expectRevert(abi.encodeWithSelector(IMORCastEscrow.PoolExceeded.selector, 1e6, 0));
+        vm.expectRevert(abi.encodeWithSelector(IMorcastEscrow.PoolExceeded.selector, 1e6, 0));
         escrow.claim(id, creator, 1e6, proof);
 
         escrow.withdrawFee(id);

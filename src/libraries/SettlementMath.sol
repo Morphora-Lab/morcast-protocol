@@ -4,29 +4,29 @@ pragma solidity ^0.8.24;
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 /// @title SettlementMath
-/// @notice Settlement arithmetic of a MORCast campaign: how the escrowed budget is divided
-///         between the protocol fee, the creator pool and the brand refund.
+/// @notice Settlement arithmetic of a Morcast campaign. It defines how the escrowed budget is
+///         divided between the protocol fee, the creator pool and the brand refund.
 /// @dev Symbols used throughout the protocol:
 ///
 ///        B  budget      amount the brand escrowed, in token base units (B > 0, B mod 5 == 0)
 ///        T  target      campaign goal in the campaign's primary metric (T > 0)
-///        S  recognized  total recognized delivery reported by MORCast at settlement
+///        S  recognized  total recognized delivery reported by Morcast at settlement
 ///        G  spent       part of the budget the brand pays for recognized delivery
 ///
 ///      Formula:
 ///
 ///        G      = floor(B × min(S, T) / T), rounded down to a multiple of 5
-///        fee    = G / 5          (20% of G, paid to the MORCast treasury)
+///        fee    = G / 5          (20% of G, paid to the Morcast treasury)
 ///        pool   = 4 × G / 5      (80% of G, claimed by creators)
 ///        refund = B − G          (returned to the brand)
 ///
 ///      Consequences:
 ///        - One recognized unit is worth B / T, so the brand never pays more than B.
-///        - S >= T  =>  G == B: the target is reached and the whole budget is spent.
-///        - S == 0  =>  G == 0: nothing was recognized and the brand gets everything back.
+///        - S >= T  =>  G == B. The target is reached and the whole budget is spent.
+///        - S == 0  =>  G == 0. Nothing was recognized and the brand gets everything back.
 ///        - fee + pool + refund == B for every input, so no base unit is created or lost.
 ///
-///      All arithmetic is exact integer arithmetic; every division rounds down.
+///      All arithmetic is exact integer arithmetic, and every division rounds down.
 library SettlementMath {
     /// @notice The fee is one fifth (20%) of the spent amount.
     /// @dev G is rounded down to a multiple of this value so that G / 5 and 4 × G / 5 are exact.
