@@ -1,6 +1,6 @@
 # @morcast/protocol
 
-TypeScript implementation of the MORCast Payment Protocol arithmetic. It computes exactly what the escrow contract computes, plus the off-chain rules that produce the contract's inputs: creator scores, creator payouts and Integration metrics.
+TypeScript implementation of the Morcast Payment Protocol arithmetic. It computes exactly what the escrow contract computes, plus the off-chain rules that produce the contract's inputs: creator scores, creator payouts and Integration metrics.
 
 ## Status
 

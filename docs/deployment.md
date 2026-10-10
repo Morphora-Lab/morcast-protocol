@@ -7,9 +7,9 @@ The escrow's code and economic rules cannot change after deployment. The owner c
 Requirements: a funded deployer account (Foundry keystore, hardware wallet or other signer), the owner, settler and treasury addresses, and an Etherscan API key for source verification. The owner and the settler should be separate wallets with their keys on hardware signers. The deployer account gets no role in the contract.
 
 ```sh
-export OWNER=0x...              # MORCast owner wallet
-export SETTLER=0x...            # MORCast settler wallet
-export TREASURY=0x...           # MORCast fee recipient
+export OWNER=0x...              # Morcast owner wallet
+export SETTLER=0x...            # Morcast settler wallet
+export TREASURY=0x...           # Morcast fee recipient
 export ETHERSCAN_API_KEY=...    # for --verify
 
 forge script script/Deploy.s.sol \
@@ -52,7 +52,7 @@ RPC_URL=https://sepolia.base.org DAY_SECONDS=300 \
   scripts/deploy-short-days.sh --account <keystore-name> --broadcast
 ```
 
-The script builds the test build in a temporary copy of the project, so `src` never changes. Its code hash differs from `ESCROW_CODE_HASH`, so `isGenuineEscrow` answers `false` for it, and it must never hold real funds. The script refuses Base mainnet. Check the build with `SETTLEMENT_OPENS_AFTER()`, which returns `5 × DAY_SECONDS`. MORCast's platform accepts a test build only on a test network whose campaign day has the same length.
+The script builds the test build in a temporary copy of the project, so `src` never changes. Its code hash differs from `ESCROW_CODE_HASH`, so `isGenuineEscrow` answers `false` for it, and it must never hold real funds. The script refuses Base mainnet. Check the build with `SETTLEMENT_OPENS_AFTER()`, which returns `5 × DAY_SECONDS`. Morcast's platform accepts a test build only on a test network whose campaign day has the same length.
 
 ## Local Development
 

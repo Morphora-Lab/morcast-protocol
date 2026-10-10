@@ -33,7 +33,7 @@ S   = Σ s_i
 ```text
 raw    = floor(B × min(S, T) / T)
 G      = raw − (raw mod 5)
-fee    = G / 5          20% of G, paid to the MORCast treasury
+fee    = G / 5          20% of G, paid to the Morcast treasury
 pool   = G − fee        80% of G, claimed by creators
 refund = B − G          returned to the brand
 ```

@@ -14,8 +14,8 @@ Please report vulnerabilities privately through GitHub's "Report a vulnerability
 
 | Party | Trusted to | Cannot |
 |---|---|---|
-| Owner (MORCast's owner wallet) | Replace the settler and the treasury. Choose tokens and pause creation for new campaigns. Void funded campaigns. Recover stray tokens | Move a campaign's funds anywhere except back to its brand. Change the formula, the fee, the deadlines or the 90-day maximum. Change a settlement |
-| Settler (MORCast's settler wallet) | Settle each campaign with the recognized total and payout tree of the published result dataset | Settle outside `[Day 5, Day 10)` or twice. Change the fee recipient or the refund recipient. Move escrowed funds in any other way |
+| Owner (Morcast's owner wallet) | Replace the settler and the treasury. Choose tokens and pause creation for new campaigns. Void funded campaigns. Recover stray tokens | Move a campaign's funds anywhere except back to its brand. Change the formula, the fee, the deadlines or the 90-day maximum. Change a settlement |
+| Settler (Morcast's settler wallet) | Settle each campaign with the recognized total and payout tree of the published result dataset | Settle outside `[Day 5, Day 10)` or twice. Change the fee recipient or the refund recipient. Move escrowed funds in any other way |
 | Brand | Nothing beyond its own campaign's parameters | Cancel after `startAt`. Withdraw before settlement or Day 10. Affect other campaigns |
 | Creators and anyone else | Nothing | Claim anything but an existing, unclaimed leaf. Redirect a payout |
 | Token issuers | Circle (USDC) can pause transfers and blacklist addresses | MOR on Base (`MOROFT`, not upgradeable) has no pause, blacklist or transfer fee |
@@ -55,7 +55,7 @@ Base's sequencer orders transactions and sets timestamps. Deadlines are whole da
 
 For every campaign inside its settlement window, a compromised or dishonest settler can choose any recognized total (up to spending the whole budget) and any Merkle root. That sends up to the creator pool, 80% of the budget, to wallets of its choice. The fee still goes to the treasury and the refund to the brand.
 
-The owner can appoint the settler, so a compromised owner has the same reach. In addition, it can void funded campaigns (their budgets go back to the brands) and redirect future fee withdrawals. Neither role can take escrowed funds in any other way. This is the protocol's trust model, with MORCast as the single trusted verifier.
+The owner can appoint the settler, so a compromised owner has the same reach. In addition, it can void funded campaigns (their budgets go back to the brands) and redirect future fee withdrawals. Neither role can take escrowed funds in any other way. This is the protocol's trust model, with Morcast as the single trusted verifier.
 
 Mitigations:
 - Keep the owner and the settler in separate wallets, with their keys on hardware signers.
@@ -112,7 +112,7 @@ Concurrent `createCampaign` transactions can change which ID a campaign receives
 
 ### S-9: The owner can void a running campaign
 
-The owner can void a funded campaign at any time, including after creators have posted their content. The budget goes back to the brand only, so nothing can be stolen, but creators lose the payout they were working toward. Voiding must follow MORCast's published policy, for example for a mistaken deposit, a cancellation agreed with the brand before creators start, or an emergency.
+The owner can void a funded campaign at any time, including after creators have posted their content. The budget goes back to the brand only, so nothing can be stolen, but creators lose the payout they were working toward. Voiding must follow Morcast's published policy, for example for a mistaken deposit, a cancellation agreed with the brand before creators start, or an emergency.
 
 ## Verified Properties
 

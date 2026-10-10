@@ -1,12 +1,12 @@
-# MORCast Payment Protocol
+# Morcast Payment Protocol
 
-On-chain escrow and settlement for MORCast creator campaigns on Base.
+On-chain escrow and settlement for Morcast creator campaigns on Base.
 
-A brand escrows a campaign budget in USDC or MOR. After the campaign ends, MORCast publishes the measured results and settles the campaign once. The contract then pays the protocol fee, lets creators claim their share against a Merkle root, and returns the unspent budget to the brand. If the campaign is not settled within its settlement window, the brand can withdraw the full budget.
+A brand escrows a campaign budget in USDC or MOR. After the campaign ends, Morcast publishes the measured results and settles the campaign once. The contract then pays the protocol fee, lets creators claim their share against a Merkle root, and returns the unspent budget to the brand. If the campaign is not settled within its settlement window, the brand can withdraw the full budget.
 
 ## Status
 
-Feature-complete for protocol v1. Deployed on Base Sepolia for MORCast's staging. Not deployed on Base mainnet. Not audited.
+Feature-complete for protocol v1. Deployed on Base Sepolia for Morcast's staging. Not deployed on Base mainnet. Not audited.
 
 | Component | State |
 |---|---|
@@ -43,7 +43,7 @@ escrow.withdrawBrand(id);                // unspent budget back to the brand
 
 If the campaign is not settled before Day 10, the brand calls `withdrawBrand(id)` from Day 10 to recover the whole budget.
 
-The owner, a wallet MORCast holds, operates the escrow. It can replace the settler and the treasury, choose tokens and pause creation for new campaigns, void a funded campaign (the budget goes back to its brand) and recover tokens sent to the escrow by mistake. It can never move a campaign's funds anywhere else.
+The owner, a wallet Morcast holds, operates the escrow. It can replace the settler and the treasury, choose tokens and pause creation for new campaigns, void a funded campaign (the budget goes back to its brand) and recover tokens sent to the escrow by mistake. It can never move a campaign's funds anywhere else.
 
 Anyone can check a published result dataset, and compare it with the escrow, with the SDK package from a [release](#releases):
 
@@ -54,11 +54,11 @@ npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download
 
 ## Example
 
-A brand escrows 100,000 USDC for a target of 1,000,000 qualified views, and MORCast recognizes 640,000:
+A brand escrows 100,000 USDC for a target of 1,000,000 qualified views, and Morcast recognizes 640,000:
 
 | Party | Receives |
 |---|---|
-| MORCast treasury (fee, 20% of spent) | 12,800 USDC |
+| Morcast treasury (fee, 20% of spent) | 12,800 USDC |
 | Creators (pool, 80% of spent) | 51,200 USDC |
 | Brand (refund) | 36,000 USDC |
 

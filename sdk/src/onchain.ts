@@ -93,7 +93,7 @@ export function isSupportedEscrowVersion(version: string): boolean {
  * trusting an address with funds, for example before sending a brand a deposit request.
  *
  * @example
- * if (!(await isGenuineEscrow(client, escrowAddress))) throw new Error("not a MORCast escrow");
+ * if (!(await isGenuineEscrow(client, escrowAddress))) throw new Error("not a Morcast escrow");
  */
 export async function isGenuineEscrow(
   client: Pick<PublicClient, "getCode">,

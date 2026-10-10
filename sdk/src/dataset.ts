@@ -1,5 +1,5 @@
 /**
- * The result dataset: the document MORCast publishes for each campaign after measurement.
+ * The result dataset: the document Morcast publishes for each campaign after measurement.
  *
  * It lists every accepted submission with its status and metric, every creator's total, score
  * and payout, the settlement totals and the Merkle leaves. `resultHash`, passed to `settle`, is
@@ -73,7 +73,7 @@ export const itemSchema = z.strictObject({
   /** Platform content ID (X post ID or YouTube video ID). */
   contentId: text,
   contentUrl: text,
-  /** When MORCast received the submission, unix seconds. */
+  /** When Morcast received the submission, unix seconds. */
   receivedAt: uint,
   status: z.enum(["PASS", "FAIL"]),
   /** All applicable reason codes, sorted and unique. Empty for PASS. */
@@ -106,7 +106,7 @@ export const creatorSchema = z.strictObject({
   payout: uint,
 });
 
-/** An issue raised during review, with MORCast's decision. */
+/** An issue raised during review, with Morcast's decision. */
 export const issueSchema = z.strictObject({
   issueId: text,
   /** Wallet of the creator or brand that raised the issue. */
