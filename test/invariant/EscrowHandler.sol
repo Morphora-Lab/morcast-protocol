@@ -3,8 +3,8 @@ pragma solidity 0.8.37;
 
 import {Test} from "forge-std/Test.sol";
 
-import {MORCastEscrow} from "../../src/MORCastEscrow.sol";
-import {IMORCastEscrow} from "../../src/interfaces/IMORCastEscrow.sol";
+import {MorcastEscrow} from "../../src/MorcastEscrow.sol";
+import {IMorcastEscrow} from "../../src/interfaces/IMorcastEscrow.sol";
 import {SettlementMath} from "../../src/libraries/SettlementMath.sol";
 import {MerkleTreeBuilder} from "../utils/MerkleTreeBuilder.sol";
 import {PayoutAllocation} from "../utils/PayoutAllocation.sol";
@@ -17,7 +17,7 @@ import {MockERC20} from "../utils/Tokens.sol";
 ///      bookkeeping. Owner actions (settler and treasury rotation, pausing, token allowlist,
 ///      voiding, recovering stray tokens) are exercised too.
 contract EscrowHandler is Test {
-    MORCastEscrow public immutable escrow;
+    MorcastEscrow public immutable escrow;
     MockERC20 public immutable usdc;
     MockERC20 public immutable mor;
     address public immutable owner;
@@ -43,7 +43,7 @@ contract EscrowHandler is Test {
     mapping(uint256 id => bytes32[]) internal _payoutLeaves;
     mapping(uint256 id => mapping(uint256 index => bool)) internal _payoutClaimed;
 
-    constructor(MORCastEscrow escrow_, MockERC20 usdc_, MockERC20 mor_) {
+    constructor(MorcastEscrow escrow_, MockERC20 usdc_, MockERC20 mor_) {
         escrow = escrow_;
         usdc = usdc_;
         mor = mor_;
@@ -107,7 +107,7 @@ contract EscrowHandler is Test {
     function cancel(uint256 idSeed) external {
         (bool found, uint256 id) = _find(idSeed, _isCancellable);
         if (!found) return;
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
 
         vm.prank(c.brand);
         escrow.cancel(id);
@@ -131,7 +131,7 @@ contract EscrowHandler is Test {
         if (settler == address(0)) return; // settlement disabled by the owner
         (bool found, uint256 id) = _find(idSeed, _isSettleable);
         if (!found) return;
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
 
         (uint256 opensAt, uint256 closesAt) = escrow.settlementWindow(id);
         if (block.timestamp < opensAt) {
@@ -194,7 +194,7 @@ contract EscrowHandler is Test {
     function withdrawFee(uint256 idSeed) external {
         (bool found, uint256 id) = _find(idSeed, _hasUnpaidFee);
         if (!found) return;
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
 
         escrow.withdrawFee(id);
 
@@ -207,12 +207,12 @@ contract EscrowHandler is Test {
     function withdrawBrand(uint256 idSeed) external {
         (bool found, uint256 id) = _find(idSeed, _isBrandWithdrawable);
         if (!found) return;
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
 
         vm.prank(c.brand);
         escrow.withdrawBrand(id);
 
-        ghostBalance[c.token] -= c.status == IMORCastEscrow.Status.Settled ? c.refund : c.budget;
+        ghostBalance[c.token] -= c.status == IMorcastEscrow.Status.Settled ? c.refund : c.budget;
         calls["withdrawBrand"]++;
     }
 
@@ -256,7 +256,7 @@ contract EscrowHandler is Test {
     function voidCampaign(uint256 idSeed) external {
         (bool found, uint256 id) = _find(idSeed, _isFunded);
         if (!found) return;
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
 
         vm.prank(owner);
         escrow.voidCampaign(id);
@@ -316,18 +316,18 @@ contract EscrowHandler is Test {
     }
 
     function _isCancellable(uint256 id) internal view returns (bool) {
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
-        return c.status == IMORCastEscrow.Status.Funded && block.timestamp < c.startAt;
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
+        return c.status == IMorcastEscrow.Status.Funded && block.timestamp < c.startAt;
     }
 
     function _isFunded(uint256 id) internal view returns (bool) {
-        return escrow.getCampaign(id).status == IMORCastEscrow.Status.Funded;
+        return escrow.getCampaign(id).status == IMorcastEscrow.Status.Funded;
     }
 
     function _isSettleable(uint256 id) internal view returns (bool) {
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
         (, uint256 closesAt) = escrow.settlementWindow(id);
-        return c.status == IMORCastEscrow.Status.Funded && block.timestamp < closesAt;
+        return c.status == IMorcastEscrow.Status.Funded && block.timestamp < closesAt;
     }
 
     function _hasUnclaimedPayout(uint256 id) internal view returns (bool) {
@@ -338,14 +338,14 @@ contract EscrowHandler is Test {
     }
 
     function _hasUnpaidFee(uint256 id) internal view returns (bool) {
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
-        return c.status == IMORCastEscrow.Status.Settled && !c.feePaid;
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
+        return c.status == IMorcastEscrow.Status.Settled && !c.feePaid;
     }
 
     function _isBrandWithdrawable(uint256 id) internal view returns (bool) {
-        IMORCastEscrow.Campaign memory c = escrow.getCampaign(id);
-        if (c.status == IMORCastEscrow.Status.Settled) return !c.refundPaid;
-        if (c.status != IMORCastEscrow.Status.Funded) return false;
+        IMorcastEscrow.Campaign memory c = escrow.getCampaign(id);
+        if (c.status == IMorcastEscrow.Status.Settled) return !c.refundPaid;
+        if (c.status != IMorcastEscrow.Status.Funded) return false;
         (, uint256 closesAt) = escrow.settlementWindow(id);
         return block.timestamp >= closesAt;
     }

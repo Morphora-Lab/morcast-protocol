@@ -3,7 +3,7 @@ pragma solidity 0.8.37;
 
 import {Test} from "forge-std/Test.sol";
 
-import {MORCastEscrow} from "../../src/MORCastEscrow.sol";
+import {MorcastEscrow} from "../../src/MorcastEscrow.sol";
 import {MerkleTreeBuilder} from "./MerkleTreeBuilder.sol";
 import {MockERC20} from "./Tokens.sol";
 
@@ -28,7 +28,7 @@ abstract contract EscrowFixture is Test {
 
     MockERC20 internal usdc;
     MockERC20 internal mor;
-    MORCastEscrow internal escrow;
+    MorcastEscrow internal escrow;
 
     address internal owner = makeAddr("owner");
     address internal settler = makeAddr("settler");
@@ -45,7 +45,7 @@ abstract contract EscrowFixture is Test {
 
         usdc = new MockERC20("USD Coin", "USDC", 6);
         mor = new MockERC20("MorpheusAI", "MOR", 18);
-        escrow = new MORCastEscrow(owner, settler, treasury, _tokens(address(usdc), address(mor)));
+        escrow = new MorcastEscrow(owner, settler, treasury, _tokens(address(usdc), address(mor)));
 
         _fund(brand, usdc, 10 * BUDGET);
         _fund(brand, mor, 1_000_000e18);

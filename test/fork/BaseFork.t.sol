@@ -4,8 +4,8 @@ pragma solidity 0.8.37;
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {Test} from "forge-std/Test.sol";
 
-import {MORCastEscrow} from "../../src/MORCastEscrow.sol";
-import {IMORCastEscrow} from "../../src/interfaces/IMORCastEscrow.sol";
+import {MorcastEscrow} from "../../src/MorcastEscrow.sol";
+import {IMorcastEscrow} from "../../src/interfaces/IMorcastEscrow.sol";
 import {MerkleTreeBuilder} from "../utils/MerkleTreeBuilder.sol";
 
 /// @notice Runs the escrow against the real USDC and MOR contracts on a fork of Base mainnet.
@@ -17,7 +17,7 @@ contract BaseForkTest is Test {
     /// @dev Morpheus MOR on Base (18 decimals).
     address internal constant MOR = 0x7431aDa8a591C955a994a21710752EF9b882b8e3;
 
-    MORCastEscrow internal escrow;
+    MorcastEscrow internal escrow;
     address internal settler = makeAddr("settler");
     address internal treasury = makeAddr("treasury");
     address internal brand = makeAddr("brand");
@@ -38,7 +38,7 @@ contract BaseForkTest is Test {
         address[] memory tokens = new address[](2);
         tokens[0] = USDC;
         tokens[1] = MOR;
-        escrow = new MORCastEscrow(makeAddr("owner"), settler, treasury, tokens);
+        escrow = new MorcastEscrow(makeAddr("owner"), settler, treasury, tokens);
         startAt = uint64(block.timestamp + 1 days);
         endAt = uint64(block.timestamp + 15 days);
     }
@@ -117,6 +117,6 @@ contract BaseForkTest is Test {
         IERC20Metadata(token).approve(address(escrow), budget);
         id = escrow.createCampaign(token, budget, 1_000_000, startAt, endAt, keccak256("manifest"));
         vm.stopPrank();
-        assertEq(uint8(escrow.getCampaign(id).status), uint8(IMORCastEscrow.Status.Funded));
+        assertEq(uint8(escrow.getCampaign(id).status), uint8(IMorcastEscrow.Status.Funded));
     }
 }

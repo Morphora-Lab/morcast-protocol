@@ -3,7 +3,7 @@ pragma solidity 0.8.37;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-import {IMORCastEscrow} from "../src/interfaces/IMORCastEscrow.sol";
+import {IMorcastEscrow} from "../src/interfaces/IMorcastEscrow.sol";
 import {EscrowFixture} from "./utils/EscrowFixture.sol";
 import {MockERC20} from "./utils/Tokens.sol";
 
@@ -80,18 +80,18 @@ contract OwnerTest is EscrowFixture {
         uint256 id = _createCampaign();
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.SettlerUpdated(settler, newSettler);
+        emit IMorcastEscrow.SettlerUpdated(settler, newSettler);
         vm.prank(owner);
         escrow.setSettler(newSettler);
 
         vm.warp(_day(5));
-        vm.expectRevert(IMORCastEscrow.NotSettler.selector);
+        vm.expectRevert(IMorcastEscrow.NotSettler.selector);
         vm.prank(settler);
         escrow.settle(id, 0, bytes32(0), RESULT_HASH);
 
         vm.prank(newSettler);
         escrow.settle(id, 0, bytes32(0), RESULT_HASH);
-        assertEq(uint8(escrow.getCampaign(id).status), uint8(IMORCastEscrow.Status.Settled));
+        assertEq(uint8(escrow.getCampaign(id).status), uint8(IMorcastEscrow.Status.Settled));
     }
 
     /// @notice With settlement disabled nobody can settle, and brands get their full budget
@@ -102,7 +102,7 @@ contract OwnerTest is EscrowFixture {
         escrow.setSettler(address(0));
 
         vm.warp(_day(5));
-        vm.expectRevert(IMORCastEscrow.NotSettler.selector);
+        vm.expectRevert(IMorcastEscrow.NotSettler.selector);
         vm.prank(settler);
         escrow.settle(id, 0, bytes32(0), RESULT_HASH);
 
@@ -122,12 +122,12 @@ contract OwnerTest is EscrowFixture {
         _settle(id, TARGET, keccak256("root"));
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.TreasuryUpdated(treasury, newTreasury);
+        emit IMorcastEscrow.TreasuryUpdated(treasury, newTreasury);
         vm.prank(owner);
         escrow.setTreasury(newTreasury);
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.FeeWithdrawn(id, newTreasury, 20_000e6);
+        emit IMorcastEscrow.FeeWithdrawn(id, newTreasury, 20_000e6);
         escrow.withdrawFee(id);
 
         assertEq(usdc.balanceOf(newTreasury), 20_000e6);
@@ -135,7 +135,7 @@ contract OwnerTest is EscrowFixture {
     }
 
     function test_setTreasury_revertsOnZeroAddress() public {
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
+        vm.expectRevert(IMorcastEscrow.ZeroAddress.selector);
         vm.prank(owner);
         escrow.setTreasury(address(0));
     }
@@ -151,11 +151,11 @@ contract OwnerTest is EscrowFixture {
         uint256 cancelledLater = _createCampaign();
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.CreationPausedUpdated(true);
+        emit IMorcastEscrow.CreationPausedUpdated(true);
         vm.prank(owner);
         escrow.setCreationPaused(true);
 
-        vm.expectRevert(IMORCastEscrow.CreationPaused.selector);
+        vm.expectRevert(IMorcastEscrow.CreationPaused.selector);
         _createCampaign();
 
         vm.prank(brand);
@@ -181,11 +181,11 @@ contract OwnerTest is EscrowFixture {
         uint256 id = _createCampaign(address(mor), 100e18, TARGET);
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.CampaignTokenUpdated(address(mor), false);
+        emit IMorcastEscrow.CampaignTokenUpdated(address(mor), false);
         vm.prank(owner);
         escrow.setCampaignToken(address(mor), false);
 
-        vm.expectRevert(abi.encodeWithSelector(IMORCastEscrow.UnsupportedToken.selector, mor));
+        vm.expectRevert(abi.encodeWithSelector(IMorcastEscrow.UnsupportedToken.selector, mor));
         _createCampaign(address(mor), 100e18, TARGET);
 
         // USDC is unaffected.
@@ -203,7 +203,7 @@ contract OwnerTest is EscrowFixture {
         MockERC20 usdt = new MockERC20("Tether USD", "USDT0", 6);
         _fund(brand, usdt, BUDGET);
 
-        vm.expectRevert(abi.encodeWithSelector(IMORCastEscrow.UnsupportedToken.selector, usdt));
+        vm.expectRevert(abi.encodeWithSelector(IMorcastEscrow.UnsupportedToken.selector, usdt));
         _createCampaign(address(usdt), BUDGET, TARGET);
 
         vm.prank(owner);
@@ -215,7 +215,7 @@ contract OwnerTest is EscrowFixture {
     }
 
     function test_setCampaignToken_revertsOnZeroAddress() public {
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
+        vm.expectRevert(IMorcastEscrow.ZeroAddress.selector);
         vm.prank(owner);
         escrow.setCampaignToken(address(0), true);
     }
@@ -232,13 +232,13 @@ contract OwnerTest is EscrowFixture {
         uint256 brandBefore = usdc.balanceOf(brand);
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.CampaignVoided(id, brand, BUDGET);
+        emit IMorcastEscrow.CampaignVoided(id, brand, BUDGET);
         vm.prank(owner);
         escrow.voidCampaign(id);
 
         assertEq(usdc.balanceOf(brand), brandBefore + BUDGET);
         assertEq(usdc.balanceOf(owner), 0);
-        assertEq(uint8(escrow.getCampaign(id).status), uint8(IMORCastEscrow.Status.Refunded));
+        assertEq(uint8(escrow.getCampaign(id).status), uint8(IMorcastEscrow.Status.Refunded));
         assertEq(escrow.totalOwed(address(usdc)), 0);
     }
 
@@ -248,7 +248,7 @@ contract OwnerTest is EscrowFixture {
         escrow.voidCampaign(id);
 
         bytes memory refunded = abi.encodeWithSelector(
-            IMORCastEscrow.InvalidStatus.selector, IMORCastEscrow.Status.Refunded
+            IMorcastEscrow.InvalidStatus.selector, IMorcastEscrow.Status.Refunded
         );
         vm.warp(_day(5));
         vm.expectRevert(refunded);
@@ -272,7 +272,7 @@ contract OwnerTest is EscrowFixture {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                IMORCastEscrow.InvalidStatus.selector, IMORCastEscrow.Status.Settled
+                IMorcastEscrow.InvalidStatus.selector, IMorcastEscrow.Status.Settled
             )
         );
         vm.prank(owner);
@@ -292,7 +292,7 @@ contract OwnerTest is EscrowFixture {
         address recipient = makeAddr("sender of the stray tokens");
 
         vm.expectEmit(address(escrow));
-        emit IMORCastEscrow.TokensRecovered(address(usdc), recipient, 777e6);
+        emit IMorcastEscrow.TokensRecovered(address(usdc), recipient, 777e6);
         vm.prank(owner);
         escrow.recoverTokens(address(usdc), recipient);
         assertEq(usdc.balanceOf(recipient), 777e6);
@@ -310,7 +310,7 @@ contract OwnerTest is EscrowFixture {
     function test_recoverTokens_cannotTouchCampaignFunds() public {
         _createCampaign();
 
-        vm.expectRevert(IMORCastEscrow.NothingToRecover.selector);
+        vm.expectRevert(IMorcastEscrow.NothingToRecover.selector);
         vm.prank(owner);
         escrow.recoverTokens(address(usdc), owner);
 
@@ -328,7 +328,7 @@ contract OwnerTest is EscrowFixture {
 
     function test_recoverTokens_revertsOnZeroRecipient() public {
         _sendToEscrow(usdc, 1);
-        vm.expectRevert(IMORCastEscrow.ZeroAddress.selector);
+        vm.expectRevert(IMorcastEscrow.ZeroAddress.selector);
         vm.prank(owner);
         escrow.recoverTokens(address(usdc), address(0));
     }

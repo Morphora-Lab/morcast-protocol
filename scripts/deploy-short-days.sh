@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploys a test build of MORCastEscrow whose campaign days last DAY_SECONDS seconds instead of
+# Deploys a test build of MorcastEscrow whose campaign days last DAY_SECONDS seconds instead of
 # 86,400, so that a whole campaign runs in about an hour on a test network.
 #
 # The build is the contract in src with its three timing constants scaled. Settlement opens after
@@ -41,7 +41,7 @@ cp "$root/foundry.toml" "$root/remappings.txt" "$work/"
 cp -r "$root/src" "$root/script" "$work/"
 ln -s "$root/lib" "$work/lib"
 
-escrow="$work/src/MORCastEscrow.sol"
+escrow="$work/src/MorcastEscrow.sol"
 sed -i -E \
   -e "s/(SETTLEMENT_OPENS_AFTER = )5 days;/\1$((5 * day));/" \
   -e "s/(SETTLEMENT_CLOSES_AFTER = )10 days;/\1$((10 * day));/" \
@@ -50,7 +50,7 @@ sed -i -E \
 # Each constant must now be a number of seconds. Otherwise the build would keep real days.
 for constant in SETTLEMENT_OPENS_AFTER SETTLEMENT_CLOSES_AFTER MAX_CAMPAIGN_DURATION; do
   if ! grep -Eq "$constant = [0-9]+;" "$escrow"; then
-    echo "Could not scale $constant in src/MORCastEscrow.sol." >&2
+    echo "Could not scale $constant in src/MorcastEscrow.sol." >&2
     exit 1
   fi
 done

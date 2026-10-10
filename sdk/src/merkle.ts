@@ -3,7 +3,7 @@
  *
  * Each creator payout is a leaf over the value `(campaignId, wallet, amount)`. The tree is an
  * OpenZeppelin `StandardMerkleTree` with the leaf encoding `(uint256, address, uint256)`, which
- * is exactly what `MORCastEscrow.claim` verifies:
+ * is exactly what `MorcastEscrow.claim` verifies:
  *
  *   leaf = keccak256(keccak256(abi.encode(campaignId, wallet, amount)))
  *   node = keccak256(sort(left, right))       the smaller hash comes first
@@ -38,7 +38,7 @@ export interface Payout {
 
 /** A leaf of the payout tree with everything needed to claim it. */
 export interface PayoutLeaf extends Payout {
-  /** The leaf hash, as `MORCastEscrow.leafHash` returns it. */
+  /** The leaf hash, as `MorcastEscrow.leafHash` returns it. */
   leaf: Hex;
   /** Sibling hashes from the leaf up to the root, as `claim` expects them. */
   proof: Hex[];
@@ -55,7 +55,7 @@ export interface PayoutTree {
 
 /**
  * Hash of the payout leaf `(campaignId, wallet, amount)`, identical to
- * `MORCastEscrow.leafHash(campaignId, wallet, amount)`.
+ * `MorcastEscrow.leafHash(campaignId, wallet, amount)`.
  */
 export function payoutLeafHash(campaignId: bigint, wallet: Address, amount: bigint): Hex {
   return keccak256(keccak256(encodeAbiParameters(LEAF_PARAMETERS, [campaignId, wallet, amount])));
