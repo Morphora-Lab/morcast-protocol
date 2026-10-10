@@ -78,15 +78,15 @@ On a fresh Anvil node, the addresses are always:
 |---|---|
 | USDC (mock) | `0x5FbDB2315678afecb367f032d93F642f64180aa3` |
 | MOR (mock) | `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512` |
-| MORCastEscrow | `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0` |
+| MorcastEscrow | `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0` |
 
 ## Deployments
 
-No production deployment yet. Staging (Base Sepolia, chain 84532) runs version `1.0.0`, deployed from `v1.0.0-rc.3` and verified on [Sourcify](https://sourcify.dev). Its transactions are recorded in [`broadcast/Deploy.s.sol/84532`](../broadcast/Deploy.s.sol/84532):
+No production deployment yet. Staging (Base Sepolia, chain 84532) still runs the deployment made from `v1.0.0-rc.3`, before the contract took its present name. It is verified on [Sourcify](https://sourcify.dev), and its code hash is that release's, not this one's. A deployment of this release follows. The transactions are recorded in [`broadcast/Deploy.s.sol/84532`](../broadcast/Deploy.s.sol/84532):
 
 | Contract | Address |
 |---|---|
-| MORCastEscrow | [`0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7`](https://sepolia.basescan.org/address/0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7), created in block 47781042 |
+| Escrow from `v1.0.0-rc.3` | [`0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7`](https://sepolia.basescan.org/address/0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7), created in block 47781042 |
 | USDC | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` (Circle's test USDC) |
 | MOR (test) | `0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`: [`MockERC20`](../test/utils/Tokens.sol) "MorpheusAI (test)", 18 decimals. Anyone can mint it |
 

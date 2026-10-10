@@ -4,20 +4,20 @@ TypeScript implementation of the Morcast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.3`, released with protocol release candidate `v1.0.0-rc.3`. The package is attached to each GitHub release. It is not on npm.
+Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0-rc.4`, released with protocol release candidate `v1.0.0-rc.4`. The package is attached to each GitHub release. It is not on npm.
 
 ## Install
 
 Each [release](https://github.com/Morphora-Lab/morcast-protocol/releases) carries the package. Install it from there:
 
 ```sh
-pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.3/morcast-protocol-1.0.0-rc.3.tgz
+pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0-rc.4/morcast-protocol-1.0.0-rc.4.tgz
 ```
 
 The lockfile records the package's hash, so every later install gets exactly the same files. To confirm that the release workflow built a downloaded package from this repository:
 
 ```sh
-gh attestation verify morcast-protocol-1.0.0-rc.3.tgz --repo Morphora-Lab/morcast-protocol
+gh attestation verify morcast-protocol-1.0.0-rc.4.tgz --repo Morphora-Lab/morcast-protocol
 ```
 
 The package is ESM only and needs Node.js 20 or later.
@@ -102,13 +102,13 @@ All values are `bigint`. Every function throws a `RangeError` on invalid input.
 | `canonicalize(value)` | RFC 8785 canonical JSON of a number-free document |
 | `hashCanonical(value)` | keccak256 of the canonical JSON (`manifestHash`, `resultHash`) |
 | `buildPayoutTree(campaignId, payouts)` | `{ root, leaves }`, each leaf with its hash and proof. Zero payouts are left out. |
-| `payoutLeafHash(campaignId, wallet, amount)` | The leaf hash, identical to `MORCastEscrow.leafHash` |
+| `payoutLeafHash(campaignId, wallet, amount)` | The leaf hash, identical to `MorcastEscrow.leafHash` |
 | `verifyPayoutProof(root, campaignId, wallet, amount, proof)` | Whether `claim` would accept the proof |
 | `verifyResultDataset(input)` | `{ valid, errors, resultHash, dataset }` for a published result dataset |
 | `resultDatasetSchema` | The dataset schema (zod), `morcast.result.v1` |
 | `readCampaign(client, escrow, campaignId)` | The campaign as stored by the escrow |
 | `compareWithChain(dataset, campaign, resultHash)` | Mismatches between a dataset and the on-chain campaign |
-| `morcastEscrowAbi` | ABI of `MORCastEscrow`, generated from the compiled contract |
+| `morcastEscrowAbi` | ABI of `MorcastEscrow`, generated from the compiled contract |
 | `ESCROW_CODE_HASH`, `isGenuineEscrow(client, escrow)` | keccak256 of the escrow's runtime code, identical for every deployment of this version, and whether a deployment runs that code |
 | `SETTLEMENT_OPENS_AFTER`, `SETTLEMENT_CLOSES_AFTER`, `MAX_CAMPAIGN_DURATION` | The contract's timing constants in seconds: Day 5, Day 10 and 90 days |
 | `ESCROW_VERSION`, `readEscrowVersion(client, escrow)`, `isSupportedEscrowVersion(version)` | The escrow version this SDK implements, a deployment's version, and whether the SDK can read it (same major version) |
