@@ -82,7 +82,25 @@ On a fresh Anvil node, the addresses are always:
 
 ## Deployments
 
-No production deployment yet. Staging (Base Sepolia, chain 84532) runs version `1.0.0`, deployed from `v1.0.0-rc.4` and verified on [Sourcify](https://sourcify.dev). Its transactions are recorded in [`broadcast/Deploy.s.sol/84532`](../broadcast/Deploy.s.sol/84532):
+### Production on Base
+
+Production (Base, chain 8453) runs version `1.0.0`, deployed from `v1.0.0` on 13 October 2026. Its source is verified on [Sourcify](https://sourcify.dev) with an exact match, and its code hash is the release's `ESCROW_CODE_HASH`. Its transaction is recorded in [`broadcast/Deploy.s.sol/8453`](../broadcast/Deploy.s.sol/8453):
+
+| Contract or role | Address |
+|---|---|
+| MorcastEscrow | [`0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`](https://basescan.org/address/0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459), created in block 52554940 |
+| Owner | `0x97A695618897dd276502Bb9b7a25D088f1b91A02` |
+| Settler and treasury | `0x7Fb845e53fd656754E06e1A92d30eD6B221d4401` |
+| USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
+| MOR | `0x7431aDa8a591C955a994a21710752EF9b882b8e3` |
+
+The owner and the settler are separate wallets Morcast holds. The treasury is the settler, so the protocol fee goes to the settler wallet. The account that sent the deployment, `0xB0742AC9890BEf1894747724077254F9553Cd946`, has no role in the contract.
+
+That account also sent the first staging deployment below. A contract's address follows from its sender and the sender's transaction count, so this escrow has on Base the address the test MOR token has on Base Sepolia. They are different contracts on different chains.
+
+### Staging on Base Sepolia
+
+Staging (Base Sepolia, chain 84532) runs version `1.0.0`, deployed from `v1.0.0-rc.4` and verified on [Sourcify](https://sourcify.dev). Its transactions are recorded in [`broadcast/Deploy.s.sol/84532`](../broadcast/Deploy.s.sol/84532):
 
 | Contract | Address |
 |---|---|
@@ -90,6 +108,6 @@ No production deployment yet. Staging (Base Sepolia, chain 84532) runs version `
 | USDC | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` (Circle's test USDC) |
 | MOR (test) | `0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`: [`MockERC20`](../test/utils/Tokens.sol) "MorpheusAI (test)", 18 decimals. Anyone can mint it |
 
-Its owner, settler and treasury are one staging operator account, `0xB0742AC9890BEf1894747724077254F9553Cd946`, which holds no real funds. Production uses separate owner and settler wallets, as above.
+Its owner, settler and treasury are one staging operator account, `0xB0742AC9890BEf1894747724077254F9553Cd946`, which holds no real funds.
 
 An earlier deployment, made from `v1.0.0-rc.3` before the contract took its present name, stays at [`0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7`](https://sepolia.basescan.org/address/0x7550A4093bF8883Faa437bd60DA4a7eC3591a1D7), created in block 47781042. Its code hash is that release's. Morcast sends it no new campaigns, and it keeps serving the ones it holds.
