@@ -6,13 +6,13 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, Morca
 
 ## Status
 
-Protocol v1 is released as version 1.0.0. Deployed on Base Sepolia for Morcast's staging. Not deployed on Base mainnet. Not audited.
+Protocol v1 is released as version 1.0.0 and deployed on Base ([Deployments](docs/deployment.md#deployments)). Morcast's staging runs on Base Sepolia. Not audited.
 
 | Component | State |
 |---|---|
 | Escrow contract (`MorcastEscrow`) | Implemented. Unit, invariant and Base fork tests |
 | Settlement arithmetic (`SettlementMath`) | Implemented, unit- and fuzz-tested |
-| Deployment scripts | Implemented. Used for the Base Sepolia staging deployment ([Deployments](docs/deployment.md#deployments)) |
+| Deployment scripts | Implemented. Used for the Base deployment and the Base Sepolia staging deployment ([Deployments](docs/deployment.md#deployments)) |
 | TypeScript SDK: settlement, payouts, metrics | Implemented, tested against the shared vectors |
 | TypeScript SDK: document hashing, payout Merkle trees | Implemented. Trees verified against the contract |
 | TypeScript SDK: result dataset and verifier (`morcast-verify`) | Implemented. Verified end to end on a local node |
@@ -118,7 +118,7 @@ Versions follow semantic versioning. A tag such as `v1.0.0-rc.1` marks a pre-rel
 | `v1.0.0-rc.2` | Adds the escrow's code hash to the SDK (`ESCROW_CODE_HASH`, `isGenuineEscrow`) |
 | `v1.0.0-rc.3` | A creator may take part in a campaign with several accounts. Each creator in a result dataset lists its `accounts`, and each account belongs to one wallet |
 | `v1.0.0-rc.4` | The contract takes the product's name, `MorcastEscrow`. Its rules and its ABI are the same. Its code hash is new, so a deployment of an earlier release is not this release's escrow |
-| `v1.0.0` | The first release of protocol v1. The contract is the one of `v1.0.0-rc.4`, so its code hash is the same. No external audit yet |
+| `v1.0.0` | The first release of protocol v1, deployed on Base. The contract is the one of `v1.0.0-rc.4`, so its code hash is the same. No external audit yet |
 
 The escrow's `VERSION()` names the contract version a deployment runs. See [Versions and upgrades](docs/upgrades.md).
 
