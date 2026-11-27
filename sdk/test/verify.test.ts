@@ -46,15 +46,15 @@ describe("example dataset", () => {
     expect(d.totals).toEqual({
       recognized: "640000",
       spent: "64000000000",
-      fee: "12800000000",
-      pool: "51200000000",
+      fee: "5120000000",
+      pool: "58880000000",
       refund: "36000000000",
     });
     expect(d.creators.map((c) => c.payout)).toEqual([
-      "24000000000",
-      "14400000000",
-      "9600000000",
-      "3200000000",
+      "27600000000",
+      "16560000000",
+      "11040000000",
+      "3680000000",
       "0",
     ]);
     expect(d.merkle.leaves).toHaveLength(4);
@@ -72,9 +72,10 @@ describe("verifyResultDataset", () => {
       "campaign.threshold",
     ],
     [
-      "a budget that is not a multiple of 5",
+      "a budget that is not a multiple of 25",
       (d) => {
-        d.campaign.budget = "101";
+        // A multiple of 5, which version 1 escrows accepted.
+        d.campaign.budget = "105";
       },
       "campaign.budget",
     ],

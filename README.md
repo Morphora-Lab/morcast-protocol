@@ -6,7 +6,7 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, Morca
 
 ## Status
 
-Protocol v1 is released as version 1.0.0 and deployed on Base ([Deployments](docs/deployment.md#deployments)). Morcast's staging runs on Base Sepolia. Not audited.
+Protocol v2 (version 2.0.0) lowers the protocol fee from 20% to 8% of what a campaign spends. Its first deployment on Base is still to come. Version 1.0.0 is deployed on Base and stays there for any campaign it holds ([Deployments](docs/deployment.md#deployments)). Morcast's staging runs on Base Sepolia. Not audited.
 
 | Component | State |
 |---|---|
@@ -48,7 +48,7 @@ The owner, a wallet Morcast holds, operates the escrow. It can replace the settl
 Anyone can check a published result dataset, and compare it with the escrow, with the SDK package from a [release](#releases):
 
 ```sh
-npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0/morcast-protocol-1.0.0.tgz \
+npx --package=https://github.com/Morphora-Lab/morcast-protocol/releases/download/v2.0.0/morcast-protocol-2.0.0.tgz \
   morcast-verify result.json --rpc-url https://mainnet.base.org
 ```
 
@@ -58,8 +58,8 @@ A brand escrows 100,000 USDC for a target of 1,000,000 qualified views, and Morc
 
 | Party | Receives |
 |---|---|
-| Morcast treasury (fee, 20% of spent) | 12,800 USDC |
-| Creators (pool, 80% of spent) | 51,200 USDC |
+| Morcast treasury (fee, 8% of spent) | 5,120 USDC |
+| Creators (pool, 92% of spent) | 58,880 USDC |
 | Brand (refund) | 36,000 USDC |
 
 The brand pays for 64% of the target, so 64,000 USDC is spent.
@@ -119,6 +119,7 @@ Versions follow semantic versioning. A tag such as `v1.0.0-rc.1` marks a pre-rel
 | `v1.0.0-rc.3` | A creator may take part in a campaign with several accounts. Each creator in a result dataset lists its `accounts`, and each account belongs to one wallet |
 | `v1.0.0-rc.4` | The contract takes the product's name, `MorcastEscrow`. Its rules and its ABI are the same. Its code hash is new, so a deployment of an earlier release is not this release's escrow |
 | `v1.0.0` | The first release of protocol v1, deployed on Base. The contract is the one of `v1.0.0-rc.4`, so its code hash is the same. No external audit yet |
+| `v2.0.0` | Protocol v2. The fee is 8% of what a campaign spends instead of 20%, and creators share 92%. A budget must be a multiple of 25 base units instead of 5. The ABI is the same. The code hash is new, and the SDK refuses version 1 escrows, because their fee differs |
 
 The escrow's `VERSION()` names the contract version a deployment runs. See [Versions and upgrades](docs/upgrades.md).
 

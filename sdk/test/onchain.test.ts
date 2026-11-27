@@ -94,20 +94,21 @@ describe("readCampaign", () => {
 
 describe("escrow versions", () => {
   it("accepts versions with the same major version only", () => {
-    expect(ESCROW_VERSION).toBe("1.0.0");
-    expect(isSupportedEscrowVersion("1.0.0")).toBe(true);
-    expect(isSupportedEscrowVersion("1.4.2")).toBe(true);
-    expect(isSupportedEscrowVersion("2.0.0")).toBe(false);
-    expect(isSupportedEscrowVersion("0.9.0")).toBe(false);
+    expect(ESCROW_VERSION).toBe("2.0.0");
+    expect(isSupportedEscrowVersion("2.0.0")).toBe(true);
+    expect(isSupportedEscrowVersion("2.4.2")).toBe(true);
+    // Version 1 escrows take a 20% fee, so this SDK would misread their settlements.
+    expect(isSupportedEscrowVersion("1.0.0")).toBe(false);
+    expect(isSupportedEscrowVersion("3.0.0")).toBe(false);
   });
 
   it("reads VERSION from the escrow", async () => {
-    const client = { readContract: async () => "1.0.0" };
+    const client = { readContract: async () => "2.0.0" };
     const version = await readEscrowVersion(
       client as unknown as Parameters<typeof readEscrowVersion>[0],
       dataset.escrow as Hex,
     );
-    expect(version).toBe("1.0.0");
+    expect(version).toBe("2.0.0");
   });
 });
 

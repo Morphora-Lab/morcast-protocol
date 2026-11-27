@@ -4,20 +4,20 @@ TypeScript implementation of the Morcast Payment Protocol arithmetic. It compute
 
 ## Status
 
-Complete for protocol v1: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `1.0.0`, released with protocol `v1.0.0`. The package is attached to each GitHub release. It is not on npm.
+Complete for protocol v2: settlement, payouts, metrics, document hashing, payout Merkle trees and result dataset verification, tested against the shared vectors in [`../vectors`](../vectors). Version `2.0.0`, released with protocol `v2.0.0`. It reads version 2 escrows only, whose fee is 8%. To check a campaign of a version 1 escrow (20% fee), use the `v1.0.0` package. The package is attached to each GitHub release. It is not on npm.
 
 ## Install
 
 Each [release](https://github.com/Morphora-Lab/morcast-protocol/releases) carries the package. Install it from there:
 
 ```sh
-pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v1.0.0/morcast-protocol-1.0.0.tgz
+pnpm add https://github.com/Morphora-Lab/morcast-protocol/releases/download/v2.0.0/morcast-protocol-2.0.0.tgz
 ```
 
 The lockfile records the package's hash, so every later install gets exactly the same files. To confirm that the release workflow built a downloaded package from this repository:
 
 ```sh
-gh attestation verify morcast-protocol-1.0.0.tgz --repo Morphora-Lab/morcast-protocol
+gh attestation verify morcast-protocol-2.0.0.tgz --repo Morphora-Lab/morcast-protocol
 ```
 
 The package is ESM only and needs Node.js 20 or later.
@@ -47,10 +47,10 @@ const scores = creators.map((c) => ({ wallet: c.wallet, score: creatorScore(c.to
 const recognized = recognizedTotal(scores.map((s) => s.score)); // 480_000n
 
 const { fee, pool, refund } = split(budget, target, recognized);
-// fee 9_600_000_000n, pool 38_400_000_000n, refund 52_000_000_000n
+// fee 3_840_000_000n, pool 44_160_000_000n, refund 52_000_000_000n
 
 const payouts = allocatePayouts(pool, scores);
-// payouts 24_000_000_000n, 14_400_000_000n, 0n
+// payouts 27_600_000_000n, 16_560_000_000n, 0n
 ```
 
 Build the payout tree for `settle` and `claim`, and hash a document:
@@ -72,7 +72,7 @@ import { compareWithChain, readCampaign, verifyResultDataset } from "@morcast/pr
 
 const report = verifyResultDataset(JSON.parse(readFileSync("result.json", "utf8")));
 report.valid;       // every check passed
-report.errors;      // [{ path: "totals.fee", message: "expected 12800000000" }, ...]
+report.errors;      // [{ path: "totals.fee", message: "expected 5120000000" }, ...]
 report.resultHash;  // the hash that settle() must use
 
 const onChain = await readCampaign(publicClient, escrowAddress, 1n);
@@ -92,6 +92,7 @@ All values are `bigint`. Every function throws a `RangeError` on invalid input.
 | Function | Result |
 |---|---|
 | `split(budget, target, recognized)` | `{ spent, fee, pool, refund }`, identical to the contract's `SettlementMath.split` |
+| `FEE_NUMERATOR`, `FEE_DENOMINATOR` | The fee is `2 / 25` (8%) of what a campaign spends. A budget must be a multiple of `FEE_DENOMINATOR` |
 | `creatorThreshold(target)` | `M = ceil(T / 100)` |
 | `creatorScore(total, threshold)` | `total` if `total ≥ threshold`, otherwise `0` |
 | `recognizedTotal(scores)` | `S`, the sum of the scores |

@@ -156,7 +156,7 @@
       ],
       "total": "300000",
       "score": "300000",
-      "payout": "24000000000"
+      "payout": "27600000000"
     },
     {
       "wallet": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
@@ -165,7 +165,7 @@
       ],
       "total": "180000",
       "score": "180000",
-      "payout": "14400000000"
+      "payout": "16560000000"
     },
     {
       "wallet": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
@@ -174,7 +174,7 @@
       ],
       "total": "120000",
       "score": "120000",
-      "payout": "9600000000"
+      "payout": "11040000000"
     },
     {
       "wallet": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
@@ -183,7 +183,7 @@
       ],
       "total": "40000",
       "score": "40000",
-      "payout": "3200000000"
+      "payout": "3680000000"
     },
     {
       "wallet": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
@@ -198,28 +198,28 @@
   "totals": {
     "recognized": "640000",
     "spent": "64000000000",
-    "fee": "12800000000",
-    "pool": "51200000000",
+    "fee": "5120000000",
+    "pool": "58880000000",
     "refund": "36000000000"
   },
   "merkle": {
-    "root": "0x7fdbb3dbd5ec392744877350c321b7b262751614ee3f45021101e0a47d79942f",
+    "root": "0xef05e2d8a52d1303bca83ef5b29df29a35a821c5a0d2fd536dbd0d090c263879",
     "leaves": [
       {
         "wallet": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
-        "amount": "24000000000"
+        "amount": "27600000000"
       },
       {
         "wallet": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
-        "amount": "14400000000"
+        "amount": "16560000000"
       },
       {
         "wallet": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
-        "amount": "9600000000"
+        "amount": "11040000000"
       },
       {
         "wallet": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
-        "amount": "3200000000"
+        "amount": "3680000000"
       }
     ]
   },

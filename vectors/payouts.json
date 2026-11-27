@@ -3,94 +3,94 @@
   "cases": [
     {
       "name": "spec-13-partial-delivery",
-      "description": "Section 13 partial delivery: pool 51,200 USDC; the creator below M has score 0 and is not listed.",
-      "pool": "51200000000",
+      "description": "Section 13 partial delivery: pool 58,880 USDC. The creator below M has score 0 and is not listed.",
+      "pool": "58880000000",
       "creators": [
         {
           "wallet": "0x00000000000000000000000000000000000000c1",
           "score": "300000",
-          "payout": "24000000000"
+          "payout": "27600000000"
         },
         {
           "wallet": "0x00000000000000000000000000000000000000c2",
           "score": "180000",
-          "payout": "14400000000"
+          "payout": "16560000000"
         },
         {
           "wallet": "0x00000000000000000000000000000000000000c3",
           "score": "120000",
-          "payout": "9600000000"
+          "payout": "11040000000"
         },
         {
           "wallet": "0x00000000000000000000000000000000000000c4",
           "score": "40000",
-          "payout": "3200000000"
+          "payout": "3680000000"
         }
       ]
     },
     {
       "name": "spec-13-over-delivery",
-      "description": "Section 13 over-delivery: pool 80,000 USDC, S = 1,500,000; the creator with 300,000 receives 16,000 USDC.",
-      "pool": "80000000000",
+      "description": "Section 13 over-delivery: pool 92,000 USDC, S = 1,500,000. The creator with 300,000 receives 18,400 USDC.",
+      "pool": "92000000000",
       "creators": [
         {
           "wallet": "0x00000000000000000000000000000000000000d1",
           "score": "300000",
-          "payout": "16000000000"
+          "payout": "18400000000"
         },
         {
           "wallet": "0x00000000000000000000000000000000000000d2",
           "score": "700000",
-          "payout": "37333333333"
+          "payout": "42933333333"
         },
         {
           "wallet": "0x00000000000000000000000000000000000000d3",
           "score": "500000",
-          "payout": "26666666667"
+          "payout": "30666666667"
         }
       ]
     },
     {
       "name": "spec-13-integer-vector",
-      "description": "Section 13 integer vector: one leftover unit goes to the largest remainder (0x0a).",
-      "pool": "266933332",
+      "description": "Section 13 integer vector: two leftover units go to the largest remainders (0x0c, then 0x0a).",
+      "pool": "306973318",
       "creators": [
         {
           "wallet": "0x000000000000000000000000000000000000000a",
           "score": "500",
-          "payout": "133333333"
+          "payout": "153333326"
         },
         {
           "wallet": "0x000000000000000000000000000000000000000b",
           "score": "400",
-          "payout": "106666666"
+          "payout": "122666660"
         },
         {
           "wallet": "0x000000000000000000000000000000000000000c",
           "score": "101",
-          "payout": "26933333"
+          "payout": "30973332"
         }
       ]
     },
     {
       "name": "spec-13-tie",
       "description": "Section 13 tie vector: equal remainders, so the two leftover units go to the lowest wallet addresses.",
-      "pool": "800000000",
+      "pool": "920000000",
       "creators": [
         {
           "wallet": "0x0000000000000000000000000000000000000003",
           "score": "1000",
-          "payout": "266666666"
+          "payout": "306666666"
         },
         {
           "wallet": "0x0000000000000000000000000000000000000001",
           "score": "1000",
-          "payout": "266666667"
+          "payout": "306666667"
         },
         {
           "wallet": "0x0000000000000000000000000000000000000002",
           "score": "1000",
-          "payout": "266666667"
+          "payout": "306666667"
         }
       ]
     },

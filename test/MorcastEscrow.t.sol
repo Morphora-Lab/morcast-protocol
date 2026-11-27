@@ -19,7 +19,7 @@ contract MorcastEscrowTest is EscrowFixture {
     // ===========================================================================================
 
     function test_constructor_setsConfiguration() public view {
-        assertEq(escrow.VERSION(), "1.0.0");
+        assertEq(escrow.VERSION(), "2.0.0");
         assertEq(escrow.owner(), owner);
         assertEq(escrow.settler(), settler);
         assertEq(escrow.treasury(), treasury);
@@ -126,9 +126,13 @@ contract MorcastEscrowTest is EscrowFixture {
         _createCampaign(address(usdc), 0, TARGET);
     }
 
-    function test_createCampaign_revertsOnBudgetNotMultipleOfFive() public {
+    function test_createCampaign_revertsOnBudgetNotMultipleOfTwentyFive() public {
         vm.expectRevert(abi.encodeWithSelector(IMorcastEscrow.InvalidBudget.selector, BUDGET + 1));
         _createCampaign(address(usdc), BUDGET + 1, TARGET);
+
+        // A multiple of 5 that is not a multiple of 25 is refused too.
+        vm.expectRevert(abi.encodeWithSelector(IMorcastEscrow.InvalidBudget.selector, BUDGET + 5));
+        _createCampaign(address(usdc), BUDGET + 5, TARGET);
     }
 
     function test_createCampaign_revertsOnZeroTarget() public {
@@ -300,8 +304,8 @@ contract MorcastEscrowTest is EscrowFixture {
         assertEq(uint8(c.status), uint8(IMorcastEscrow.Status.Settled));
         assertEq(c.recognized, 640_000);
         assertEq(c.spent, 64_000e6);
-        assertEq(c.fee, 12_800e6);
-        assertEq(c.pool, 51_200e6);
+        assertEq(c.fee, 5_120e6);
+        assertEq(c.pool, 58_880e6);
         assertEq(c.refund, 36_000e6);
         assertEq(c.merkleRoot, root);
         assertEq(c.resultHash, RESULT_HASH);
@@ -315,7 +319,7 @@ contract MorcastEscrowTest is EscrowFixture {
 
         vm.expectEmit(address(escrow));
         emit IMorcastEscrow.CampaignSettled(
-            id, 640_000, 64_000e6, 12_800e6, 51_200e6, 36_000e6, root, RESULT_HASH
+            id, 640_000, 64_000e6, 5_120e6, 58_880e6, 36_000e6, root, RESULT_HASH
         );
         vm.prank(settler);
         escrow.settle(id, 640_000, root, RESULT_HASH);
@@ -446,8 +450,8 @@ contract MorcastEscrowTest is EscrowFixture {
         emit IMorcastEscrow.Claimed(id, payouts[0].wallet, payouts[0].amount);
         _claim(id, payouts, 0, payouts[0].wallet);
 
-        assertEq(usdc.balanceOf(payouts[0].wallet), 24_000e6);
-        assertEq(escrow.getCampaign(id).creatorClaimed, 24_000e6);
+        assertEq(usdc.balanceOf(payouts[0].wallet), 27_600e6);
+        assertEq(escrow.getCampaign(id).creatorClaimed, 27_600e6);
         assertTrue(escrow.isClaimed(id, payouts[0].wallet, payouts[0].amount));
         assertTrue(escrow.claimed(escrow.leafHash(id, payouts[0].wallet, payouts[0].amount)));
         assertFalse(escrow.isClaimed(id, payouts[1].wallet, payouts[1].amount));
@@ -461,7 +465,7 @@ contract MorcastEscrowTest is EscrowFixture {
         // A relayer submits the claim. The funds still go to the creator's wallet.
         _claim(id, payouts, 1, stranger);
 
-        assertEq(usdc.balanceOf(payouts[1].wallet), 14_400e6);
+        assertEq(usdc.balanceOf(payouts[1].wallet), 16_560e6);
         assertEq(usdc.balanceOf(stranger), 0);
     }
 
@@ -482,13 +486,13 @@ contract MorcastEscrowTest is EscrowFixture {
     function test_claim_worksWithSingleLeafTree() public {
         uint256 id = _createCampaign();
         Payout[] memory payouts = new Payout[](1);
-        payouts[0] = Payout(makeAddr("solo creator"), 80_000e6);
+        payouts[0] = Payout(makeAddr("solo creator"), 92_000e6);
 
-        // S >= T: the whole pool (80% of the budget) goes to the only creator.
+        // S >= T: the whole pool (92% of the budget) goes to the only creator.
         _settle(id, TARGET, _root(id, payouts));
         _claim(id, payouts, 0, payouts[0].wallet);
 
-        assertEq(usdc.balanceOf(payouts[0].wallet), 80_000e6);
+        assertEq(usdc.balanceOf(payouts[0].wallet), 92_000e6);
     }
 
     function test_claim_revertsOnSecondClaim() public {
@@ -551,13 +555,13 @@ contract MorcastEscrowTest is EscrowFixture {
         Payout[] memory payouts = new Payout[](2);
         payouts[0] = Payout(makeAddr("creator A"), 40_000e6);
         payouts[1] = Payout(makeAddr("creator B"), 40_000e6);
-        _settle(id, 640_000, _root(id, payouts)); // pool = 51,200 USDC
+        _settle(id, 640_000, _root(id, payouts)); // pool = 58,880 USDC
 
         _claim(id, payouts, 0, stranger);
 
         bytes32[] memory proof = MerkleTreeBuilder.proof(_leaves(id, payouts), 1);
         vm.expectRevert(
-            abi.encodeWithSelector(IMorcastEscrow.PoolExceeded.selector, 40_000e6, 11_200e6)
+            abi.encodeWithSelector(IMorcastEscrow.PoolExceeded.selector, 40_000e6, 18_880e6)
         );
         escrow.claim(id, payouts[1].wallet, payouts[1].amount, proof);
     }
@@ -571,11 +575,11 @@ contract MorcastEscrowTest is EscrowFixture {
         _settle(id, 640_000, _root(id, _specPayouts()));
 
         vm.expectEmit(address(escrow));
-        emit IMorcastEscrow.FeeWithdrawn(id, treasury, 12_800e6);
+        emit IMorcastEscrow.FeeWithdrawn(id, treasury, 5_120e6);
         vm.prank(stranger); // anyone may trigger it
         escrow.withdrawFee(id);
 
-        assertEq(usdc.balanceOf(treasury), 12_800e6);
+        assertEq(usdc.balanceOf(treasury), 5_120e6);
         assertTrue(escrow.getCampaign(id).feePaid);
     }
 
@@ -642,7 +646,7 @@ contract MorcastEscrowTest is EscrowFixture {
     function test_withdrawBrand_marksZeroRefundAsPaid() public {
         uint256 id = _createCampaign();
         Payout[] memory payouts = new Payout[](1);
-        payouts[0] = Payout(makeAddr("solo creator"), 80_000e6);
+        payouts[0] = Payout(makeAddr("solo creator"), 92_000e6);
         _settle(id, TARGET, _root(id, payouts)); // target reached: refund = 0
 
         uint256 brandBefore = usdc.balanceOf(brand);
@@ -733,12 +737,12 @@ contract MorcastEscrowTest is EscrowFixture {
         vm.prank(brand);
         escrow.withdrawBrand(id);
 
-        assertEq(usdc.balanceOf(treasury), 12_800e6);
+        assertEq(usdc.balanceOf(treasury), 5_120e6);
         assertEq(usdc.balanceOf(brand), brandBefore + 36_000e6);
-        assertEq(usdc.balanceOf(payouts[0].wallet), 24_000e6);
-        assertEq(usdc.balanceOf(payouts[1].wallet), 14_400e6);
-        assertEq(usdc.balanceOf(payouts[2].wallet), 9_600e6);
-        assertEq(usdc.balanceOf(payouts[3].wallet), 3_200e6);
+        assertEq(usdc.balanceOf(payouts[0].wallet), 27_600e6);
+        assertEq(usdc.balanceOf(payouts[1].wallet), 16_560e6);
+        assertEq(usdc.balanceOf(payouts[2].wallet), 11_040e6);
+        assertEq(usdc.balanceOf(payouts[3].wallet), 3_680e6);
         assertEq(usdc.balanceOf(address(escrow)), 0);
     }
 
@@ -747,7 +751,7 @@ contract MorcastEscrowTest is EscrowFixture {
         uint256 first = _createCampaign();
         uint256 second = _createCampaign();
         Payout[] memory payouts = new Payout[](1);
-        payouts[0] = Payout(makeAddr("creator"), 80_000e6);
+        payouts[0] = Payout(makeAddr("creator"), 92_000e6);
 
         _settle(first, TARGET, _root(first, payouts));
         _claim(first, payouts, 0, stranger);
@@ -774,7 +778,7 @@ contract MorcastEscrowTest is EscrowFixture {
         vm.stopPrank();
 
         address creator = makeAddr("creator");
-        bytes32 leaf = guarded.leafHash(id, creator, 80_000e6);
+        bytes32 leaf = guarded.leafHash(id, creator, 92_000e6);
         vm.warp(_day(5));
         vm.prank(settler);
         guarded.settle(id, TARGET, leaf, RESULT_HASH);
@@ -783,7 +787,7 @@ contract MorcastEscrowTest is EscrowFixture {
         token.arm(address(guarded), abi.encodeCall(guarded.withdrawFee, (id)));
 
         vm.expectRevert(ReentrancyGuardTransient.ReentrancyGuardReentrantCall.selector);
-        guarded.claim(id, creator, 80_000e6, new bytes32[](0));
+        guarded.claim(id, creator, 92_000e6, new bytes32[](0));
     }
 
     // ===========================================================================================
@@ -834,12 +838,12 @@ contract MorcastEscrowTest is EscrowFixture {
     // Helpers
     // ===========================================================================================
 
-    /// @dev Creator payouts of the specification's partial-delivery example (pool 51,200 USDC).
+    /// @dev Creator payouts of the specification's partial-delivery example (pool 58,880 USDC).
     function _specPayouts() internal returns (Payout[] memory payouts) {
         payouts = new Payout[](4);
-        payouts[0] = Payout(makeAddr("creator 1"), 24_000e6);
-        payouts[1] = Payout(makeAddr("creator 2"), 14_400e6);
-        payouts[2] = Payout(makeAddr("creator 3"), 9_600e6);
-        payouts[3] = Payout(makeAddr("creator 4"), 3_200e6);
+        payouts[0] = Payout(makeAddr("creator 1"), 27_600e6);
+        payouts[1] = Payout(makeAddr("creator 2"), 16_560e6);
+        payouts[2] = Payout(makeAddr("creator 3"), 11_040e6);
+        payouts[3] = Payout(makeAddr("creator 4"), 3_680e6);
     }
 }

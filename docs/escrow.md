@@ -12,7 +12,7 @@
 | Owner | Set at deployment. Transferred in two steps | Operate the escrow (see [Owner Actions](#owner-actions)). The owner can never move a campaign's money anywhere except back to the brand that deposited it. |
 | Anyone | Any address | Submit a creator claim (funds always go to the leaf's wallet). Trigger the fee transfer to the treasury. |
 
-The code cannot be upgraded, and the economic rules (the formula, the 20% fee, Day 5, Day 10 and the 90-day maximum) are constants. A new version is a new deployment. See [Versions and Upgrades](upgrades.md).
+The code cannot be upgraded, and the economic rules (the formula, the 8% fee, Day 5, Day 10 and the 90-day maximum) are constants. A new version is a new deployment. See [Versions and Upgrades](upgrades.md).
 
 ## Timeline
 
@@ -38,7 +38,7 @@ createCampaign ─► Funded ─┬─ cancel (t < startAt) ──────�
 
 | Function | Caller | Conditions | Effect |
 |---|---|---|---|
-| `createCampaign(token, budget, target, startAt, endAt, manifestHash)` | brand | Creation is not paused. `token` is allowed. `budget > 0` and `budget mod 5 == 0`. `target > 0`. `startAt < endAt` and `endAt − startAt ≤ 90 days`. `t < startAt`. The escrow's balance rises by exactly `budget`. | Pulls `budget`. Status `Funded`. Returns the new campaign ID. |
+| `createCampaign(token, budget, target, startAt, endAt, manifestHash)` | brand | Creation is not paused. `token` is allowed. `budget > 0` and `budget mod 25 == 0`. `target > 0`. `startAt < endAt` and `endAt − startAt ≤ 90 days`. `t < startAt`. The escrow's balance rises by exactly `budget`. | Pulls `budget`. Status `Funded`. Returns the new campaign ID. |
 | `cancel(id)` | brand | `Funded` and `t < startAt` | Status `Cancelled`. The budget goes to the brand. |
 | `settle(id, recognized, merkleRoot, resultHash)` | settler | `Funded` and `Day 5 ≤ t < Day 10`. `merkleRoot ≠ 0` when the pool is not empty. `resultHash ≠ 0`. | Computes spent, fee, pool and refund with the [settlement formula](settlement.md). Status `Settled`. |
 | `claim(id, wallet, amount, proof)` | anyone | `Settled`. The leaf is proven against `merkleRoot` and not yet claimed. `amount ≤ pool − creatorClaimed`. | Marks the leaf claimed. `amount` goes to `wallet`. |

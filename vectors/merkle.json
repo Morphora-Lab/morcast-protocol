@@ -3,44 +3,44 @@
   "cases": [
     {
       "name": "spec-13-partial-delivery",
-      "description": "Payouts of the specification's partial-delivery example (pool 51,200 USDC) for campaign 1.",
+      "description": "Payouts of the specification's partial-delivery example (pool 58,880 USDC) for campaign 1.",
       "campaignId": "1",
-      "root": "0xef7c71072a6c318b11c738faa0c53bd4ee183205f36c85d7ff62ad87196c0a72",
+      "root": "0xdc1a3e36406e5c86d48e8fd1cfdd284bbe0e96ad1c968d9123b29270b4f1138e",
       "leaves": [
         {
           "wallet": "0x00000000000000000000000000000000000000c1",
-          "amount": "24000000000",
-          "leaf": "0x9f23cbf50056061ce87f34ce1f099bf8c4e7b9fc0a35aad08bb180187e2a725c",
+          "amount": "27600000000",
+          "leaf": "0xc1cedea5b19135789d2573da4ed57de0663dbc6caa26dbecf423b3215cb310bf",
           "proof": [
-            "0xa315d9409b99d9491fa5e434e34eaa593ba10dfb8f1a3c541c88c10a5f6eb8fc",
-            "0xcfa0765e50a0667ee5bb0a238a68baebeba1bf816703045002196c04f56e0260"
+            "0x34b8d9ec47d4011c44c5e6ea9034c209a25e75be86f93392ac5f4f5fd591b95b",
+            "0x2cc9c4f320b7c7ed7b2c85b0ff4794fe1208d86faead890dbef8307b286770b3"
           ]
         },
         {
           "wallet": "0x00000000000000000000000000000000000000c2",
-          "amount": "14400000000",
-          "leaf": "0x026e6f6762b9788ac51f560c657e4bdd5f3bcd8f9effd2b424d81a04fb5b812c",
+          "amount": "16560000000",
+          "leaf": "0x128da317ffd02702b48c91fafb66f3677c651dd47f3c5eb727db6ac4068bc00b",
           "proof": [
-            "0x19a9b3fcf33773e062a767251164043227a9976e70e1f646f5a8dce92f48c70f",
-            "0x7113b3d1df23c0c391b0aea933245246586dd185da7de328c2cc74294a20568e"
+            "0x2b859091edc014612a278148917bb14836d57f5c3daaff125b835176f1520333",
+            "0x041436a913a68787b4632cdf02e90b0348104c8a566abffafa55b1356636c846"
           ]
         },
         {
           "wallet": "0x00000000000000000000000000000000000000c3",
-          "amount": "9600000000",
-          "leaf": "0xa315d9409b99d9491fa5e434e34eaa593ba10dfb8f1a3c541c88c10a5f6eb8fc",
+          "amount": "11040000000",
+          "leaf": "0x34b8d9ec47d4011c44c5e6ea9034c209a25e75be86f93392ac5f4f5fd591b95b",
           "proof": [
-            "0x9f23cbf50056061ce87f34ce1f099bf8c4e7b9fc0a35aad08bb180187e2a725c",
-            "0xcfa0765e50a0667ee5bb0a238a68baebeba1bf816703045002196c04f56e0260"
+            "0xc1cedea5b19135789d2573da4ed57de0663dbc6caa26dbecf423b3215cb310bf",
+            "0x2cc9c4f320b7c7ed7b2c85b0ff4794fe1208d86faead890dbef8307b286770b3"
           ]
         },
         {
           "wallet": "0x00000000000000000000000000000000000000c4",
-          "amount": "3200000000",
-          "leaf": "0x19a9b3fcf33773e062a767251164043227a9976e70e1f646f5a8dce92f48c70f",
+          "amount": "3680000000",
+          "leaf": "0x2b859091edc014612a278148917bb14836d57f5c3daaff125b835176f1520333",
           "proof": [
-            "0x026e6f6762b9788ac51f560c657e4bdd5f3bcd8f9effd2b424d81a04fb5b812c",
-            "0x7113b3d1df23c0c391b0aea933245246586dd185da7de328c2cc74294a20568e"
+            "0x128da317ffd02702b48c91fafb66f3677c651dd47f3c5eb727db6ac4068bc00b",
+            "0x041436a913a68787b4632cdf02e90b0348104c8a566abffafa55b1356636c846"
           ]
         }
       ]

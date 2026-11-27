@@ -33,10 +33,10 @@ describe("README example", () => {
     expect(recognized).toBe(480_000n);
 
     const { fee, pool, refund } = split(budget, target, recognized);
-    expect([fee, pool, refund]).toEqual([9_600_000_000n, 38_400_000_000n, 52_000_000_000n]);
+    expect([fee, pool, refund]).toEqual([3_840_000_000n, 44_160_000_000n, 52_000_000_000n]);
 
     const payouts = allocatePayouts(pool, scores);
-    expect(payouts.map((p) => p.payout)).toEqual([24_000_000_000n, 14_400_000_000n, 0n]);
+    expect(payouts.map((p) => p.payout)).toEqual([27_600_000_000n, 16_560_000_000n, 0n]);
 
     // The zero payout is left out of the tree. Both remaining leaves have valid proofs.
     const tree = buildPayoutTree(

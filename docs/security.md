@@ -5,8 +5,8 @@
 | Item | State |
 |---|---|
 | Internal review | Completed 2026-09-30 on commit `45a7bc4`, and extended the same day to the owner role. No critical, high or medium findings. |
-| External audit | Not yet performed. Required before mainnet deployment. |
-| Deployment | None |
+| External audit | Not yet performed. |
+| Deployment | Version 1.0.0 on Base since 13 October 2026. Version 2.0.0 is still to be deployed ([Deployments](deployment.md#deployments)) |
 
 Please report vulnerabilities privately through GitHub's "Report a vulnerability" form on this repository, not in public issues.
 
@@ -53,7 +53,7 @@ Base's sequencer orders transactions and sets timestamps. Deadlines are whole da
 
 ### S-1: The owner and the settler are trusted
 
-For every campaign inside its settlement window, a compromised or dishonest settler can choose any recognized total (up to spending the whole budget) and any Merkle root. That sends up to the creator pool, 80% of the budget, to wallets of its choice. The fee still goes to the treasury and the refund to the brand.
+For every campaign inside its settlement window, a compromised or dishonest settler can choose any recognized total (up to spending the whole budget) and any Merkle root. That sends up to the creator pool, 92% of the budget, to wallets of its choice. The fee still goes to the treasury and the refund to the brand.
 
 The owner can appoint the settler, so a compromised owner has the same reach. In addition, it can void funded campaigns (their budgets go back to the brands) and redirect future fee withdrawals. Neither role can take escrowed funds in any other way. This is the protocol's trust model, with Morcast as the single trusted verifier.
 

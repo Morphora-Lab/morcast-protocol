@@ -20,7 +20,7 @@ import {
 import { buildPayoutTree } from "./merkle.js";
 import { integrationMetric, RETENTION_SCALE } from "./metrics.js";
 import { allocatePayouts } from "./payouts.js";
-import { creatorScore, creatorThreshold, split } from "./settlement.js";
+import { creatorScore, creatorThreshold, FEE_DENOMINATOR, split } from "./settlement.js";
 
 /** One failed check. `path` points into the dataset, e.g. `items[3].metric`. */
 export interface VerificationError {
@@ -94,8 +94,9 @@ function checkHeader(d: ResultDataset, fail: Fail): void {
   if (n(d.revision) === 0n && d.issues.length > 0) {
     fail("issues", "revision 0 is the first publication and cannot contain issues");
   }
-  if (budget === 0n || budget % 5n !== 0n) {
-    fail("campaign.budget", "must be positive and a multiple of 5");
+  // The escrow refuses any other budget, so a dataset with one cannot belong to a campaign.
+  if (budget === 0n || budget % FEE_DENOMINATOR !== 0n) {
+    fail("campaign.budget", `must be positive and a multiple of ${FEE_DENOMINATOR}`);
   }
   if (target === 0n) {
     fail("campaign.target", "must be positive");

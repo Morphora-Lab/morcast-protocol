@@ -34,7 +34,7 @@ describe("split", () => {
     });
   });
 
-  it("conserves the budget and splits 20/80 for random inputs", () => {
+  it("conserves the budget and splits 8/92 for random inputs", () => {
     const random = new Random(42n);
     for (let i = 0; i < 2_000; i++) {
       const budget = random.bits(256);
@@ -43,8 +43,9 @@ describe("split", () => {
       const { spent, fee, pool, refund } = split(budget, target, recognized);
 
       expect(fee + pool + refund).toBe(budget);
-      expect(spent % 5n).toBe(0n);
-      expect(pool).toBe(4n * fee);
+      expect(spent % 25n).toBe(0n);
+      expect(fee).toBe((spent / 25n) * 2n);
+      expect(pool).toBe((spent / 25n) * 23n);
       expect(spent <= budget).toBe(true);
     }
   });
@@ -52,7 +53,7 @@ describe("split", () => {
   it("spends the whole budget once the target is reached", () => {
     const random = new Random(7n);
     for (let i = 0; i < 500; i++) {
-      const budget = random.between(1n, MAX_UINT256 / 5n) * 5n;
+      const budget = random.between(1n, MAX_UINT256 / 25n) * 25n;
       const target = random.between(1n, MAX_UINT256);
       const recognized = random.between(target, MAX_UINT256);
       expect(split(budget, target, recognized).spent).toBe(budget);

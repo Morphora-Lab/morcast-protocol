@@ -8,16 +8,16 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 ///         divided between the protocol fee, the creator pool and the brand refund.
 /// @dev Symbols used throughout the protocol:
 ///
-///        B  budget      amount the brand escrowed, in token base units (B > 0, B mod 5 == 0)
+///        B  budget      amount the brand escrowed, in token base units (B > 0, B mod 25 == 0)
 ///        T  target      campaign goal in the campaign's primary metric (T > 0)
 ///        S  recognized  total recognized delivery reported by Morcast at settlement
 ///        G  spent       part of the budget the brand pays for recognized delivery
 ///
 ///      Formula:
 ///
-///        G      = floor(B × min(S, T) / T), rounded down to a multiple of 5
-///        fee    = G / 5          (20% of G, paid to the Morcast treasury)
-///        pool   = 4 × G / 5      (80% of G, claimed by creators)
+///        G      = floor(B × min(S, T) / T), rounded down to a multiple of 25
+///        fee    = 2 × G / 25     (8% of G, paid to the Morcast treasury)
+///        pool   = 23 × G / 25    (92% of G, claimed by creators)
 ///        refund = B − G          (returned to the brand)
 ///
 ///      Consequences:
@@ -28,9 +28,14 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 ///
 ///      All arithmetic is exact integer arithmetic, and every division rounds down.
 library SettlementMath {
-    /// @notice The fee is one fifth (20%) of the spent amount.
-    /// @dev G is rounded down to a multiple of this value so that G / 5 and 4 × G / 5 are exact.
-    uint256 internal constant FEE_DIVISOR = 5;
+    /// @notice The fee is 2 parts in 25 (8%) of the spent amount.
+    uint256 internal constant FEE_NUMERATOR = 2;
+
+    /// @notice The fee's denominator. 2 / 25 is 8% in lowest terms.
+    /// @dev G is rounded down to a multiple of this value, so that 2 × G / 25 and 23 × G / 25 are
+    ///      exact. A budget must be a multiple of it too, so that a fully spent budget splits
+    ///      exactly.
+    uint256 internal constant FEE_DENOMINATOR = 25;
 
     /// @notice Splits a campaign budget according to the recognized delivery.
     /// @dev Reverts with a division-by-zero panic when `target` is zero. A campaign can never
@@ -39,8 +44,8 @@ library SettlementMath {
     /// @param target     T, the campaign target in the primary metric.
     /// @param recognized S, the recognized total in the primary metric.
     /// @return spent  G, the amount the brand pays: fee + pool.
-    /// @return fee    The protocol fee, 20% of G.
-    /// @return pool   The creator pool, 80% of G.
+    /// @return fee    The protocol fee, 8% of G.
+    /// @return pool   The creator pool, 92% of G.
     /// @return refund The amount returned to the brand: B − G.
     function split(uint256 budget, uint256 target, uint256 recognized)
         internal
@@ -56,14 +61,17 @@ library SettlementMath {
         // Because min(S, T) <= T, the result is never larger than B.
         uint256 raw = Math.mulDiv(budget, capped, target);
 
-        // Round down to a multiple of 5. The dropped remainder (at most 4 base units) is part
+        // Round down to a multiple of 25. The dropped remainder (at most 24 base units) is part
         // of the refund, so rounding always favours the brand.
-        spent = raw - (raw % FEE_DIVISOR);
+        spent = raw - (raw % FEE_DENOMINATOR);
 
-        // spent is a multiple of 5, so both parts are exact:
-        //   fee  = spent / 5
-        //   pool = spent − spent / 5 = 4 × spent / 5
-        fee = spent / FEE_DIVISOR;
+        // spent is a multiple of 25, so both parts are exact:
+        //   fee  = spent / 25 × 2       (dividing first means the product can never overflow)
+        //   pool = spent − fee = 23 × spent / 25
+        // The linter warns about dividing before multiplying. Nothing is lost here, because
+        // spent is a multiple of 25.
+        // forge-lint: disable-next-line(divide-before-multiply)
+        fee = (spent / FEE_DENOMINATOR) * FEE_NUMERATOR;
         pool = spent - fee;
 
         // spent <= raw <= budget, so this subtraction cannot underflow.
