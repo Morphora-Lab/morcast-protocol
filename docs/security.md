@@ -6,7 +6,7 @@
 |---|---|
 | Internal review | Completed 2026-09-30 on commit `45a7bc4`, and extended the same day to the owner role. No critical, high or medium findings. |
 | External audit | Not yet performed. |
-| Deployment | Version 1.0.0 on Base since 13 October 2026. Version 2.0.0 is still to be deployed ([Deployments](deployment.md#deployments)) |
+| Deployment | Version 2.0.0 on Base since 27 November 2026. Version 1.0.0 on Base since 13 October 2026, with campaign creation paused since 27 November 2026 ([Deployments](deployment.md#deployments)) |
 
 Please report vulnerabilities privately through GitHub's "Report a vulnerability" form on this repository, not in public issues.
 

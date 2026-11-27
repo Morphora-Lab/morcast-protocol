@@ -84,30 +84,31 @@ On a fresh Anvil node, the addresses are always:
 
 ### Production on Base
 
-Production (Base, chain 8453) runs version `1.0.0`, deployed from `v1.0.0` on 13 October 2026. Its source is verified on [Sourcify](https://sourcify.dev) with an exact match, and its code hash is the release's `ESCROW_CODE_HASH`. Its transaction is recorded in [`broadcast/Deploy.s.sol/8453`](../broadcast/Deploy.s.sol/8453):
+Production (Base, chain 8453) runs version `2.0.0` with its 8% fee, deployed from `v2.0.0` on 27 November 2026 at 02:37 UTC. Its source is verified on [Sourcify](https://sourcify.dev) with an exact match, and its code hash is the release's `ESCROW_CODE_HASH`.
 
 | Contract or role | Address |
 |---|---|
-| MorcastEscrow | [`0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`](https://basescan.org/address/0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459), created in block 52554940 |
+| MorcastEscrow | [`0x9635bb84a2deA2C46f6039C482aC050Ec3b2e37e`](https://basescan.org/address/0x9635bb84a2deA2C46f6039C482aC050Ec3b2e37e), created in block 62783442 |
 | Owner | `0x97A695618897dd276502Bb9b7a25D088f1b91A02` |
 | Settler and treasury | `0x7Fb845e53fd656754E06e1A92d30eD6B221d4401` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 | MOR | `0x7431aDa8a591C955a994a21710752EF9b882b8e3` |
 
-The owner and the settler are separate wallets Morcast holds. The treasury is the settler, so the protocol fee goes to the settler wallet. The account that sent the deployment, `0xB0742AC9890BEf1894747724077254F9553Cd946`, has no role in the contract.
+The owner and the settler are separate wallets Morcast holds. The treasury is the settler, so the protocol fee goes to the settler wallet.
+
+The owner wallet sent the deployment itself, signed in MetaMask, in transaction [`0xc7d8d640…97f3e85b`](https://basescan.org/tx/0xc7d8d640e635a74d41309d48840ec6f0f29acdc6391d08948e1dd26b97f3e85b). Its data is exactly what `script/Deploy.s.sol` sends with these roles, checked against the script's simulation before it was signed. Foundry did not send it, so it has no record in `broadcast/`.
+
+### Version 1 on Base
+
+Version `1.0.0`, with its 20% fee, was deployed from `v1.0.0` on 13 October 2026. Its source is verified on Sourcify with an exact match. Its transaction is recorded in [`broadcast/Deploy.s.sol/8453`](../broadcast/Deploy.s.sol/8453):
+
+| Contract | Address |
+|---|---|
+| MorcastEscrow | [`0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459`](https://basescan.org/address/0x97f3Db60394c979c5ffB1345b62BDC3020Fb0459), created in block 52554940 |
+
+It has the same owner, settler, treasury and tokens. It held no campaign when version 2 replaced it. Its owner paused campaign creation on 27 November 2026, in transaction [`0xd821e6e8…4ceb4ccf`](https://basescan.org/tx/0xd821e6e86cc2103837516b084fa56393ab3dbda9ef9ea0dc07ee134b4ceb4ccf). The account that sent its deployment, `0xB0742AC9890BEf1894747724077254F9553Cd946`, has no role in it.
 
 That account also sent the first staging deployment below. A contract's address follows from its sender and the sender's transaction count, so this escrow has on Base the address the test MOR token has on Base Sepolia. They are different contracts on different chains.
-
-### Moving production to version 2
-
-Version 2.0.0 lowers the fee to 8%. A deployment cannot change its fee, so version 2 is a new deployment at a new address, made with the same owner, settler and treasury:
-
-1. Deploy from the `v2.0.0` tag as described in [Base Mainnet](#base-mainnet) and run every check listed there. The code hash must equal `v2.0.0`'s `ESCROW_CODE_HASH`.
-2. Register the new escrow in the platform with its creation block, and let it receive new campaigns.
-3. Stop the version 1 escrow from receiving new campaigns in the platform. Its owner then calls `setCreationPaused(true)` on it, so no brand can deposit there by mistake.
-4. Record the new deployment here and in [`broadcast/Deploy.s.sol/8453`](../broadcast/Deploy.s.sol/8453).
-
-The version 1 escrow keeps its 20% fee for any campaign it holds. Funds never move between versions.
 
 ### Staging on Base Sepolia
 

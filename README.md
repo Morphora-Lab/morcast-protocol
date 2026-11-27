@@ -6,7 +6,7 @@ A brand escrows a campaign budget in USDC or MOR. After the campaign ends, Morca
 
 ## Status
 
-Protocol v2 (version 2.0.0) lowers the protocol fee from 20% to 8% of what a campaign spends. Its first deployment on Base is still to come. Version 1.0.0 is deployed on Base and stays there for any campaign it holds ([Deployments](docs/deployment.md#deployments)). Morcast's staging runs on Base Sepolia. Not audited.
+Protocol v2 (version 2.0.0) lowers the protocol fee from 20% to 8% of what a campaign spends. It is deployed on Base since 27 November 2026 and receives Morcast's new campaigns. Version 1.0.0 stays deployed on Base with campaign creation paused ([Deployments](docs/deployment.md#deployments)). Morcast's staging runs on Base Sepolia. Not audited.
 
 | Component | State |
 |---|---|
@@ -119,7 +119,7 @@ Versions follow semantic versioning. A tag such as `v1.0.0-rc.1` marks a pre-rel
 | `v1.0.0-rc.3` | A creator may take part in a campaign with several accounts. Each creator in a result dataset lists its `accounts`, and each account belongs to one wallet |
 | `v1.0.0-rc.4` | The contract takes the product's name, `MorcastEscrow`. Its rules and its ABI are the same. Its code hash is new, so a deployment of an earlier release is not this release's escrow |
 | `v1.0.0` | The first release of protocol v1, deployed on Base. The contract is the one of `v1.0.0-rc.4`, so its code hash is the same. No external audit yet |
-| `v2.0.0` | Protocol v2. The fee is 8% of what a campaign spends instead of 20%, and creators share 92%. A budget must be a multiple of 25 base units instead of 5. The ABI is the same. The code hash is new, and the SDK refuses version 1 escrows, because their fee differs |
+| `v2.0.0` | Protocol v2, deployed on Base. The fee is 8% of what a campaign spends instead of 20%, and creators share 92%. A budget must be a multiple of 25 base units instead of 5. The ABI is the same. The code hash is new, and the SDK refuses version 1 escrows, because their fee differs |
 
 The escrow's `VERSION()` names the contract version a deployment runs. See [Versions and upgrades](docs/upgrades.md).
 
