@@ -47,7 +47,7 @@ contract MorcastEscrow is IMorcastEscrow, Ownable2Step, ReentrancyGuardTransient
     /// @inheritdoc IMorcastEscrow
     /// @dev The code cannot be upgraded, so every new version is a new deployment with its own
     ///      address. Off-chain systems use this value to tell deployments apart.
-    string public constant VERSION = "1.0.0";
+    string public constant VERSION = "2.0.0";
 
     /// @inheritdoc IMorcastEscrow
     /// @dev Day 5. Results are published by Day 4 and reviewed until at least Day 5.
@@ -138,8 +138,10 @@ contract MorcastEscrow is IMorcastEscrow, Ownable2Step, ReentrancyGuardTransient
         // Only tokens allowed by the owner can be used for new campaigns.
         if (!isCampaignToken[token]) revert UnsupportedToken(token);
 
-        // A multiple of 5 guarantees that a fully spent budget splits exactly into 20% / 80%.
-        if (budget == 0 || budget % SettlementMath.FEE_DIVISOR != 0) revert InvalidBudget(budget);
+        // A multiple of 25 guarantees that a fully spent budget splits exactly into 8% / 92%.
+        if (budget == 0 || budget % SettlementMath.FEE_DENOMINATOR != 0) {
+            revert InvalidBudget(budget);
+        }
 
         // The target is the divisor of the settlement formula, so it must be positive.
         if (target == 0) revert InvalidTarget();

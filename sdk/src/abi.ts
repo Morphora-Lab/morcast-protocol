@@ -1330,4 +1330,4 @@ export const morcastEscrowAbi = [
  * deployment of this version. The contract has no immutable variables, so all its deployments
  * share this code.
  */
-export const ESCROW_CODE_HASH = "0xbea3d25d321145877870e8a017fc1338005d2deda1bcbacd62c7a7f073fe2255";
+export const ESCROW_CODE_HASH = "0x5cf0bd800a17a02dbebc1f7e47e7d65413a09c1b9e359d1f8c8cfafed4627b11";

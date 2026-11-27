@@ -127,10 +127,10 @@ contract OwnerTest is EscrowFixture {
         escrow.setTreasury(newTreasury);
 
         vm.expectEmit(address(escrow));
-        emit IMorcastEscrow.FeeWithdrawn(id, newTreasury, 20_000e6);
+        emit IMorcastEscrow.FeeWithdrawn(id, newTreasury, 8_000e6);
         escrow.withdrawFee(id);
 
-        assertEq(usdc.balanceOf(newTreasury), 20_000e6);
+        assertEq(usdc.balanceOf(newTreasury), 8_000e6);
         assertEq(usdc.balanceOf(treasury), 0);
     }
 
@@ -344,12 +344,12 @@ contract OwnerTest is EscrowFixture {
 
         // Settlement changes who is owed what, not the total.
         address creator = makeAddr("creator");
-        bytes32 leaf = escrow.leafHash(id, creator, 51_200e6);
+        bytes32 leaf = escrow.leafHash(id, creator, 58_880e6);
         _settle(id, 640_000, leaf);
         assertEq(escrow.totalOwed(address(usdc)), BUDGET);
 
-        escrow.claim(id, creator, 51_200e6, new bytes32[](0));
-        assertEq(escrow.totalOwed(address(usdc)), BUDGET - 51_200e6);
+        escrow.claim(id, creator, 58_880e6, new bytes32[](0));
+        assertEq(escrow.totalOwed(address(usdc)), BUDGET - 58_880e6);
 
         escrow.withdrawFee(id);
         assertEq(escrow.totalOwed(address(usdc)), 36_000e6);

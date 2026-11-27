@@ -1,5 +1,5 @@
 {
-  "description": "Settlement split vectors: spent = floor(budget x min(recognized, target) / target) rounded down to a multiple of 5; fee = spent / 5; pool = spent - fee; refund = budget - spent. All integers are decimal strings in token base units.",
+  "description": "Settlement split vectors: spent = floor(budget x min(recognized, target) / target) rounded down to a multiple of 25; fee = spent / 25 x 2; pool = spent - fee; refund = budget - spent. All integers are decimal strings in token base units.",
   "cases": [
     {
       "name": "spec-13-partial-delivery",
@@ -8,8 +8,8 @@
       "target": "1000000",
       "recognized": "640000",
       "spent": "64000000000",
-      "fee": "12800000000",
-      "pool": "51200000000",
+      "fee": "5120000000",
+      "pool": "58880000000",
       "refund": "36000000000"
     },
     {
@@ -30,8 +30,8 @@
       "target": "1000000",
       "recognized": "1500000",
       "spent": "100000000000",
-      "fee": "20000000000",
-      "pool": "80000000000",
+      "fee": "8000000000",
+      "pool": "92000000000",
       "refund": "0"
     },
     {
@@ -40,10 +40,10 @@
       "budget": "1000000000",
       "target": "3000",
       "recognized": "1001",
-      "spent": "333666665",
-      "fee": "66733333",
-      "pool": "266933332",
-      "refund": "666333335"
+      "spent": "333666650",
+      "fee": "26693332",
+      "pool": "306973318",
+      "refund": "666333350"
     },
     {
       "name": "spec-13-tie",
@@ -52,8 +52,8 @@
       "target": "3000",
       "recognized": "3000",
       "spent": "1000000000",
-      "fee": "200000000",
-      "pool": "800000000",
+      "fee": "80000000",
+      "pool": "920000000",
       "refund": "0"
     },
     {
@@ -62,25 +62,25 @@
       "budget": "12345000000000000000000",
       "target": "7",
       "recognized": "3",
-      "spent": "5290714285714285714285",
-      "fee": "1058142857142857142857",
-      "pool": "4232571428571428571428",
-      "refund": "7054285714285714285715"
+      "spent": "5290714285714285714275",
+      "fee": "423257142857142857142",
+      "pool": "4867457142857142857133",
+      "refund": "7054285714285714285725"
     },
     {
-      "name": "round-down-to-multiple-of-5",
-      "description": "floor(B x S / T) = 42 is rounded down to 40.",
+      "name": "round-down-to-multiple-of-25",
+      "description": "floor(B x S / T) = 42 is rounded down to 25.",
       "budget": "100",
       "target": "7",
       "recognized": "3",
-      "spent": "40",
-      "fee": "8",
-      "pool": "32",
-      "refund": "60"
+      "spent": "25",
+      "fee": "2",
+      "pool": "23",
+      "refund": "75"
     },
     {
-      "name": "dust-below-5",
-      "description": "floor(B x S / T) = 3 rounds down to 0; the brand keeps the dust.",
+      "name": "dust-below-25",
+      "description": "floor(B x S / T) = 3 rounds down to 0. The brand keeps the dust.",
       "budget": "10",
       "target": "3",
       "recognized": "1",
@@ -92,13 +92,13 @@
     {
       "name": "tiny-budget",
       "description": "A tiny budget with a large target spends nothing.",
-      "budget": "5",
+      "budget": "25",
       "target": "1000000",
       "recognized": "1",
       "spent": "0",
       "fee": "0",
       "pool": "0",
-      "refund": "5"
+      "refund": "25"
     },
     {
       "name": "recognized-max-uint",
@@ -107,8 +107,8 @@
       "target": "3000",
       "recognized": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       "spent": "1000000000",
-      "fee": "200000000",
-      "pool": "800000000",
+      "fee": "80000000",
+      "pool": "920000000",
       "refund": "0"
     },
     {
@@ -117,10 +117,10 @@
       "budget": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       "target": "57896044618658097711785492504343953926634992332820282019728792003956564819968",
       "recognized": "28948022309329048855892746252171976963317496166410141009864396001978282409984",
-      "spent": "57896044618658097711785492504343953926634992332820282019728792003956564819965",
-      "fee": "11579208923731619542357098500868790785326998466564056403945758400791312963993",
-      "pool": "46316835694926478169428394003475163141307993866256225615783033603165251855972",
-      "refund": "57896044618658097711785492504343953926634992332820282019728792003956564819970"
+      "spent": "57896044618658097711785492504343953926634992332820282019728792003956564819950",
+      "fee": "4631683569492647816942839400347516314130799386625622561578303360316525185596",
+      "pool": "53264361049165449894842653103996437612504192946194659458150488643640039634354",
+      "refund": "57896044618658097711785492504343953926634992332820282019728792003956564819985"
     }
   ]
 }

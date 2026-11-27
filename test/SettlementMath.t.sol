@@ -69,7 +69,7 @@ contract SettlementMathTest is Test {
     // ---------------------------------------------------------------------------------------
 
     /// @notice No base unit is created or lost: fee + pool + refund == budget, spent is a
-    ///         multiple of 5, never exceeds the budget, and the pool is exactly 4 × fee.
+    ///         multiple of 25, never exceeds the budget, and 2 × pool is exactly 23 × fee.
     function testFuzz_split_conservesBudget(uint256 budget, uint256 target, uint256 recognized)
         public
         pure
@@ -81,9 +81,11 @@ contract SettlementMathTest is Test {
 
         assertEq(fee + pool + refund, budget, "fee + pool + refund != budget");
         assertEq(fee + pool, spent, "fee + pool != spent");
-        assertEq(spent % 5, 0, "spent is not a multiple of 5");
+        assertEq(spent % 25, 0, "spent is not a multiple of 25");
         assertLe(spent, budget, "spent > budget");
-        assertEq(pool, 4 * fee, "pool != 4 x fee");
+        // spent is a multiple of 25, so dividing first is exact and cannot overflow.
+        assertEq(fee, spent / 25 * 2, "fee is not 8% of spent");
+        assertEq(pool, spent / 25 * 23, "pool is not 92% of spent");
     }
 
     /// @notice Reaching or exceeding the target spends exactly the whole budget.
@@ -92,8 +94,8 @@ contract SettlementMathTest is Test {
         uint256 target,
         uint256 recognized
     ) public pure {
-        // Campaign budgets are always multiples of 5.
-        budget = bound(budget, 1, type(uint256).max / 5) * 5;
+        // Campaign budgets are always multiples of 25.
+        budget = bound(budget, 1, type(uint256).max / 25) * 25;
         target = bound(target, 1, type(uint256).max);
         recognized = bound(recognized, target, type(uint256).max);
 
@@ -129,14 +131,14 @@ contract SettlementMathTest is Test {
 
         uint256 capped = recognized < target ? recognized : uint256(target);
         uint256 raw = uint256(budget) * capped / target;
-        uint256 expectedSpent = raw - raw % 5;
+        uint256 expectedSpent = raw - raw % 25;
 
         (uint256 spent, uint256 fee, uint256 pool, uint256 refund) =
             SettlementMath.split(budget, target, recognized);
 
         assertEq(spent, expectedSpent);
-        assertEq(fee, expectedSpent / 5);
-        assertEq(pool, 4 * expectedSpent / 5);
+        assertEq(fee, 2 * expectedSpent / 25);
+        assertEq(pool, 23 * expectedSpent / 25);
         assertEq(refund, budget - expectedSpent);
     }
 

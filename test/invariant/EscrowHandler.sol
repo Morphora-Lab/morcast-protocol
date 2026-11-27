@@ -85,7 +85,7 @@ contract EscrowHandler is Test {
         MockERC20 token = useMor ? mor : usdc;
         if (escrow.creationPaused() || !escrow.isCampaignToken(address(token))) return;
 
-        budget = bound(budget, 1, 1e30) * 5; // always a multiple of 5
+        budget = bound(budget, 1, 1e30) * 25; // always a multiple of 25
         target = bound(target, 1, 1e18);
         uint64 startAt = uint64(block.timestamp + bound(startDelay, 1, 30 days));
         uint64 endAt = uint64(startAt + bound(duration, 1, 60 days));

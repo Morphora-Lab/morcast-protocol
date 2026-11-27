@@ -72,9 +72,9 @@ interface IMorcastEscrow {
         uint256 recognized;
         /// G: part of the budget spent on recognized delivery (fee + pool).
         uint256 spent;
-        /// Protocol fee: 20% of G.
+        /// Protocol fee: 8% of G.
         uint256 fee;
-        /// Creator pool: 80% of G.
+        /// Creator pool: 92% of G.
         uint256 pool;
         /// Amount returned to the brand after settlement: B − G.
         uint256 refund;
@@ -160,7 +160,7 @@ interface IMorcastEscrow {
     /// @notice Campaign creation is paused.
     error CreationPaused();
 
-    /// @notice The budget is zero or not a multiple of 5.
+    /// @notice The budget is zero or not a multiple of 25.
     error InvalidBudget(uint256 budget);
 
     /// @notice The target is zero.

@@ -78,13 +78,13 @@ contract BaseForkTest is Test {
     // -------------------------------------------------------------------------------------------
 
     /// @dev Target 1,000,000 and recognized 640,000: 64% of the budget is spent, split into a
-    ///      fee (20%) and a pool (80%) paid to two creators in a 3:1 ratio.
+    ///      fee (8%) and a pool (92%) paid to two creators in a 3:1 ratio.
     function _lifecycle(address token, uint256 budget) private {
         IERC20Metadata erc20 = IERC20Metadata(token);
         uint256 id = _create(token, budget);
 
         uint256 spent = budget * 64 / 100;
-        uint256 fee = spent / 5;
+        uint256 fee = spent * 2 / 25;
         uint256 pool = spent - fee;
         uint256 payoutA = pool * 3 / 4;
         uint256 payoutB = pool - payoutA;

@@ -131,7 +131,7 @@ contract SecurityTest is EscrowFixture {
         uint256 id = _createCampaign();
         address creator = makeAddr("creator");
         Payout[] memory payouts = new Payout[](2);
-        payouts[0] = Payout(creator, 51_200e6); // the whole pool
+        payouts[0] = Payout(creator, 58_880e6); // the whole pool
         payouts[1] = Payout(creator, 1e6); // an extra leaf for the same wallet
         _settle(id, 640_000, _root(id, payouts));
 
@@ -150,13 +150,13 @@ contract SecurityTest is EscrowFixture {
     // Helpers
     // -------------------------------------------------------------------------------------------
 
-    /// @dev Creator payouts of the specification's partial-delivery example (pool 51,200 USDC).
+    /// @dev Creator payouts of the specification's partial-delivery example (pool 58,880 USDC).
     function _payouts() internal returns (Payout[] memory payouts) {
         payouts = new Payout[](4);
-        payouts[0] = Payout(makeAddr("creator 1"), 24_000e6);
-        payouts[1] = Payout(makeAddr("creator 2"), 14_400e6);
-        payouts[2] = Payout(makeAddr("creator 3"), 9_600e6);
-        payouts[3] = Payout(makeAddr("creator 4"), 3_200e6);
+        payouts[0] = Payout(makeAddr("creator 1"), 27_600e6);
+        payouts[1] = Payout(makeAddr("creator 2"), 16_560e6);
+        payouts[2] = Payout(makeAddr("creator 3"), 11_040e6);
+        payouts[3] = Payout(makeAddr("creator 4"), 3_680e6);
     }
 
     /// @dev Performs a call and reports whether it succeeded, without reverting.
