@@ -6,7 +6,7 @@
  * recognized total `S` passed to `settle`.
  *
  * Symbols:
- *   B  budget      escrowed amount in token base units (B > 0, B mod 5 == 0)
+ *   B  budget      escrowed amount in token base units (B > 0, B mod 25 == 0)
  *   T  target      campaign goal in the primary metric (T > 0)
  *   M  threshold   minimum total a creator needs to score: ceil(T / 100)
  *   Q  total       sum of a creator's metrics over its passing items
@@ -17,16 +17,22 @@
 
 import { assertUint256 } from "./uint.js";
 
-/** The fee is one fifth (20%) of the spent amount. */
-export const FEE_DIVISOR = 5n;
+/** The fee is 2 parts in 25 (8%) of the spent amount: `FEE_NUMERATOR / FEE_DENOMINATOR`. */
+export const FEE_NUMERATOR = 2n;
+
+/**
+ * The fee's denominator. The spent amount is rounded down to a multiple of it, so the fee and the
+ * pool are exact, and a campaign budget must be a multiple of it too.
+ */
+export const FEE_DENOMINATOR = 25n;
 
 /** How a campaign budget is divided at settlement. */
 export interface Split {
   /** G: the part of the budget spent on recognized delivery (fee + pool). */
   spent: bigint;
-  /** The protocol fee: 20% of G, paid to the Morcast treasury. */
+  /** The protocol fee: 8% of G, paid to the Morcast treasury. */
   fee: bigint;
-  /** The creator pool: 80% of G, claimed by creators against the Merkle root. */
+  /** The creator pool: 92% of G, claimed by creators against the Merkle root. */
   pool: bigint;
   /** The amount returned to the brand: B − G. */
   refund: bigint;
@@ -37,8 +43,8 @@ export interface Split {
  *
  * ```text
  * raw    = floor(B × min(S, T) / T)
- * G      = raw − (raw mod 5)
- * fee    = G / 5
+ * G      = raw − (raw mod 25)
+ * fee    = G / 25 × 2
  * pool   = G − fee
  * refund = B − G
  * ```
@@ -53,7 +59,7 @@ export interface Split {
  *
  * @example
  * split(100_000_000_000n, 1_000_000n, 640_000n);
- * // { spent: 64_000_000_000n, fee: 12_800_000_000n, pool: 51_200_000_000n, refund: 36_000_000_000n }
+ * // { spent: 64_000_000_000n, fee: 5_120_000_000n, pool: 58_880_000_000n, refund: 36_000_000_000n }
  */
 export function split(budget: bigint, target: bigint, recognized: bigint): Split {
   assertUint256(budget, "budget");
@@ -67,10 +73,11 @@ export function split(budget: bigint, target: bigint, recognized: bigint): Split
   // floor(B × min(S, T) / T). Never larger than B because min(S, T) <= T.
   const raw = (budget * capped) / target;
 
-  // Round down to a multiple of 5 so that the 20% / 80% split is exact. The dropped remainder
-  // (at most 4 base units) stays with the brand.
-  const spent = raw - (raw % FEE_DIVISOR);
-  const fee = spent / FEE_DIVISOR;
+  // Round down to a multiple of 25 so that the 8% / 92% split is exact. The dropped remainder
+  // (at most 24 base units) stays with the brand.
+  const spent = raw - (raw % FEE_DENOMINATOR);
+  // spent is a multiple of 25, so dividing first is exact, as in the contract.
+  const fee = (spent / FEE_DENOMINATOR) * FEE_NUMERATOR;
 
   return { spent, fee, pool: spent - fee, refund: budget - spent };
 }

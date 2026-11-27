@@ -6,7 +6,7 @@
  * Escrow version whose ABI and rules this SDK implements. Deployments with the same major
  * version are compatible.
  */
-export const ESCROW_VERSION = "1.0.0";
+export const ESCROW_VERSION = "2.0.0";
 
 /** Settlement opens on Day 5 (`MorcastEscrow.SETTLEMENT_OPENS_AFTER`). */
 export const SETTLEMENT_OPENS_AFTER = 5n * 86_400n;

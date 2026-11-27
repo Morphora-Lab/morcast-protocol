@@ -53,7 +53,8 @@ export { allocatePayouts, type CreatorPayout, type CreatorScore } from "./payout
 export {
   creatorScore,
   creatorThreshold,
-  FEE_DIVISOR,
+  FEE_DENOMINATOR,
+  FEE_NUMERATOR,
   recognizedTotal,
   type Split,
   split,

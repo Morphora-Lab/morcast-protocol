@@ -23,7 +23,7 @@ async function run(
     },
     connect: () => ({
       chainId: async () => chain?.chainId ?? 0,
-      escrowVersion: async () => chain?.version ?? "1.0.0",
+      escrowVersion: async () => chain?.version ?? "2.0.0",
       readCampaign: async () => {
         if (chain === undefined) throw new Error("no chain");
         return chain.campaign;
@@ -72,7 +72,7 @@ describe("morcast-verify", () => {
     broken.totals.fee = "1";
     const result = await run(["result.json"], { "result.json": JSON.stringify(broken) });
     expect(result.code).toBe(1);
-    expect(result.out).toContain("totals.fee: expected 12800000000");
+    expect(result.out).toContain("totals.fee: expected 5120000000");
   });
 
   it("prints a JSON report with --json", async () => {
@@ -95,10 +95,10 @@ describe("morcast-verify", () => {
   });
 
   it("refuses an escrow with an unsupported major version", async () => {
-    const chain = { chainId: 31_337, campaign: settledCampaign(), version: "2.0.0" };
+    const chain = { chainId: 31_337, campaign: settledCampaign(), version: "1.0.0" };
     const result = await run(["result.json", "--rpc-url", "http://rpc"], files, chain);
     expect(result.code).toBe(1);
-    expect(result.out).toContain("escrow version 2.0.0 is not supported");
+    expect(result.out).toContain("escrow version 1.0.0 is not supported");
   });
 
   it.each([
