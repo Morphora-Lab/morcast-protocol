@@ -98,6 +98,17 @@ The owner and the settler are separate wallets Morcast holds. The treasury is th
 
 That account also sent the first staging deployment below. A contract's address follows from its sender and the sender's transaction count, so this escrow has on Base the address the test MOR token has on Base Sepolia. They are different contracts on different chains.
 
+### Moving production to version 2
+
+Version 2.0.0 lowers the fee to 8%. A deployment cannot change its fee, so version 2 is a new deployment at a new address, made with the same owner, settler and treasury:
+
+1. Deploy from the `v2.0.0` tag as described in [Base Mainnet](#base-mainnet) and run every check listed there. The code hash must equal `v2.0.0`'s `ESCROW_CODE_HASH`.
+2. Register the new escrow in the platform with its creation block, and let it receive new campaigns.
+3. Stop the version 1 escrow from receiving new campaigns in the platform. Its owner then calls `setCreationPaused(true)` on it, so no brand can deposit there by mistake.
+4. Record the new deployment here and in [`broadcast/Deploy.s.sol/8453`](../broadcast/Deploy.s.sol/8453).
+
+The version 1 escrow keeps its 20% fee for any campaign it holds. Funds never move between versions.
+
 ### Staging on Base Sepolia
 
 Staging (Base Sepolia, chain 84532) runs version `1.0.0`, deployed from `v1.0.0-rc.4` and verified on [Sourcify](https://sourcify.dev). Its transactions are recorded in [`broadcast/Deploy.s.sol/84532`](../broadcast/Deploy.s.sol/84532):

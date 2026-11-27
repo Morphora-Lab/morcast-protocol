@@ -4,7 +4,7 @@ The escrow cannot be upgraded. A new version is a new deployment at a new addres
 
 ## Identifying a Deployment
 
-- `VERSION()` returns the version of a deployment's code, for example `"1.0.0"`, following semantic versioning. A new major version may change the ABI or the rules.
+- `VERSION()` returns the version of a deployment's code, for example `"2.0.0"`, following semantic versioning. A new major version may change the ABI or the rules. Version 2 changed the fee from 20% to 8%.
 - Every deployment of one version runs identical code, because the contract has no immutable variables. Its runtime code hash therefore identifies the released code. The SDK publishes it as `ESCROW_CODE_HASH`, and `isGenuineEscrow(client, address)` checks a deployment. A contract with another hash is not that version's escrow, whatever its functions answer.
 - A result dataset names its deployment with `chainId` and `escrow`. Campaign IDs restart at 1 in every deployment, so a campaign is identified by `(chainId, escrow, campaignId)`.
 - The SDK implements one major version (`ESCROW_VERSION`). `morcast-verify --rpc-url` refuses deployments with a different major version rather than misreading them.
